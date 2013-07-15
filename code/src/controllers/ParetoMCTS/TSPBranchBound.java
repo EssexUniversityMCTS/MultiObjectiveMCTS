@@ -1,5 +1,6 @@
 package controllers.ParetoMCTS;
 
+import framework.core.FuelTank;
 import framework.core.Game;
 import framework.core.Waypoint;
 import framework.graph.Graph;
@@ -7,6 +8,7 @@ import framework.graph.Node;
 import framework.graph.Path;
 import framework.utils.Vector2d;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -60,6 +62,10 @@ public class TSPBranchBound
      */
     private double m_minCost = Double.MAX_VALUE;
 
+    /** CACHE OF ROUTES TO SPEED UP EXPERIMENTS **/
+    private TreeMap<String,ArrayList<Integer>> m_PreRoutes;
+
+
     /**
      * Creates the TSP Graph.
      * @param a_game Game to take the waypoints from.
@@ -67,7 +73,7 @@ public class TSPBranchBound
      */
     public TSPBranchBound(Game a_game, Graph a_graph)
     {
-        MAX_NODES =  a_game.getWaypoints().size();
+        MAX_NODES =  a_game.getWaypoints().size() + a_game.getFuelTanks().size();
         m_graph = a_graph;
         m_nodes = new TreeMap<Integer, Vector2d>();
         m_dists = new double[MAX_NODES][MAX_NODES];
@@ -79,6 +85,12 @@ public class TSPBranchBound
         {
             m_nodes.put(index++, way.s.copy());
         }
+
+        for(FuelTank ft: a_game.getFuelTanks())        //Add all fuel tanks to the path.
+        {
+            m_nodes.put(index++, ft.s.copy());
+        }
+
 
         //Precompute distances between all waypoints.
         for(int i = 0; i < m_nodes.size(); ++i)
@@ -110,6 +122,25 @@ public class TSPBranchBound
             double distance = getDistance(startingPoint, a1);//a1.dist(startingPoint);
             m_distOrigin[i] = distance;
         }
+
+
+        m_PreRoutes = new TreeMap<String, ArrayList<Integer>>();
+        m_PreRoutes.put("maps/ptsp_map01.map",  getArrayObject(new int[]{7,8,11,2,6,13,4,1,10,0,3,5,12,9}));
+        m_PreRoutes.put("maps/ptsp_map02.map",  getArrayObject(new int[]{12,4,1,2,10,0,3,11,6,9,7,13,8,5}));
+        m_PreRoutes.put("maps/ptsp_map08.map",  getArrayObject(new int[]{7,13,9,8,11,4,5,12,6,3,0,1,10,2}));
+        m_PreRoutes.put("maps/ptsp_map19.map",  getArrayObject(new int[]{9,4,1,10,3,12,6,8,13,7,5,11,2,0}));
+        m_PreRoutes.put("maps/ptsp_map24.map",  getArrayObject(new int[]{4,2,10,3,11,0,1,5,13,8,9,6,12,7}));
+        m_PreRoutes.put("maps/ptsp_map35.map",  getArrayObject(new int[]{12,4,6,8,9,13,7,11,2,0,3,5,10,1}));
+        m_PreRoutes.put("maps/ptsp_map40.map",  getArrayObject(new int[]{2,3,0,10,1,12,11,4,6,8,9,13,5,7}));
+        m_PreRoutes.put("maps/ptsp_map45.map",  getArrayObject(new int[]{5,9,13,7,12,4,11,2,0,10,1,3,6,8}));
+        m_PreRoutes.put("maps/ptsp_map56.map",  getArrayObject(new int[]{8,12,5,10,0,3,1,2,4,11,13,6,7,9}));
+        m_PreRoutes.put("maps/ptsp_map61.map",  getArrayObject(new int[]{13,8,7,4,11,6,1,3,0,2,10,5,12,9}));
+
+        /*
+        {,"maps/ptsp_map02.map","maps/ptsp_map08.map",
+                "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
+                "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"};
+         */
 
     }
 
@@ -239,6 +270,26 @@ public class TSPBranchBound
     public int[] getBestPath()
     {
         return m_tspBestPath.m_path;
+    }
+
+    private ArrayList<Integer> getArrayObject(int []values)
+    {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for(int i = 0; i < values.length; ++i)
+            list.add(values[i]);
+        return list;
+    }
+
+    public int[] getPreRouteArray(String a_key)
+    {
+        ArrayList<Integer> list = m_PreRoutes.get(a_key);
+        int[] array = new int[list.size()];
+        int i = 0;
+        for(int v : list)
+        {
+            array[i++] = v;
+        }
+        return array;
     }
 
 

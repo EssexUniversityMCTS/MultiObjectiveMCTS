@@ -16,14 +16,11 @@ public class ParetoMCTSPlayer implements Player {
 
     TreePolicy m_treePolicy;
     ParetoTreeNode m_root;
-    Game m_curState;
     Random m_rnd;
     double[] m_targetWeights;
     public ParetoArchive m_globalPA;
+    Roller m_randomRoller;
 
-    //Macroactions
-    private int m_currentMacroAction;                       //Current action in the macro action being executed.
-    private int m_lastAction;                       //Last macro action to be executed.
 
     public ParetoMCTSPlayer(TreePolicy a_treePolicy, Random a_rnd, double[] a_targetWeights)
     {
@@ -31,24 +28,21 @@ public class ParetoMCTSPlayer implements Player {
         this.m_rnd = a_rnd;
         this.m_targetWeights = a_targetWeights;
         m_globalPA = new ParetoArchive();
-        m_currentMacroAction = 0;
-        m_lastAction = 0;
+        m_randomRoller = new RandomRoller(RandomRoller.RANDOM_ROLLOUT, this.m_rnd);
+        m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy);
     }
 
     public void init()
     {
-
+        m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy);
     }
 
     public int run(Game a_gameState, long a_timeDue)
     {
-        m_curState = a_gameState;
-        Roller randomRoller = new RandomRoller(RandomRoller.RANDOM_ROLLOUT, this.m_rnd);
-        m_root = new ParetoTreeNode(m_curState,randomRoller,m_treePolicy);
+        m_root.state = a_gameState;
 
         m_root.mctsSearch(a_timeDue);
-        m_currentMacroAction = ParetoMCTSController.MACRO_ACTION_LENGTH - 1;
-        m_lastAction = m_root.bestActionIndex(m_targetWeights);
+        int nextAction = m_root.bestActionIndex(m_targetWeights);
 
         for(int i = 0; i < m_root.pa.m_members.size(); ++i)
         {
@@ -56,7 +50,7 @@ public class ParetoMCTSPlayer implements Player {
         }
 
 
-        return m_lastAction; //(Integer) ((DstState)(a_gameState)).getBoard().getMoves().get(m_lastAction);
+        return nextAction;
     }
     
     public double getHV(boolean a_normalized)

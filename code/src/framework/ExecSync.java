@@ -116,18 +116,18 @@ public class ExecSync extends Exec
             long now = System.currentTimeMillis();
             long spent = now - then;
 
-            if(spent > PTSPConstants.TIME_ACTION_DISQ)
+            /*if(spent > PTSPConstants.TIME_ACTION_DISQ)
             {
                 actionToExecute = 0;
                 System.out.println("Controller disqualified. Time exceeded: " + (spent - PTSPConstants.TIME_ACTION_DISQ));
                 m_game.abort();
 
             }else{
-
+              */
                 if(spent > PTSPConstants.ACTION_TIME_MS)
                     actionToExecute = 0;
                 m_game.tick(actionToExecute);
-            }
+            //}
 
             int remaining = (int) Math.max(0, delay - (now-then));//To adjust to the proper framerate.
             //Wait until de next cycle.
@@ -276,12 +276,13 @@ public class ExecSync extends Exec
     public static void main(String[] args)
     {
         m_mapNames = new String[]{"maps/ptsp_map61.map"}; //Set here the name of the map to play in.
-        //m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
-        //        "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
-        //        "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
+       // m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
+       //         "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
+       //         "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
 
         m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
+        m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";
         //m_controllerName = "controllers.WoxController.WoxController"; //Set here the controller name. Leave it to null to play with KeyController.
@@ -292,15 +293,15 @@ public class ExecSync extends Exec
 
 
         /////// 1. To play the game with the key controller.
-        int delay = PTSPConstants.DELAY;  //PTSPConstants.DELAY: best human play speed
-        playGame(delay);
+        //int delay = PTSPConstants.DELAY;  //PTSPConstants.DELAY: best human play speed
+        //playGame(delay);
 
         /////// 2. Executes one game.
-        //int delay = 1;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
-        //runGame(m_visibility, delay);
+        int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
+        runGame(m_visibility, delay);
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
-        //int numTrials=10;
+        //int numTrials=1;
         //runGames(numTrials);
 
     }

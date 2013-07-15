@@ -332,9 +332,9 @@ public class ParetoTreeNode {
     public double getHV(boolean a_normalized)
     {
         if(a_normalized)
-            return pa.computeHV2(ParetoMCTSController.getValueBounds());
+            return pa.computeHV(ParetoMCTSController.getValueBounds());
         else return
-                pa.computeHV2();
+                pa.computeHV();
 
     }
 
