@@ -44,10 +44,10 @@ public class ParetoMCTSPlayer implements Player {
         m_root.mctsSearch(a_timeDue);
         int nextAction = m_root.bestActionIndex(m_targetWeights);
 
-        for(int i = 0; i < m_root.pa.m_members.size(); ++i)
+        /*for(int i = 0; i < m_root.pa.m_members.size(); ++i)
         {
             m_globalPA.add(m_root.pa.m_members.get(i));
-        }
+        }   */
 
 
         return nextAction;

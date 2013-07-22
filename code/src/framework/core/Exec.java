@@ -141,13 +141,13 @@ public class Exec
             m_controller = (Controller) a_cons.newInstance(constructorArgs);
 
             long timeAfter = System.currentTimeMillis();
-            if(timeAfter > finalDateMs)
-            {
-                if(m_verbose) System.out.println("Controller initialization time out (" +
-                        (PTSPConstants.getStepsInit(m_game.getNumWaypoints()) + timeAfter - finalDateMs) + " ms > " +
-                        PTSPConstants.getStepsInit(m_game.getNumWaypoints()) + ").");
-            }
-            else
+            //if(timeAfter > finalDateMs)
+            //{
+            //    if(m_verbose) System.out.println("Controller initialization time out (" +
+            //            (PTSPConstants.getStepsInit(m_game.getNumWaypoints()) + timeAfter - finalDateMs) + " ms > " +
+            //            PTSPConstants.getStepsInit(m_game.getNumWaypoints()) + ").");
+            //}
+            //else
             {
                 ok = true;
                 if(m_verbose) System.out.println("Controller initialization time: " + (PTSPConstants.getStepsInit(m_game.getNumWaypoints()) + timeAfter - finalDateMs) + " ms.");

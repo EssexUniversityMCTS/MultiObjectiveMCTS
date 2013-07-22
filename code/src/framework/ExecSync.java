@@ -1,6 +1,7 @@
 package framework;
 
 import controllers.keycontroller.KeyController;
+import controllers.utils.StatSummary;
 import framework.core.*;
 import framework.utils.JEasyFrame;
 
@@ -124,8 +125,8 @@ public class ExecSync extends Exec
 
             }else{
               */
-                if(spent > PTSPConstants.ACTION_TIME_MS)
-                    actionToExecute = 0;
+                //if(spent > PTSPConstants.ACTION_TIME_MS)
+                //    actionToExecute = 0;
                 m_game.tick(actionToExecute);
             //}
 
@@ -161,19 +162,20 @@ public class ExecSync extends Exec
         //Prepare the average results.
         double avgTotalWaypoints=0;
         double avgTotalTimeSpent=0;
-        double avgTotalDamageTaken=0;
-        double avgTotalFuelSpent=0;
         int totalDisqualifications=0;
         int totalNumGamesPlayed=0;
         boolean moreMaps = true;
+
+        StatSummary ssWp = new StatSummary();
+        StatSummary ssTime = new StatSummary();
+        StatSummary ssFuel = new StatSummary();
+        StatSummary ssDamage = new StatSummary();
 
         for(int m = 0; moreMaps && m < m_mapNames.length; ++m)
         {
             String mapName = m_mapNames[m];
             double avgWaypoints=0;
             double avgTimeSpent=0;
-            double avgDamage=0;
-            double avgFuel=0;
             int numGamesPlayed = 0;
 
             if(m_verbose)
@@ -202,27 +204,33 @@ public class ExecSync extends Exec
 
                     //Exceeded time
                     long exceeded = System.currentTimeMillis() - due;
-                    if(exceeded > PTSPConstants.TIME_ACTION_DISQ)
+                    /*if(exceeded > PTSPConstants.TIME_ACTION_DISQ)
                     {
                         actionToExecute = 0;
                         numGamesPlayed--;
                         m_game.abort();
 
-                    }else{
+                    }else{  */
 
-                        if(exceeded > PTSPConstants.ACTION_TIME_MS)
-                            actionToExecute = 0;
+                       // if(exceeded > PTSPConstants.ACTION_TIME_MS)
+                       //     actionToExecute = 0;
 
                         m_game.tick(actionToExecute);
-                    }
+                    //}
 
                 }
 
                 //Update the averages with the results of this trial.
                 avgWaypoints += m_game.getWaypointsVisited();
                 avgTimeSpent += m_game.getTotalTime();
-                avgDamage += m_game.getShip().getDamage();
-                avgFuel += (PTSPConstants.INITIAL_FUEL-m_game.getShip().getRemainingFuel());
+
+                if(m_game.getWaypointsVisited() == 10)
+                {
+                    ssWp.add(m_game.getWaypointsVisited());
+                    ssTime.add(m_game.getTotalTime());
+                    ssFuel.add(PTSPConstants.INITIAL_FUEL - m_game.getShip().getRemainingFuel());
+                    ssDamage.add(m_game.getShip().getDamage());
+                }  else trials++;
 
                 //Print the results.
                 if(m_verbose)
@@ -240,8 +248,6 @@ public class ExecSync extends Exec
 
             avgTotalWaypoints += (avgWaypoints / numGamesPlayed);
             avgTotalTimeSpent += (avgTimeSpent / numGamesPlayed);
-            avgTotalDamageTaken += (avgDamage / numGamesPlayed);
-            avgTotalFuelSpent += (avgFuel / numGamesPlayed);
             totalDisqualifications += (trials - numGamesPlayed);
             totalNumGamesPlayed += numGamesPlayed;
 
@@ -249,9 +255,8 @@ public class ExecSync extends Exec
             if(m_verbose)
             {
                 System.out.println("--------");
-                System.out.format("Average waypoints: %.3f, average time spent: %.3f, average damage taken: %.3f, average fuel spent: %.3f\n",
-                        (avgWaypoints / numGamesPlayed), (avgTimeSpent / numGamesPlayed),
-                        (avgDamage / numGamesPlayed), (avgFuel / numGamesPlayed));
+                System.out.format("Average waypoints: %.3f, average time spent: %.3f\n",
+                        (avgWaypoints / numGamesPlayed), (avgTimeSpent / numGamesPlayed));
                 System.out.println("Disqualifications: " + (trials - numGamesPlayed) + "/" + trials);
             }
         }
@@ -259,11 +264,13 @@ public class ExecSync extends Exec
         //Print the average score.
         if(m_verbose)
         {
-            System.out.println("\n-------- Final score --------");
-            System.out.format("Average waypoints: %.3f, average time spent: %.3f, average damage taken: %.3f, average fuel spent: %.3f\n",
-                    (avgTotalWaypoints / m_mapNames.length), (avgTotalTimeSpent / m_mapNames.length),
-                    (avgTotalDamageTaken / m_mapNames.length), (avgTotalFuelSpent / m_mapNames.length));
-            System.out.println("Disqualifications: " + (trials*m_mapNames.length - totalNumGamesPlayed) + "/" + trials*m_mapNames.length);
+            System.out.println("-------- Final score --------");
+            //System.out.format("Average waypoints: %.3f, average time spent: %.3f\n", (avgTotalWaypoints / m_mapNames.length), (avgTotalTimeSpent / m_mapNames.length));
+            //System.out.println("Disqualifications: " + (trials*m_mapNames.length - totalNumGamesPlayed) + "/" + trials*m_mapNames.length);
+            System.out.format("Average waypoints: %.3f +- %.3f, average time spent: %.3f +- %.3f" +
+                    ", average fuel consumed: %.3f +- %.3f, average damage taken: %.3f +- %.3f\n",
+                    ssWp.mean(), ssWp.stdErr(), ssTime.mean(), ssTime.stdErr(), ssFuel.mean(), ssFuel.stdErr(), ssDamage.mean(), ssDamage.stdErr());
+
         }
     }
 
@@ -275,7 +282,7 @@ public class ExecSync extends Exec
      */
     public static void main(String[] args)
     {
-        m_mapNames = new String[]{"maps/ptsp_map61.map"}; //Set here the name of the map to play in.
+        m_mapNames = new String[]{"maps/ptsp_map02.map"}; //Set here the name of the map to play in.
        // m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
        //         "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
        //         "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
@@ -301,13 +308,9 @@ public class ExecSync extends Exec
         runGame(m_visibility, delay);
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
-        //int numTrials=1;
+        //int numTrials=10;
         //runGames(numTrials);
 
     }
-
-
-
-
 
 }

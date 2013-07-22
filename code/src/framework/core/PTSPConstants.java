@@ -136,7 +136,7 @@ public abstract class PTSPConstants
         else if(a_numWaypoints == 50)
             return 400;
 
-        else return 800;
+        else return 800;// 250; //return 800;
     }
 
     /**

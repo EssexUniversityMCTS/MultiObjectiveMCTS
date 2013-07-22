@@ -1,5 +1,6 @@
 package framework.core;
 
+import controllers.ParetoMCTS.ParetoMCTSController;
 import framework.utils.Vector2d;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -242,7 +243,9 @@ public class Ship extends GameObject
      */
     public void update(int a_actionId)
     {
-        //System.out.println("Executing: " + a_actionId);
+        //if(ParetoMCTSController.FLAG)
+        //    System.out.println("Executing: " + a_actionId);
+
         if(!m_started)
         {
             if(a_actionId != Controller.ACTION_NO_FRONT)

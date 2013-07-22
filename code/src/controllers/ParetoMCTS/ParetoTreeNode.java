@@ -56,9 +56,10 @@ public class ParetoTreeNode {
     public void mctsSearch(long a_timeDue) {
 
         long remaining = a_timeDue - System.currentTimeMillis();
+        int its = 0;
 
-        //for (int i = 0; i < its; i++) {
-        while(remaining > 10)   {
+        for (int i = 0; i < 400; i++) {
+        //while(remaining > 10)   {
             m_runList.clear();
             m_runList.add(this); //root always in.
 
@@ -66,8 +67,10 @@ public class ParetoTreeNode {
             double delta[] = selected.rollOut();
             selected.backUp(delta, true, selected.childIndex);
 
+            its++;
             remaining = a_timeDue - System.currentTimeMillis();
         }
+        //System.out.println(its);
     }
 
     public ParetoTreeNode treePolicy() {
@@ -200,25 +203,56 @@ public class ParetoTreeNode {
         }
     }
 
+    public void printStats()
+    {
+        System.out.println("************** Root archive **************");
+        this.pa.printArchive();
+        if(false) for(int i = 0; i < children.length; ++i)
+        {
+            ParetoTreeNode pnCh = children[i];
+            System.out.println("*********** Child " + i + " **************");
+            pnCh.pa.printArchive();
+            System.out.println("***************************************");
+        }
+        System.out.println("********************************************");
+
+    }
+
 
     public int bestActionIndex(double[] targets) {
         int selected = -1;
         double[][] bounds = ParetoMCTSController.getValueBounds();
         double bestValue = -Double.MAX_VALUE;
         OrderedArrayList myPA = pa.m_members;
+        //System.out.println("----------------");
         for(int i = 0; i < myPA.size(); ++i)
         {
             double[] thisRes = myPA.get(i);
-
+            /*
             double val0 = Utils.normalise(thisRes[0], bounds[0][0], bounds[0][1]);
             double val1 = Utils.normalise(thisRes[1], bounds[1][0], bounds[1][1]);
             double val2 = Utils.normalise(thisRes[2], bounds[2][0], bounds[2][1]);
-            double val = targets[0] * val0 + targets[1] * val1 + targets[2] * val2;
+            double val = targets[0] * val0 + targets[1] * val1 + targets[2] * val2;*/
+
+            double val = 1.0;
+            for(int t = 0; t < targets.length; ++t)
+            {
+                double v =  Utils.normalise(thisRes[t], bounds[t][0], bounds[t][1]);
+                val *= v*targets[t];
+            }
+
+           // System.out.println("Element in PA " + i + ": " + val);
 
             if(val > bestValue) {
                 bestValue = val;
                 selected = i;
             }
+        }
+
+        if(selected == -1)
+        {
+            System.out.println(" ********************* SELECTED -1, myPA.size(): " + myPA.size() + " ***************");
+            return 0;
         }
 
         double selectedTarget[] = myPA.get(selected);
@@ -231,9 +265,15 @@ public class ParetoTreeNode {
             {
                 double[] sol = resFromThisChild.get(i);
                 //System.out.println("PA point " + key + ":" + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[key].nVisits);
-                if(sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
+
+                if(sol.length == 3 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1] && sol[2] == selectedTarget[2])
+                //if(sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
                 {
-                    //System.out.println("SELECTED: " + children[key].nVisits + "," + sol[0] + "," + sol[1] + ": " + key);
+                    //System.out.println("SELECTED-3: " + children[key].nVisits + "," + sol[0] + "," + sol[1] + ": " + key);
+                    return key;
+                }else if(sol.length == 2 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
+                {
+                    //System.out.println("SELECTED-2: " + children[key].nVisits + "," + sol[0] + "," + sol[1] + ": " + key);
                     return key;
                 }
             }
@@ -241,7 +281,7 @@ public class ParetoTreeNode {
 
 
         //If we get down here, we've done something wrong.
-        pa.printArchive();
+       /* pa.printArchive();
 
         System.out.println("Looking for: " + selectedTarget[0] + "," + selectedTarget[1]);
         for(Integer key : navSet)
@@ -256,7 +296,7 @@ public class ParetoTreeNode {
                     System.out.println("FOUND!");
             }
         }
-
+                  */
         //throw new RuntimeException("Unexpected selection: " + selected);
         return selected;
     }

@@ -26,6 +26,13 @@ public class Utils
         return Math.sqrt(acum);
     }
 
+
+    public static boolean crowded(double[] a, double[] b, double epsilon)
+    {
+        double distance = distanceEuq(a,b);
+        return distance < epsilon;
+    }
+
     /**
      * @param a_one first element to compare.
      * @param a_two second element to compare.
@@ -35,7 +42,7 @@ public class Utils
     {
         int numTargets = a_one.length;
         if(numTargets != a_two.length)
-            throw new RuntimeException("Dominance check failed: number of objectives mismatch!");
+            throw new RuntimeException("Dominance check failed: number of objectives mismatch! " + a_one.length + " != " + a_two.length);
 
         int dominance = 0;
         boolean equal = false;

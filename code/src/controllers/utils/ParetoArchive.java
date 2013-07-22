@@ -1,6 +1,7 @@
 package controllers.utils;
 
 
+import controllers.ParetoMCTS.ParetoMCTSController;
 import framework.utils.Cube;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.PriorityQueue;
  */
 public class ParetoArchive
 {
+    public static double EPSILON = 0.1;
     public OrderedArrayList m_members;
     public double m_hv;
     public boolean m_hvClean;
@@ -53,8 +55,13 @@ public class ParetoArchive
         {
             double[] member = m_members.get(i);
             int dom = Utils.dominates(member, a_candidate);
-            if(dom == -1)
+            boolean crowded = Utils.crowded(member, a_candidate, EPSILON);
+            //if(dom == -1) //Use this line to allow any distance between points in pareto.
+            if(dom == -1 || crowded) //Use this line to avoid crowded fronts (min. distance: EPSILON).
             {
+                //if(crowded)
+                  //  System.out.println("OUT ["+m_members.size()+"]");
+
                 dominated = true;
             }else if(dom == 1)
             {
@@ -106,7 +113,7 @@ public class ParetoArchive
             double[] member = m_members.get(i);
             for(int j = 0; j < member.length; ++j)
             {
-                System.out.format("%.2f ", member[j]);
+                System.out.format("%.5f ", member[j]);
             }
             System.out.println();
         }
@@ -171,11 +178,15 @@ public class ParetoArchive
             dim1 = member[0];
         }
         m_hvClean = true; //We are calculating it.
+        m_hv = acum;
         return acum;
     }
 
     private double lebesgue3()         //Assumes maximization.
     {
+        //long now = System.currentTimeMillis();
+        ParetoMCTSController.HV_COUNTS++;
+
         OrderedList pointsInX = new OrderedList();
         OrderedList pointsInY = new OrderedList();
         OrderedList pointsInZ = new OrderedList();
@@ -219,6 +230,10 @@ public class ParetoArchive
         }
 
         m_hvClean = true;
+        m_hv = acum;
+
+        //System.out.println("lebesgue3() with " + m_members.size() + " points: " + (System.currentTimeMillis()-now));
+
         return acum;
     }
 

@@ -7,6 +7,7 @@ import framework.graph.Path;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -68,13 +69,29 @@ public class ParetoMCTSController extends Controller {
      */
     public static Game m_currentGameState;
 
+    /**
+     * Cache  for speeding up looks for nodes in the graph.
+     */
+    public static HashMap<Integer, Node> m_nodeLookup;
 
-    public static int SCORE_PER_WAYPOINT = 1000;
+    public static double m_preRolloutDistance1;
+    public static double m_preRolloutDistance2;
+    public static double m_preRolloutFuel;
+    public static double m_preRolloutDamage;
+
+    public static int MULT_PER_WAYPOINT = 2;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
     public static int NUM_ACTIONS = 6;
-    public static int NUM_TARGETS = 3;
     public static int K = 1;
+
+    public static double[] targetWeights= new double[]{0,0,1};
+            //new double[]{0.33,0.33,0.33};
+                                  // new double[]{0.5, 0.5};
+                                  // new double[]{0.9, 0.05, 0.05};
+                                  // new double[]{1, 0, 0});
+                                  // new double[]{0.0, 1.0, 0};
+    public static int NUM_TARGETS = targetWeights.length;
 
     /**
      * Constructor of the controller
@@ -86,8 +103,9 @@ public class ParetoMCTSController extends Controller {
         m_rnd = new Random();
         m_resetRS = true;
         m_graph = new Graph(a_game);
+        m_nodeLookup = new HashMap<Integer, Node>();
         m_tspGraph = new TSPBranchBound(a_game, m_graph);
-        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_rnd, new double[]{0.33, 0.33, 0.33});
+        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_rnd, targetWeights);
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;
         m_currentGameState = null;
@@ -102,15 +120,19 @@ public class ParetoMCTSController extends Controller {
     }
 
 
+    public static boolean FLAG;
+    public static int HV_COUNTS;
     /**
      * Returns an action to execute in the game.
      * @param a_game A copy of the current game
      * @param a_timeDue The time the next move is due
-     * @return
+     * @return action to execute
      */
     @Override
     public int getAction(Game a_game, long a_timeDue)
     {
+        FLAG = false;
+        HV_COUNTS = 0;
         int cycle = a_game.getTotalTime();
         int nextMacroAction;
 
@@ -145,6 +167,13 @@ public class ParetoMCTSController extends Controller {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue);
+
+
+                //System.out.println("PA Size: " + m_player.m_root.pa.m_members.size());
+                //System.out.println("HV_COUNTS: " + HV_COUNTS);
+                //m_player.m_root.printStats();
+                //System.out.println("Suggested: " + suggestedAction);
+
                 //now it's time to execute this action. Also, in next cycle, we need to reset the search
                 m_resetRS = true;
                 if(suggestedAction != -1)
@@ -158,6 +187,7 @@ public class ParetoMCTSController extends Controller {
             }
         }
 
+        FLAG = true;
         return nextMacroAction;
     }
 
@@ -193,6 +223,7 @@ public class ParetoMCTSController extends Controller {
      */
     public static void updateNextPickups(int a_howMany)
     {
+        GameObject[] pickups = null;
         m_nextPickups = null;
         try{
 
@@ -209,6 +240,7 @@ public class ParetoMCTSController extends Controller {
                 //Array with the next pickups to visit, considering the case where there are less available.
                 m_nextPickups = new int[Math.min(a_howMany, waypoints.size()+fuelTanks.size() - nVisited)];
                 int pLength =  m_nextPickups.length; //number of elements to pick up.
+                pickups = new GameObject[pLength];
 
                 //Go through the best path and check for what is collected.
                 for(int i = 0, j = 0; j < pLength && i < m_bestRoute.length; ++i)
@@ -221,7 +253,8 @@ public class ParetoMCTSController extends Controller {
                         if(!waypoints.get(key).isCollected())
                         {
                             //The first pLength elements not visited are selected.
-                            m_nextPickups[j++] = key;
+                            m_nextPickups[j] = key;
+                            pickups[j++] = waypoints.get(key);
                         }
                     }else
                     {
@@ -229,7 +262,8 @@ public class ParetoMCTSController extends Controller {
                         if(!fuelTanks.get(key-10).isCollected())
                         {
                             //The first pLength elements not visited are selected.
-                            m_nextPickups[j++] = key;
+                            m_nextPickups[j] = key;
+                            pickups[j++] = fuelTanks.get(key-10);
                         }
                     }
 
@@ -240,102 +274,144 @@ public class ParetoMCTSController extends Controller {
         }catch(Exception e){
             e.printStackTrace();
         }
+
+        //Initial values for all objectives.
+        m_preRolloutFuel = PTSPConstants.INITIAL_FUEL-m_currentGameState.getShip().getRemainingFuel(); //Fuel Consumed!
+        m_preRolloutDamage = m_currentGameState.getShip().getDamage();
+
+        m_preRolloutDistance1 = m_preRolloutDistance2 = 1;//default value.
+        if(pickups != null)
+        {
+            Path pathToFirst = getPathToGameObject(m_currentGameState, pickups[0], m_nextPickups[0]);
+            m_preRolloutDistance1 = pathToFirst.m_cost;
+
+            if(pickups.length > 1)
+            {
+                Path pathToSecond = getPathBetweenGameObjects(m_currentGameState, pickups[0], m_nextPickups[0], pickups[1], m_nextPickups[1]);
+                m_preRolloutDistance2 = m_preRolloutDistance1 + pathToSecond.m_cost;
+            }
+        }
+
     }
+
+    public static double ALPHA = 0.9;
+    public static double BETA = 1 - ALPHA;
+    public static double GAMMA = 2;
 
     public static double[] value(Game a_gameState)
     {
-        int timeSpent = 0;
-        double score = 0;
         if(m_nextPickups == null)
         {
-            //All waypoints visited, reward for finished game.
-            timeSpent = 10000 - a_gameState.getTotalTime();
-            score = 10 * (a_gameState.getWaypointsVisited() * SCORE_PER_WAYPOINT + timeSpent);
-        }else
-        {
-            //This is the normal case
-
-            GameObject obj0 = null, obj1 = null;
-            boolean obj0Collected = false, obj1Collected = false;
-            //This is the path to the object we ned to collect
-            Path pathToFirst = null;
-
-            //Next object supposed to be collected, that might have been collected since we started the random path.
-            if(m_nextPickups[0] < 10)
-            {
-                obj0 = a_gameState.getWaypoints().get(m_nextPickups[0]);
-                obj0Collected = ((Waypoint)obj0).isCollected();
-                pathToFirst = getPathToGameObject(a_gameState, obj0, m_nextPickups[0]);
-            }else{
-                obj0 = a_gameState.getFuelTanks().get(m_nextPickups[0]-10);
-                obj0Collected = ((FuelTank)obj0).isCollected();
-             pathToFirst = getPathToGameObject(a_gameState, obj0, m_nextPickups[0]-10);
-            }
-
-
-            //Let's give some points for the distance to it
-            double distancePoints = 0;
-            if(m_nextPickups.length == 1)
-            {
-                //If it is the last waypoint, we just give scores for it.
-                distancePoints = scoreDist(pathToFirst.m_cost);
-            }else
-            {
-                //There are more waypoints after this one. Get that one.
-                if(m_nextPickups[1] < 10)
-                {
-                    obj1 = a_gameState.getWaypoints().get(m_nextPickups[1]);
-                    obj1Collected = ((Waypoint)obj1).isCollected();
-                }else{
-                    obj1 = a_gameState.getFuelTanks().get(m_nextPickups[1]-10);
-                    obj1Collected = ((FuelTank)obj1).isCollected();
-                }
-
-                //And give points to these distances.
-                if(obj0Collected)
-                {
-                    double dist = a_gameState.getShip().s.dist(obj1.s);
-                    distancePoints = scoreDist(dist) + SCORE_PER_WAYPOINT*10;
-
-                }else
-                    distancePoints = scoreDist(pathToFirst.m_cost);
-
-            }
-
-            //Reward points for collecting waypoints.
-            double waypointsPoints = 0;
-            if(match(a_gameState.getVisitOrder(), m_bestRoute))
-            {
-                if(obj0Collected)
-                    waypointsPoints = SCORE_PER_WAYPOINT;
-
-                if(obj1 != null && obj1Collected)
-                    waypointsPoints = SCORE_PER_WAYPOINT * 2;
-            }
-
-             score = waypointsPoints + distancePoints;
+            double superReward[] = new double[targetWeights.length];
+            for(int i = 0; i < targetWeights.length; ++i)
+                superReward[i] = 2;
+            return superReward; // Game finished successfully.
         }
 
-        double[] moScore = new double[]{score*(2000 - a_gameState.getTotalTime()),
-                                        score*(1000 - a_gameState.getShip().getRemainingFuel()),
-                                        score*(1000 - a_gameState.getShip().getDamage())};
+        if(a_gameState.isEnded() && a_gameState.getWaypointsLeft()>0)
+        {
+            double superPunishment[] = new double[targetWeights.length];
+            for(int i = 0; i < targetWeights.length; ++i)
+                superPunishment[i] = -2;
+            return superPunishment; // Game finished - game over.
+        }
+
+        //All my waypoints
+        LinkedList<Waypoint> waypoints = a_gameState.getWaypoints();
+
+        //All my fuel tanks
+        LinkedList<FuelTank> fuelTanks = a_gameState.getFuelTanks();
+
+        double collectionBonus = 0;
+        double feasibility = 1;
+        int playoutLength = MACRO_ACTION_LENGTH * ROLLOUT_DEPTH;
+        double consumedFuelInterval = (PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) - m_preRolloutFuel ;
+        double damageTakenInterval = a_gameState.getShip().getDamage() - m_preRolloutDamage;
+
+        //First object. Is it collected?
+        double distanceScore1 = GAMMA; //1*GAMMA;
+        double distance1 = 0;
+        boolean is1Collected = (m_nextPickups[0] < 10) ? (waypoints.get(m_nextPickups[0])).isCollected() : (fuelTanks.get(m_nextPickups[0]-10)).isCollected();
+        GameObject firstObj = (m_nextPickups[0] < 10) ? waypoints.get(m_nextPickups[0]) : fuelTanks.get(m_nextPickups[0]-10);
+        if(!is1Collected)
+        {
+            Path pathToFirst = getPathToGameObject(a_gameState, firstObj, m_nextPickups[0]);
+            distance1 = pathToFirst.m_cost;
+            distanceScore1 = 1 - (distance1/m_preRolloutDistance1);
+
+            //Feasibility check:
+            double v = (m_preRolloutDistance1 - distance1) / playoutLength;
+            double pot_dist = v * a_gameState.getStepsLeft();
+            if(distanceScore1>0 && pot_dist < distance1)
+            {
+                feasibility = -1;
+            }
+        }
+
+        double distanceScore2 = GAMMA;
+        double distance2 = 0;
+        if(m_nextPickups.length>1)
+        {
+            boolean is2Collected = (m_nextPickups[1] < 10) ? (waypoints.get(m_nextPickups[1])).isCollected() : (fuelTanks.get(m_nextPickups[1]-10)).isCollected();
+            GameObject secondObject = (m_nextPickups[1] < 10) ? waypoints.get(m_nextPickups[1]) : fuelTanks.get(m_nextPickups[1]-10);
+            if(!is2Collected)
+            {
+                if(!is1Collected)
+                {
+                    distance2 = distance1; //Plus distance between objects.
+                    Path pathToSecond = getPathBetweenGameObjects(a_gameState, firstObj, m_nextPickups[0], secondObject, m_nextPickups[1]);
+                    distance2 += pathToSecond.m_cost;
+
+                }else
+                {
+                    Path pathToSecond = getPathToGameObject(a_gameState, secondObject, m_nextPickups[1]);
+                    distance2 = pathToSecond.m_cost;
+                    collectionBonus = 10;
+                }
+                distanceScore2 = 1 - (distance2/m_preRolloutDistance2);
+            }
+        }
+
+        //Distance points:
+        double distancePoints = ALPHA * distanceScore1 + BETA * distanceScore2;
+
+        //Fuel and damage points:
+        double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
+        double damagePoints = 1 - (damageTakenInterval/playoutLength);
+
+        int stepsPerWp = PTSPConstants.getStepsPerWaypoints(a_gameState.getNumWaypoints());
+        //double timePoints = 1 - (a_gameState.getTotalTime()/10000.0);
+        double timePoints = 1 - ((stepsPerWp - a_gameState.getStepsLeft()) / stepsPerWp);
+
+        double[] moScore = new double[]{distancePoints*feasibility,
+                                        fuelPoints*feasibility,
+                                        damagePoints*feasibility};
+        //double[] moScore = new double[]{distancePoints*timePoints,distancePoints*fuelPoints,distancePoints*damagePoints};
+
+        //double[] moScore = new double[]{distancePoints*fuelPoints+collectionBonus,distancePoints*damagePoints+collectionBonus};
+        //double[] moScore = new double[]{distancePoints*fuelPoints,distancePoints*damagePoints};
+        //double[] moScore = new double[]{timePoints*distancePoints*fuelPoints,timePoints*distancePoints*damagePoints};
 
         return moScore;
     }
+
 
     public static double[][] getValueBounds()
     {
         double[][] bounds = new double[NUM_TARGETS][2];
         bounds[0][0] = 0;
-        bounds[0][1] = 2000;
+        bounds[0][1] = 1;
         bounds[1][0] = 0;
-        bounds[1][1] = 1000;
-        bounds[2][0] = 0;
-        bounds[2][1] = 1000;
-
+        bounds[1][1] = 1;
+        if(NUM_TARGETS == 3)
+        {
+            bounds[2][0] = 0;
+            bounds[2][1] = 1;
+        }
         return bounds;
     }
-        /**
+
+    /**
      * Gets the path from the current location of the ship to the object passed as parameter.
      * @param a_game copy of the current game state.
      * @param a_gObj object ot get the path to.
@@ -347,19 +423,52 @@ public class ParetoMCTSController extends Controller {
         //The closest node to the ship's location.
         Node shipNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_game.getShip().s.x, a_game.getShip().s.y);
 
-        Node objectNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
+        //Node objectNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
         //The closest node to the target's location (checking the cache).
-        /*Node objectNode = null;
+        Node objectNode = null;
         if(ParetoMCTSController.m_nodeLookup.containsKey(a_objKey))
             objectNode = ParetoMCTSController.m_nodeLookup.get(a_objKey);
         else{
-
+            objectNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
             ParetoMCTSController.m_nodeLookup.put(a_objKey, objectNode);
-        }          */
+        }
 
         //Get the parh between the nodes.
         return ParetoMCTSController.m_graph.getPath(shipNode.id(), objectNode.id());
     }
+
+    /**
+     * Gets the path from the current location of the ship to the object passed as parameter.
+     * @param a_game copy of the current game state.
+     * @param a_gObj object ot get the path to.
+     * @param a_objKey index of the object to look for.
+     * @return the path from the current ship position to  a_gObj.
+     */
+    private static Path getPathBetweenGameObjects(Game a_game, GameObject a_gObj, int a_objKey, GameObject a_gObj2, int a_objKey2)
+    {
+        //The closest node to the first object
+        Node object1Node = null;
+        if(ParetoMCTSController.m_nodeLookup.containsKey(a_objKey))
+            object1Node = ParetoMCTSController.m_nodeLookup.get(a_objKey);
+        else{
+            object1Node = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
+            ParetoMCTSController.m_nodeLookup.put(a_objKey, object1Node);
+        }
+
+        //The closest node to the second object
+        Node object2Node = null;
+        if(ParetoMCTSController.m_nodeLookup.containsKey(a_objKey2))
+            object2Node = ParetoMCTSController.m_nodeLookup.get(a_objKey2);
+        else{
+            object2Node = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj2.s.x, a_gObj2.s.y);
+            ParetoMCTSController.m_nodeLookup.put(a_objKey2, object2Node);
+        }
+        //Get the parh between the nodes.
+        return ParetoMCTSController.m_graph.getPath(object1Node.id(), object2Node.id());
+    }
+
+
+    public static double maxDist = 0;
 
     /**
      *  Given a distance, returns a score based on its distance.
@@ -368,9 +477,17 @@ public class ParetoMCTSController extends Controller {
      */
     public static double scoreDist(double a_dist)
     {
-        double estMaxDistance = 10000;
+        if(a_dist > maxDist)
+        {
+            maxDist = a_dist;
+            //System.out.println(maxDist);
+        }
+
+        double estMaxDistance = 1000;
         double distancePoints = estMaxDistance - a_dist;
-        distancePoints = Math.max(distancePoints,0);
+        distancePoints = Math.max(distancePoints,0) / 1000.0;
+
+        //System.out.println(a_dist + " -> " + distancePoints);
         return distancePoints;
     }
 
