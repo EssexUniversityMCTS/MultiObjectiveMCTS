@@ -45,11 +45,12 @@ public class ParetoTreePolicy implements TreePolicy{
             //double childValue = hvProp / (child.nVisits + node.epsilon);
 
             double hvVal = child.getHV(false);
+            //double hvVal = child.totValue[0];
             double childValue =  hvVal / (child.nVisits + node.epsilon);
 
             double uctValue = childValue +
                     K * Math.sqrt(Math.log(node.nVisits + 1) / (child.nVisits + node.epsilon)) +
-                    node.r.nextDouble() * node.epsilon;
+                    node.m_rnd.nextDouble() * node.epsilon;
             // small random numbers: break ties in unexpanded nodes
             if (uctValue > bestValue) {
                 selected = child;

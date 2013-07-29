@@ -129,16 +129,16 @@ public class TSPBranchBound
 
         if(USE_PUROFVIO_ROUTES)
         {
-            m_PreRoutes.put("maps/ptsp_map01.map",  getArrayObject(new int[]{7, 8, 6, 2, 1, 4, 0, 3, 5, 9}));
-            m_PreRoutes.put("maps/ptsp_map02.map",  getArrayObject(new int[]{4, 1, 2, 0, 3, 6, 9, 7, 5, 8}));
-            m_PreRoutes.put("maps/ptsp_map08.map",  getArrayObject(new int[]{7, 2, 1, 6, 9, 8, 5, 4, 3, 0}));
-            m_PreRoutes.put("maps/ptsp_map19.map",  getArrayObject(new int[]{9, 4, 6, 8, 7, 5, 0, 2, 3, 1}));
-            m_PreRoutes.put("maps/ptsp_map24.map",  getArrayObject(new int[]{7, 6, 9, 8, 5, 1, 0, 3, 4, 2}));
-            m_PreRoutes.put("maps/ptsp_map35.map",  getArrayObject(new int[]{8, 9, 7, 4, 6, 2, 0, 3, 5, 1}));
-            m_PreRoutes.put("maps/ptsp_map40.map",  getArrayObject(new int[]{2, 0, 3, 7, 5, 9, 8, 6, 4, 1}));
-            m_PreRoutes.put("maps/ptsp_map45.map",  getArrayObject(new int[]{5, 9, 7, 2, 0, 4, 3, 1, 6, 8}));
-            m_PreRoutes.put("maps/ptsp_map56.map",  getArrayObject(new int[]{8, 5, 0, 3, 1, 2, 4, 6, 7, 9}));
-            m_PreRoutes.put("maps/ptsp_map61.map",  getArrayObject(new int[]{8, 6, 1, 3, 0, 2, 5, 4, 7, 9}));
+            m_PreRoutes.put("maps/ptsp_map01.map", getArrayObject(new int[]{7,8,11,6,2,1,10,4,0,3,12,5,9}));
+            m_PreRoutes.put("maps/ptsp_map02.map", getArrayObject(new int[]{4,1,2,10,0,3,6,11,9,7,5,8,13,12}));
+            m_PreRoutes.put("maps/ptsp_map08.map", getArrayObject(new int[]{7,2,10,1,6,9,8,5,4,11,3,0,12,13}));
+            m_PreRoutes.put("maps/ptsp_map19.map", getArrayObject(new int[]{9,4,12,6,8,13,7,5,0,2,3,1,11,10}));
+            m_PreRoutes.put("maps/ptsp_map24.map", getArrayObject(new int[]{7,6,9,8,13,5,1,0,3,4,2,10,11,12}));
+            m_PreRoutes.put("maps/ptsp_map35.map", getArrayObject(new int[]{8,9,13,7,4,6,2,0,3,5,1,10,11,12}));
+            m_PreRoutes.put("maps/ptsp_map40.map", getArrayObject(new int[]{2,0,3,7,5,9,8,6,4,1,10,11,12,13}));
+            m_PreRoutes.put("maps/ptsp_map45.map", getArrayObject(new int[]{5,9,13,7,2,0,11,4,3,1,6,8,10,11}));
+            m_PreRoutes.put("maps/ptsp_map56.map", getArrayObject(new int[]{8,12,5,10,0,3,1,2,4,6,7,9,11,13}));
+            m_PreRoutes.put("maps/ptsp_map61.map", getArrayObject(new int[]{8,6,1,3,0,2,5,4,7,9,10,11,12,13}));
         }else{
             m_PreRoutes.put("maps/ptsp_map01.map",  getArrayObject(new int[]{7,8,11,2,6,13,4,1,10,0,3,5,12,9}));
             m_PreRoutes.put("maps/ptsp_map02.map",  getArrayObject(new int[]{12,4,1,2,10,0,3,11,6,9,7,13,8,5}));

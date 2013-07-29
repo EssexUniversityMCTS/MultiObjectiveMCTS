@@ -1,8 +1,6 @@
 package controllers.ParetoMCTS;
 
-import controllers.utils.OrderedArrayList;
-import controllers.utils.ParetoArchive;
-import controllers.utils.Utils;
+import controllers.utils.*;
 import framework.core.Game;
 
 import java.util.LinkedList;
@@ -12,13 +10,14 @@ import java.util.TreeMap;
 
 public class ParetoTreeNode {
 
+    public Player m_player; //owner of this tree.
     public ParetoArchive pa;
-    public TreeMap<Integer, LinkedList<double[]>> valueRoute;
+    public TreeMap<Integer, LinkedList<Solution>> valueRoute;
     public static LinkedList<ParetoTreeNode> m_runList = new LinkedList<ParetoTreeNode>();
     public int childIndex;
 
     public static double epsilon = 1e-6;
-    public static Random r = new Random();
+    //public static Random r = new Random();
     public Game state;
     public Roller roller;
     public TreePolicy treePolicy;
@@ -26,19 +25,23 @@ public class ParetoTreeNode {
     public ParetoTreeNode[] children;
     public double[] totValue;
     public int nVisits;
+    public static Random m_rnd;
 
     public ParetoTreeNode()
     {
-        this(null, null, -1, null, null);
+        this(null, null, -1, null, null, null, null);
     }
 
-    public ParetoTreeNode(Game state, Roller roller, TreePolicy treePolicy) {
-        this(state, null, -1, roller, treePolicy);
+    public ParetoTreeNode(Game state, Roller roller, TreePolicy treePolicy, Random rnd, Player a_player) {
+        this(state, null, -1, roller, treePolicy, rnd, a_player);
     }
 
-    public ParetoTreeNode(Game state, ParetoTreeNode parent, int childIndex, Roller roller, TreePolicy treePolicy) {
+    public ParetoTreeNode(Game state, ParetoTreeNode parent, int childIndex, Roller roller,
+                          TreePolicy treePolicy, Random rnd, Player a_player) {
+        this.m_player = a_player;
         this.state = state;
         this.parent = parent;
+        this.m_rnd = rnd;
         children = new ParetoTreeNode[ParetoMCTSController.NUM_ACTIONS];
         totValue = new double[ParetoMCTSController.NUM_TARGETS];
         this.roller = roller;
@@ -58,14 +61,15 @@ public class ParetoTreeNode {
         long remaining = a_timeDue - System.currentTimeMillis();
         int its = 0;
 
-        for (int i = 0; i < 400; i++) {
-        //while(remaining > 10)   {
+        //for (int i = 0; i < 400; i++) {
+        while(remaining > 10)   {
             m_runList.clear();
             m_runList.add(this); //root always in.
 
             ParetoTreeNode selected = treePolicy();
             double delta[] = selected.rollOut();
-            selected.backUp(delta, true, selected.childIndex);
+            Solution deltaSol = new Solution(delta);
+            selected.backUp(delta, deltaSol, true, selected.childIndex);
 
             its++;
             remaining = a_timeDue - System.currentTimeMillis();
@@ -96,7 +100,7 @@ public class ParetoTreeNode {
         int bestAction = -1;
         double bestValue = -1;
         for (int i = 0; i < children.length; i++) {
-            double x = r.nextDouble();
+            double x = m_rnd.nextDouble();
             if (x > bestValue && children[i] == null) {
                 bestAction = i;
                 bestValue = x;
@@ -105,13 +109,13 @@ public class ParetoTreeNode {
         Game nextState = state.getCopy();
         //nextState.next(bestAction);
         advance(nextState, bestAction);
-        ParetoTreeNode tn = new ParetoTreeNode(nextState, this, bestAction, this.roller, this.treePolicy);
+        ParetoTreeNode tn = new ParetoTreeNode(nextState, this, bestAction, this.roller, this.treePolicy, this.m_rnd, this.m_player);
         children[bestAction] = tn;
         return tn;
     }
 
     public ParetoTreeNode bestChild() {
-        return treePolicy.bestChild(this, ParetoMCTSController.getValueBounds());
+        return treePolicy.bestChild(this, m_player.getHeuristic().getValueBounds());
     }
 
     public double[] rollOut()
@@ -127,7 +131,7 @@ public class ParetoTreeNode {
             thisDepth++;
         }
 
-        return ParetoMCTSController.value(rollerState);
+        return m_player.getHeuristic().value(rollerState);
     }
 
     public void advance(Game st, int action)
@@ -139,6 +143,7 @@ public class ParetoTreeNode {
             gameOver = st.isEnded();
         }
     }
+
 
     public boolean finishRollout(Game rollerState, int depth, int action)
     {
@@ -157,7 +162,7 @@ public class ParetoTreeNode {
         return false;
     }
 
-    public void backUp(double result[], boolean added, int cI) {
+    public void backUp(double result[], Solution sol, boolean added, int cI) {
 
         /*nVisits++;
         added = pa.add(result);
@@ -175,7 +180,7 @@ public class ParetoTreeNode {
             pn.nVisits++;
 
             if(added)
-                added = pn.pa.add(result);
+                added = pn.pa.add(sol);
 
             for(int j = 0; j < result.length; ++j)
                 pn.totValue[j] += result[j];
@@ -195,7 +200,10 @@ public class ParetoTreeNode {
                 {
                     //System.out.println("ADDING (" + result[0] + "," + result[1] + ") to child " + comingFrom + " from " + pn.parent);
                     if(comingFrom != -1)
-                        pn.valueRoute.get(comingFrom).add(result);
+                    {
+                        sol.m_through = comingFrom;
+                        pn.valueRoute.get(comingFrom).add(sol);
+                    }
                 }
 
             }
@@ -221,24 +229,24 @@ public class ParetoTreeNode {
 
     public int bestActionIndex(double[] targets) {
         int selected = -1;
-        double[][] bounds = ParetoMCTSController.getValueBounds();
+        double[][] bounds = m_player.getHeuristic().getValueBounds();
         double bestValue = -Double.MAX_VALUE;
-        OrderedArrayList myPA = pa.m_members;
+        OrderedSolutionList myPA = pa.m_members;
         //System.out.println("----------------");
         for(int i = 0; i < myPA.size(); ++i)
         {
-            double[] thisRes = myPA.get(i);
+            double[] thisRes = myPA.get(i).m_data;
             /*
             double val0 = Utils.normalise(thisRes[0], bounds[0][0], bounds[0][1]);
             double val1 = Utils.normalise(thisRes[1], bounds[1][0], bounds[1][1]);
             double val2 = Utils.normalise(thisRes[2], bounds[2][0], bounds[2][1]);
             double val = targets[0] * val0 + targets[1] * val1 + targets[2] * val2;*/
 
-            double val = 1.0;
+            double val = 0.0;
             for(int t = 0; t < targets.length; ++t)
             {
                 double v =  Utils.normalise(thisRes[t], bounds[t][0], bounds[t][1]);
-                val *= v*targets[t];
+                val += v*targets[t];
             }
 
            // System.out.println("Element in PA " + i + ": " + val);
@@ -255,15 +263,15 @@ public class ParetoTreeNode {
             return 0;
         }
 
-        double selectedTarget[] = myPA.get(selected);
+        double selectedTarget[] = myPA.get(selected).m_data;
         NavigableSet<Integer> navSet = valueRoute.navigableKeySet();
         for(Integer key : navSet)
         {
-            LinkedList<double[]> resFromThisChild = valueRoute.get(key);
+            LinkedList<Solution> resFromThisChild = valueRoute.get(key);
             
             for(int i =0; i < resFromThisChild.size(); ++i)
             {
-                double[] sol = resFromThisChild.get(i);
+                double[] sol = resFromThisChild.get(i).m_data;
                 //System.out.println("PA point " + key + ":" + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[key].nVisits);
 
                 if(sol.length == 3 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1] && sol[2] == selectedTarget[2])
@@ -305,16 +313,16 @@ public class ParetoTreeNode {
         int selected = -1;
         double bestValue = Double.MIN_VALUE;
         for (int i=0; i<children.length; i++) {
-            double sol[] = children[i].pa.m_members.get(0);
+            double sol[] = children[i].pa.m_members.get(0).m_data;
            // System.out.println("Child " + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[i].nVisits);
-            if (children[i] != null && children[i].nVisits + r.nextDouble() * epsilon > bestValue) {
+            if (children[i] != null && children[i].nVisits + m_rnd.nextDouble() * epsilon > bestValue) {
                 bestValue = children[i].nVisits;
                 selected = i;
             }
         }
         if (selected == -1) throw new RuntimeException("Unexpected selection!");
 
-        double sol[] = children[selected].pa.m_members.get(0);
+        double sol[] = children[selected].pa.m_members.get(0).m_data;
         //System.out.println("SELECTED: " + (int)bestValue + "," + sol[0] + "," + sol[1] + ": " + selected);
 
         return selected;
@@ -323,8 +331,8 @@ public class ParetoTreeNode {
 
     public int bestActionIndex(ParetoArchive globalPA, double[] targets) {
         int selected = -1;
-        double[][] bounds = ParetoMCTSController.getValueBounds();
-        OrderedArrayList paMembers = pa.m_members;
+        double[][] bounds = m_player.getHeuristic().getValueBounds();
+        OrderedSolutionList paMembers = pa.m_members;
 
         //if(pa.m_members.size() > 1)
         //    System.out.println("HEY: " + pa.m_members.size());
@@ -332,7 +340,7 @@ public class ParetoTreeNode {
         double distance = Double.MAX_VALUE;
         for(int i = 0; i < paMembers.size(); ++i)
         {
-            double[] thisRes = paMembers.get(i);
+            double[] thisRes = paMembers.get(i).m_data;
 
             //if(pa.contains(thisRes))
             {
@@ -348,15 +356,15 @@ public class ParetoTreeNode {
             }
         }
 
-        double selectedTarget[] = paMembers.get(selected);
+        double selectedTarget[] = paMembers.get(selected).m_data;
         NavigableSet<Integer> navSet = valueRoute.navigableKeySet();
         for(Integer key : navSet)
         {
-            LinkedList<double[]> resFromThisChild = valueRoute.get(key);
+            LinkedList<Solution> resFromThisChild = valueRoute.get(key);
 
             for(int i =0; i < resFromThisChild.size(); ++i)
             {
-                double[] sol = resFromThisChild.get(i);
+                double[] sol = resFromThisChild.get(i).m_data;
                 if(sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
                     return key;
             }
@@ -372,7 +380,7 @@ public class ParetoTreeNode {
     public double getHV(boolean a_normalized)
     {
         if(a_normalized)
-            return pa.computeHV(ParetoMCTSController.getValueBounds());
+            return pa.computeHV(m_player.getHeuristic().getValueBounds());
         else return
                 pa.computeHV();
 
@@ -407,10 +415,10 @@ public class ParetoTreeNode {
 
     public void initValueRoute()
     {
-        this.valueRoute = new TreeMap<Integer, LinkedList<double[]>>();
+        this.valueRoute = new TreeMap<Integer, LinkedList<Solution>>();
         for(int i = 0; i < ParetoMCTSController.NUM_ACTIONS; ++i)
         {
-            this.valueRoute.put(i,new LinkedList<double[]>());
+            this.valueRoute.put(i,new LinkedList<Solution>());
         }
     }
 

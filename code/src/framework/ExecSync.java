@@ -290,6 +290,8 @@ public class ExecSync extends Exec
         m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
         m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
+        //m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
+
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";
         //m_controllerName = "controllers.WoxController.WoxController"; //Set here the controller name. Leave it to null to play with KeyController.

@@ -1,12 +1,14 @@
 package controllers.ParetoMCTS;
 
 import controllers.utils.ParetoArchive;
+import controllers.utils.Solution;
 import framework.core.Game;
 
 import java.util.Random;
 
 public class SimpleTreeNode {
 
+    public Player m_player;
     public ParetoArchive pa;
     public double[] totValue;
     public static double epsilon = 1e-6;
@@ -19,14 +21,15 @@ public class SimpleTreeNode {
     public SimpleTreeNode[] children;
 
 
-    public SimpleTreeNode(Game state, Roller roller, TreePolicy treePolicy) {
-        this(state, null, roller, treePolicy);
+    public SimpleTreeNode(Game state, Roller roller, TreePolicy treePolicy, Player a_player) {
+        this(state, null, roller, treePolicy, a_player);
         this.roller = roller;
         this.treePolicy = treePolicy;
         pa = new ParetoArchive();
     }
 
-    public SimpleTreeNode(Game state, SimpleTreeNode parent, Roller roller, TreePolicy treePolicy) {
+    public SimpleTreeNode(Game state, SimpleTreeNode parent, Roller roller, TreePolicy treePolicy, Player a_player) {
+        this.m_player = a_player;
         this.parent = parent;
         children = new SimpleTreeNode[ParetoMCTSController.NUM_ACTIONS];
         totValue = new double[ParetoMCTSController.NUM_TARGETS];
@@ -39,7 +42,7 @@ public class SimpleTreeNode {
         for (int i = 0; i < its; i++) {
             SimpleTreeNode selected = treePolicy();
             double delta[] = selected.rollOut();
-            pa.add(delta);  //Add the result of the new tree walk to the pareto front (it checks for dominance)
+            pa.add(new Solution(delta));  //Add the result of the new tree walk to the pareto front (it checks for dominance)
             selected.backUp(delta);
         }
     }
@@ -73,7 +76,7 @@ public class SimpleTreeNode {
     }
 
     public SimpleTreeNode bestChild() {
-        return treePolicy.bestChild(this, ParetoMCTSController.getValueBounds());
+        return treePolicy.bestChild(this, m_player.getHeuristic().getValueBounds());
     }
 
     public int bestActionIndex() {
@@ -106,7 +109,7 @@ public class SimpleTreeNode {
         }
         Game nextState = state.getCopy();
         nextState.tick(bestAction);
-        SimpleTreeNode tn = new SimpleTreeNode(nextState, this, this.roller, this.treePolicy);
+        SimpleTreeNode tn = new SimpleTreeNode(nextState, this, this.roller, this.treePolicy, this.m_player);
         children[bestAction] = tn;
         return tn;
     }
@@ -122,7 +125,7 @@ public class SimpleTreeNode {
                 rollerState.tick(action);
             }
         }
-        return ParetoMCTSController.value(rollerState);
+        return m_player.getHeuristic().value(rollerState);
     }
 
 

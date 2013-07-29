@@ -14,4 +14,5 @@ public interface Player {
     int run(Game a_gameState, long a_timeDue);
     double getHV(boolean a_normalized);
     void reset();
+    HeuristicMO getHeuristic();
 }

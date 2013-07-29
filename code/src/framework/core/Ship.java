@@ -5,6 +5,9 @@ import framework.utils.Vector2d;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
+import java.util.TreeMap;
 
 /**
  * This class represents the Ship object that the controller moves around the map. Checks for collisions and updates
@@ -147,11 +150,18 @@ public class Ship extends GameObject
     private boolean m_onLava;
 
     /**
+     * Added to Ship AFTER MO-PTSP competition
+     */
+    private TreeMap<Integer, Integer> m_visitHistory;
+
+
+    /**
      * Private constructor, only for getCopy()
      */
     private Ship()
     {
         m_actionList = new ArrayList<Integer>();
+        m_visitHistory = new TreeMap<Integer, Integer>();
     }
 
     /**
@@ -175,6 +185,7 @@ public class Ship extends GameObject
         m_collisionLastStep = false;
         m_nextMove = Controller.ACTION_NO_FRONT;
         m_onLava = false;
+        m_visitHistory = new TreeMap<Integer, Integer>();
 
         createCollSphere();
     }
@@ -244,7 +255,7 @@ public class Ship extends GameObject
     public void update(int a_actionId)
     {
         //if(ParetoMCTSController.FLAG)
-        //    System.out.println("Executing: " + a_actionId);
+        //    System.out.println("Speed: " + v.mag());
 
         if(!m_started)
         {
@@ -351,6 +362,7 @@ public class Ship extends GameObject
                     way.setCollected(true);
                     m_game.addCollected(i);
                     addFuel(PTSPConstants.FUEL_WAYPOINT_REWARD);
+                    m_visitHistory.put(i,m_game.getTotalTime());
                 }
             }
         }
@@ -365,6 +377,7 @@ public class Ship extends GameObject
                 if(collected)
                 {
                     ft.setCollected(true);
+                    m_visitHistory.put(10 + i, m_game.getTotalTime());
                 }
             }
         }
@@ -653,6 +666,11 @@ public class Ship extends GameObject
     public int getInvulnerableTime() {return m_invulnerable;}
 
     /**
+     * Returns the visit history
+     */
+    public TreeMap<Integer, Integer> getVisitHistory() {return m_visitHistory;}
+
+    /**
      * Indicates if the ship is on a lava surface.
      * @return true if the ship is on a lava surface.
      */
@@ -745,6 +763,8 @@ public class Ship extends GameObject
         copied.createCollSphere();
         copied.copyCollSph(m_collSphere);
 
+        copied.copyVisitHistory(m_visitHistory);
+
         return copied;
     }
 
@@ -757,6 +777,20 @@ public class Ship extends GameObject
         for(int i = 0; i < a_collRel.length; ++i)
         {
             m_collSphere[i] = a_collRel[i].copy();
+        }
+    }
+
+    /**
+     * Copies an array of visits <id,time></id,time>
+     * @param a_visitHistory tarray
+     */
+    public void copyVisitHistory(TreeMap<Integer, Integer> a_visitHistory)
+    {
+        NavigableSet<Integer> visited = a_visitHistory.descendingKeySet();
+        for(Integer v : visited)
+        {
+            int time = a_visitHistory.get(v);
+            m_visitHistory.put(v,time);
         }
     }
 

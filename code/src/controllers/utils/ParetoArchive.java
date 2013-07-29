@@ -18,7 +18,7 @@ import java.util.PriorityQueue;
 public class ParetoArchive
 {
     public static double EPSILON = 0.1;
-    public OrderedArrayList m_members;
+    public OrderedSolutionList m_members;
     public double m_hv;
     public boolean m_hvClean;
 
@@ -26,7 +26,7 @@ public class ParetoArchive
     {
         m_hvClean = false;
         m_hv = -1;
-        m_members = new OrderedArrayList();
+        m_members = new OrderedSolutionList();
     }
 
     public void reset()
@@ -36,28 +36,31 @@ public class ParetoArchive
         m_hv = -1;
     }
 
-    public void addMembers(OrderedArrayList a_list)
+    public void addMembers(OrderedSolutionList a_list)
     {
         int nMembers = a_list.size();
         for(int i = 0; i < nMembers; ++i)
         {
-            double[] member = a_list.get(i);
+            Solution member = a_list.get(i);
             this.add(member);
         }
     }
 
-    public boolean add(double[] a_candidate)
+    public boolean add(Solution a_sol)
     {
         //Check if the new entry is dominated by any in the set:
+
         boolean dominated = false;
+        boolean dominatesAny = false;
+        boolean crowded = false;
         int i = 0;
         while(!dominated && i < m_members.size())
         {
-            double[] member = m_members.get(i);
-            int dom = Utils.dominates(member, a_candidate);
-            boolean crowded = Utils.crowded(member, a_candidate, EPSILON);
-            //if(dom == -1) //Use this line to allow any distance between points in pareto.
-            if(dom == -1 || crowded) //Use this line to avoid crowded fronts (min. distance: EPSILON).
+            Solution member = m_members.get(i);
+            int dom = Utils.dominates(member.m_data, a_sol.m_data);
+
+            //if(dom == -1)
+            if(dom == -1)
             {
                 //if(crowded)
                   //  System.out.println("OUT ["+m_members.size()+"]");
@@ -68,21 +71,31 @@ public class ParetoArchive
                 //This one is dominated. It must be out.
                 m_members.remove(i);
                 m_hvClean = false;
+                dominatesAny = true;
                 //And keep the index in place:
                 --i;
-            }else if(dom == 2)
+            }else if(dom == 2)    //Use this line to allow any distance between points in pareto.
+            //}else if(dom == 2 || crowded) //Use this line to avoid crowded fronts (min. distance: EPSILON).
             {
                 //There is another identical member in the set. Do NOT include:
                 return false;
             }
+            else if(dom == 0)
+            {
+                crowded |= Utils.crowded(member.m_data, a_sol.m_data, EPSILON);
+            }
             ++i;
         }
 
-        if(!dominated)
+        if(dominatesAny)
+            crowded = false;
+
+        if(!dominated && !crowded)
         {
-            double[] newOne = new double[a_candidate.length];
+            /*double[] newOne = new double[a_candidate.length];
             System.arraycopy(a_candidate, 0, newOne, 0, a_candidate.length);
-            m_members.add(newOne);
+            Solution newSol = new Solution(newOne);    */
+            m_members.add(a_sol);
             m_hvClean = false;
             return true;
         }
@@ -95,8 +108,8 @@ public class ParetoArchive
         int i = 0;
         while(i < m_members.size())
         {
-            double[] member = m_members.get(i);
-            int dom = Utils.dominates(member, a_point);
+            Solution member = m_members.get(i);
+            int dom = Utils.dominates(member.m_data, a_point);
             if(dom == -1)
                 return true;
             ++i;
@@ -110,10 +123,10 @@ public class ParetoArchive
         int nMembers = m_members.size();
         for(int i = 0; i < nMembers; ++i)
         {
-            double[] member = m_members.get(i);
-            for(int j = 0; j < member.length; ++j)
+            Solution member = m_members.get(i);
+            for(int j = 0; j < member.m_card; ++j)
             {
-                System.out.format("%.5f ", member[j]);
+                System.out.format("%.5f ", member.m_data[j]);
             }
             System.out.println();
         }
@@ -126,13 +139,13 @@ public class ParetoArchive
         int nMembers = m_members.size();
         for(int i = 0; i < nMembers; ++i)
         {
-            double[] member = m_members.get(i);
-            int nTargets = member.length;
+            Solution member = m_members.get(i);
+            int nTargets = member.m_card;
             boolean distinct = false;
 
             for(int j = 0; !distinct && j < nTargets; ++j)
             {
-                if(member[j] != a_point[j])
+                if(member.m_data[j] != a_point[j])
                     distinct = true;
             }
 
@@ -153,10 +166,10 @@ public class ParetoArchive
 
         if(m_members.size() > 0)
         {
-            double first[] = m_members.get(0);
-            if(first.length == 2)
+            double card = m_members.get(0).m_card;
+            if(card == 2)
                 return lebesgue2();
-            else if(first.length == 3)
+            else if(card == 3)
                 return lebesgue3();
         }
 
@@ -170,7 +183,7 @@ public class ParetoArchive
 
         for(int i = 0; i < m_members.size(); ++i)
         {
-            double[] member = m_members.get(i);
+            double[] member = m_members.get(i).m_data;
             double base = member[0] - dim1;
             double height = member[1];
             acum += (base*height);
@@ -194,7 +207,7 @@ public class ParetoArchive
         //We decompose the studied region in a 3-dimensional grid using all values recorded for (x,y,z).
         for(int i = 0; i < m_members.size(); ++i)
         {
-            double[] member = m_members.get(i);
+            double[] member = m_members.get(i).m_data;
             pointsInX.add(member[0]);
             pointsInY.add(member[1]);
             pointsInZ.add(member[2]);
