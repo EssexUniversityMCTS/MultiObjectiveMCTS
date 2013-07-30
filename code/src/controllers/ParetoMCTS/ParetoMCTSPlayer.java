@@ -23,8 +23,15 @@ public class ParetoMCTSPlayer implements Player {
     HeuristicMO m_heuristic;
 
 
-    public ParetoMCTSPlayer(TreePolicy a_treePolicy, HeuristicMO a_h, Random a_rnd, double[] a_targetWeights)
+    /**
+     * Debug height map
+     */
+    public int[][] m_heightMap;
+
+
+    public ParetoMCTSPlayer(TreePolicy a_treePolicy, HeuristicMO a_h, Random a_rnd, double[] a_targetWeights, Game a_game)
     {
+        m_heightMap = new int[a_game.getMap().getMapWidth()][a_game.getMap().getMapHeight()];
         m_heuristic = a_h;
         m_treePolicy = a_treePolicy;
         this.m_rnd = a_rnd;
@@ -37,6 +44,7 @@ public class ParetoMCTSPlayer implements Player {
     public void init()
     {
         m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy,m_rnd, this);
+        m_heightMap = new int[m_heightMap.length][m_heightMap[0].length];
     }
 
     public int run(Game a_gameState, long a_timeDue)

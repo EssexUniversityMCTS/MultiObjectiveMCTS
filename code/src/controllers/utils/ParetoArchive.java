@@ -36,6 +36,18 @@ public class ParetoArchive
         m_hv = -1;
     }
 
+    public ParetoArchive copy()
+    {
+        ParetoArchive newPA = new ParetoArchive();
+
+        for(Solution s : this.m_members.m_members)
+        {
+            newPA.m_members.add(s.copy());
+        }
+
+        return newPA;
+    }
+
     public void addMembers(OrderedSolutionList a_list)
     {
         int nMembers = a_list.size();

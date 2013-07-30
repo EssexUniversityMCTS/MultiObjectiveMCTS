@@ -377,6 +377,7 @@ public class Ship extends GameObject
                 if(collected)
                 {
                     ft.setCollected(true);
+m_game.addCollected(10+i);      //Added to Ship AFTER MO-PTSP competition
                     m_visitHistory.put(10 + i, m_game.getTotalTime());
                 }
             }

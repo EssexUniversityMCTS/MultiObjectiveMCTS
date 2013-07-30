@@ -35,7 +35,10 @@ public class HeuristicPTSP implements HeuristicMO
     public int m_numTargets;
     public double maxDist = 0;
 
-    public HeuristicPTSP(double[] tWeights, int []bestRoute, int maLength, int rollDepth)
+    public double[] segmentsCost;
+    public double distanceToFinal1, distanceToFinal2, distanceToFinal3;
+
+    public HeuristicPTSP(Game a_game, double[] tWeights, int []bestRoute, int maLength, int rollDepth)
     {
         this.targetWeights = tWeights;
         m_numTargets = targetWeights.length;
@@ -43,9 +46,31 @@ public class HeuristicPTSP implements HeuristicMO
         ROLLOUT_DEPTH = rollDepth;
         m_nodeLookup = new HashMap<Integer, Node>();
         m_bestRoute = bestRoute;
+
+        segmentsCost = new double[m_bestRoute.length+1];
+
+        segmentsCost[m_bestRoute.length] = 0;
+        for(int i = m_bestRoute.length-2, j = segmentsCost.length-2; i >= 0; --i, --j)
+        {
+            int from = m_bestRoute[i];
+            int to =  m_bestRoute[i+1];
+
+            GameObject fromObj = from<10? a_game.getWaypoints().get(from) : a_game.getFuelTanks().get(from-10);
+            GameObject toObj = to<10? a_game.getWaypoints().get(to) : a_game.getFuelTanks().get(to-10);
+
+            Path p = getPathBetweenGameObjects(fromObj, from, toObj, to);
+            segmentsCost[j] = p.m_cost + segmentsCost[j+1];
+        }
+
+        GameObject firstObj = m_bestRoute[0]<10? a_game.getWaypoints().get(m_bestRoute[0]) : a_game.getFuelTanks().get(m_bestRoute[0]-10);
+
+        Path p = getPathToGameObject(a_game,firstObj,m_bestRoute[0]);
+
+        segmentsCost[0] = p.m_cost + segmentsCost[1];
+
     }
 
-    public double[] value(Game a_gameState)
+    /*public double[] value(Game a_gameState)
     {
         VALUE_CALLS++;
         if(m_nextPickups == null)
@@ -165,6 +190,121 @@ public class HeuristicPTSP implements HeuristicMO
 
         return moScore;
     }
+    */
+
+    public double[] value(Game a_gameState)
+    {
+        VALUE_CALLS++;
+        if(m_nextPickups == null)
+        {
+            double superReward[] = new double[targetWeights.length];
+            for(int i = 0; i < targetWeights.length; ++i)
+                superReward[i] = 5;
+            //System.out.println("SUPER-REWARD");
+            return superReward; // Game finished successfully.
+        }
+
+        boolean matching = match(a_gameState.getVisitOrder(),m_bestRoute);
+
+        if((!matching) || (a_gameState.isEnded() && a_gameState.getWaypointsLeft()>0))
+        {
+            double superPunishment[] = new double[targetWeights.length];
+            for(int i = 0; i < targetWeights.length; ++i)
+                superPunishment[i] = -2;
+            //System.out.println("SUPER PUNISHMENT! "+matching+" "+a_gameState.getTotalTime());
+            return superPunishment; // Game finished - game over.
+        }
+
+        //All my waypoints
+        LinkedList<Waypoint> waypoints = a_gameState.getWaypoints();
+
+        //All my fuel tanks
+        LinkedList<FuelTank> fuelTanks = a_gameState.getFuelTanks();
+
+        int playoutLength = MACRO_ACTION_LENGTH * ROLLOUT_DEPTH;
+        double consumedFuelInterval = (PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) - m_preRolloutFuel ;
+        double damageTakenInterval = a_gameState.getShip().getDamage() - m_preRolloutDamage;
+
+        //First object. Is it collected?
+        double distanceToEnd = -1;
+        double distanceScore1 = GAMMA; //1*GAMMA;
+        double distance1 = 0;
+        boolean is1Collected = (m_nextPickups[0] < 10) ? (waypoints.get(m_nextPickups[0])).isCollected() : (fuelTanks.get(m_nextPickups[0]-10)).isCollected();
+        GameObject firstObj = (m_nextPickups[0] < 10) ? waypoints.get(m_nextPickups[0]) : fuelTanks.get(m_nextPickups[0]-10);
+        if(!is1Collected)
+        {
+            Path pathToFirst = getPathToGameObject(a_gameState, firstObj, m_nextPickups[0]);
+            distance1 = pathToFirst.m_cost;
+            distanceToEnd = distance1+distanceToFinal1;
+            distanceScore1 = 1 - (distance1/m_preRolloutDistance1);
+
+        }
+
+        double alpha = ALPHA;
+        double beta = BETA;
+        double distanceScore2 = GAMMA;
+        double distance2 = 0;
+        double distance3 = 0;
+        if(m_nextPickups.length>1)
+        {
+            boolean is2Collected = (m_nextPickups[1] < 10) ? (waypoints.get(m_nextPickups[1])).isCollected() : (fuelTanks.get(m_nextPickups[1]-10)).isCollected();
+            GameObject secondObject = (m_nextPickups[1] < 10) ? waypoints.get(m_nextPickups[1]) : fuelTanks.get(m_nextPickups[1]-10);
+            if(!is2Collected)
+            {
+                if(!is1Collected)
+                {
+                    distance2 = distance1; //Plus distance between objects.
+                    Path pathToSecond = getPathBetweenGameObjects(firstObj, m_nextPickups[0], secondObject, m_nextPickups[1]);
+                    distance2 += pathToSecond.m_cost;
+
+                }else
+                {
+                    Path pathToSecond = getPathToGameObject(a_gameState, secondObject, m_nextPickups[1]);
+                    distance2 = pathToSecond.m_cost;
+                    distanceToEnd = distance2+distanceToFinal2;
+                }
+                distanceScore2 = 1 - (distance2/m_preRolloutDistance2);
+            }
+            else
+            {
+                GameObject thirdObject = (m_nextPickups[2] < 10) ? waypoints.get(m_nextPickups[2]) : fuelTanks.get(m_nextPickups[2]-10);
+                Path pathToThird = getPathToGameObject(a_gameState, thirdObject, m_nextPickups[2]);
+                distance3 = pathToThird.m_cost;
+                distanceToEnd = distance3+distanceToFinal3;
+            }
+        }else
+        {
+            alpha = 10;
+            beta = 0;
+        }
+
+
+        //Distance points:
+        //double distancePoints = alpha * distanceScore1 + beta * distanceScore2;
+        double distancePoints = 1 - (distanceToEnd*2 / segmentsCost[0]);
+        //double distancePoints = 1 - (distanceToEnd / segmentsCost[0]);
+
+        /*if(a_gameState.getWaypointsLeft() == 1)
+        {
+            distancePoints = 1 - (distanceToEnd*5 / segmentsCost[0]);
+            //System.out.println("RUN!");
+        }*/
+
+
+        //Fuel and damage points:
+        //double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
+        double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
+
+        //double damagePoints = 1 - (damageTakenInterval/playoutLength);
+        double damagePoints = 1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
+
+        //int stepsPerWp = PTSPConstants.getStepsPerWaypoints(a_gameState.getNumWaypoints());
+        //double timePoints = 1 - ((stepsPerWp - a_gameState.getStepsLeft()) / stepsPerWp); == 1!!!   -> (double) stepsPerWp
+
+        double[] moScore = new double[]{distancePoints,distancePoints*fuelPoints,distancePoints*damagePoints};
+
+        return moScore;
+    }
 
     public double[][] getValueBounds()
     {
@@ -199,6 +339,12 @@ public class HeuristicPTSP implements HeuristicMO
     {
         GameObject[] pickups = null;
         m_nextPickups = null;
+
+        distanceToFinal1 = -1;
+        distanceToFinal2 = -1;
+        distanceToFinal3 = -1;
+        int indexInRoute[];
+
         try{
 
             //All my waypoints
@@ -215,6 +361,7 @@ public class HeuristicPTSP implements HeuristicMO
                 m_nextPickups = new int[Math.min(a_howMany, waypoints.size()+fuelTanks.size() - nVisited)];
                 int pLength =  m_nextPickups.length; //number of elements to pick up.
                 pickups = new GameObject[pLength];
+                indexInRoute = new int[pLength];
 
                 //Go through the best path and check for what is collected.
                 for(int i = 0, j = 0; j < pLength && i < m_bestRoute.length; ++i)
@@ -228,6 +375,7 @@ public class HeuristicPTSP implements HeuristicMO
                         {
                             //The first pLength elements not visited are selected.
                             m_nextPickups[j] = key;
+                            indexInRoute[j] = i+1;
                             pickups[j++] = waypoints.get(key);
                         }
                     }else
@@ -237,13 +385,22 @@ public class HeuristicPTSP implements HeuristicMO
                         {
                             //The first pLength elements not visited are selected.
                             m_nextPickups[j] = key;
+                            indexInRoute[j] = i+1;
                             pickups[j++] = fuelTanks.get(key-10);
                         }
                     }
 
 
                 }
+
+                distanceToFinal1 = segmentsCost[indexInRoute[0]];
+                if(indexInRoute[1]<segmentsCost.length)
+                    distanceToFinal2 = segmentsCost[indexInRoute[1]];
+                if(indexInRoute[2]<segmentsCost.length)
+                    distanceToFinal3 = segmentsCost[indexInRoute[2]];
+
             }
+
 
             if(nVisited == a_gameState.getNumWaypoints()-1 && m_nextPickups[0]<10)
             {
@@ -254,6 +411,8 @@ public class HeuristicPTSP implements HeuristicMO
                 m_nextPickups[0] = k;
                 pickups = new GameObject[1];
                 pickups[0] = go;
+                distanceToFinal2 = -1;
+                distanceToFinal3 = -1;
             }
 
         }catch(Exception e){
@@ -272,7 +431,7 @@ public class HeuristicPTSP implements HeuristicMO
 
             if(pickups.length > 1)
             {
-                Path pathToSecond = getPathBetweenGameObjects(a_gameState, pickups[0], m_nextPickups[0], pickups[1], m_nextPickups[1]);
+                Path pathToSecond = getPathBetweenGameObjects( pickups[0], m_nextPickups[0], pickups[1], m_nextPickups[1]);
                 m_preRolloutDistance2 = m_preRolloutDistance1 + pathToSecond.m_cost;
             }
         }
@@ -319,12 +478,11 @@ public class HeuristicPTSP implements HeuristicMO
 
     /**
      * Gets the path from the current location of the ship to the object passed as parameter.
-     * @param a_game copy of the current game state.
      * @param a_gObj object ot get the path to.
      * @param a_objKey index of the object to look for.
      * @return the path from the current ship position to  a_gObj.
      */
-    private Path getPathBetweenGameObjects(Game a_game, GameObject a_gObj, int a_objKey, GameObject a_gObj2, int a_objKey2)
+    private Path getPathBetweenGameObjects(GameObject a_gObj, int a_objKey, GameObject a_gObj2, int a_objKey2)
     {
         //The closest node to the first object
         Node object1Node = null;
@@ -379,8 +537,12 @@ public class HeuristicPTSP implements HeuristicMO
         int idx = 0;
         for (Integer i : a_followedOrder)
         {
-            if(i < 10 && i != a_pathDesired[idx])
+            if(idx >= a_pathDesired.length)
+                return true;                 //Route is completed.
+
+            if(i != a_pathDesired[idx])      //Mismatch.
                 return false;
+
             idx++;
         }
         return true;

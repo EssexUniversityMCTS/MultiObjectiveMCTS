@@ -4,6 +4,7 @@ import framework.core.*;
 import framework.graph.Graph;
 import framework.graph.Node;
 import framework.graph.Path;
+import framework.utils.JEasyFrame;
 
 import java.awt.*;
 import java.util.*;
@@ -62,20 +63,26 @@ public class ParetoMCTSController extends Controller {
      */
     public static Game m_currentGameState;
 
+    /**
+     * ParetoView - Debug
+     */
+    private boolean m_viewOn = false;
+    private ParetoView m_paretoView;
+
 
     public static int MULT_PER_WAYPOINT = 2;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
     public static int NUM_ACTIONS = 6;
-    public static int K = 1;
+    public static double K = Math.sqrt(2);
 
     public static double[] targetWeights= //new double[]{0.33,0.33,0.33};
                                        //  new double[]{0.8,0.1,0.1};
                                   // new double[]{0.5, 0.5};
                                   // new double[]{0.9, 0.05, 0.05};
-                                 //  new double[]{1, 0, 0};
-                                 // new double[]{0.0, 1.0, 0};
-                                  new double[]{0.0, 0.0, 1};
+                                // new double[]{0, 1, 0};
+                                 new double[]{1.0, 0.0, 0};
+                                // new double[]{0.0, 0.0, 1};
                                 //new double[]{0.0, 0.5, 0.5};
     public static int NUM_TARGETS = targetWeights.length;
 
@@ -91,12 +98,21 @@ public class ParetoMCTSController extends Controller {
         m_graph = new Graph(a_game);
         m_tspGraph = new TSPBranchBound(a_game, m_graph);
         int []bestRoute = m_tspGraph.getPreRouteArray(a_game.getMap().getFilename());
-        m_heuristic = new HeuristicPTSP(targetWeights, bestRoute, MACRO_ACTION_LENGTH, ROLLOUT_DEPTH);
-        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_heuristic, m_rnd, targetWeights);
+        m_heuristic = new HeuristicPTSP(a_game, targetWeights, bestRoute, MACRO_ACTION_LENGTH, ROLLOUT_DEPTH);
+        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_heuristic, m_rnd, targetWeights, a_game);
         //m_player = new ParetoMCTSPlayer(new SimpleHVTreePolicy(K), m_rnd, targetWeights);
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;
         m_currentGameState = null;
+
+        JEasyFrame frame;
+        m_paretoView = null;
+        if(m_viewOn)
+        {
+            //View of the game, if applicable.
+            m_paretoView = new ParetoView(m_player.m_root.pa, new Dimension(300,300));
+            frame = new JEasyFrame(m_paretoView, "Pareto view: ");
+        }
 
         /* //Enable this to recalculate routes:
         m_tspGraph.solve();
@@ -135,7 +151,7 @@ public class ParetoMCTSController extends Controller {
             //advance the game until the last action of the macro action
             prepareGameCopy(a_game);
             m_currentGameState = a_game;
-            m_heuristic.updateNextPickups(m_currentGameState, 2);
+            m_heuristic.updateNextPickups(m_currentGameState, 3);
             if(m_currentMacroAction > 0)
             {
                 if(m_resetRS)
@@ -154,6 +170,13 @@ public class ParetoMCTSController extends Controller {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue);
+
+
+                if(m_viewOn)
+                {
+                    m_paretoView.setParetoArchive(m_player.m_root.pa.copy());
+                    m_paretoView.repaint();
+                }
 
                 //System.out.println("FEASIBILITY WARNINGS: " + ((double)F_CHECKS/(double)VALUE_CALLS));
                 m_heuristic.F_CHECKS = 0;
@@ -176,6 +199,8 @@ public class ParetoMCTSController extends Controller {
                 throw new RuntimeException("This should not be happening: " + m_currentMacroAction);
             }
         }
+
+
 
         FLAG = true;
         return nextMacroAction;
@@ -207,6 +232,8 @@ public class ParetoMCTSController extends Controller {
      */
     public void paint(Graphics2D a_gr)
     {
+        paintHeightMap(a_gr);
+
         a_gr.setColor(Color.black);
         LinkedList<Waypoint> wps = m_currentGameState.getWaypoints();
         for(int i = 0; i < wps.size(); ++i)
@@ -220,6 +247,66 @@ public class ParetoMCTSController extends Controller {
         {
             FuelTank ft = fts.get(i);
             a_gr.drawString(i+"",(int)ft.s.x+10, (int)ft.s.y+10);
+        }
+    }
+
+    private void paintHeightMap(Graphics2D a_gr)
+    {
+        for(int i = 0; i < m_player.m_heightMap.length; ++i)
+        {
+            for(int j = 0; j < m_player.m_heightMap[0].length; ++j)
+            {
+                int height = m_player.m_heightMap[i][j];
+
+                if(height > 0)
+                {
+                    Color col = getColorByHeight(height);
+                    a_gr.setColor(col);
+                    a_gr.fillRect(i,j,1,1);
+                    //System.out.print(height + " ");
+                }
+
+            }
+        }
+    }
+
+    private Color getColorByHeight(int height)
+    {
+        if(true)
+        {
+            if(height < 8)
+                return new Color(218,15,240);  //PINK
+            else if(height < 20)
+                return new Color(11,14,241);   //PURPLE
+            else if(height < 40)
+                return new Color(13,53,242);    //BLUE
+            else if(height < 50)
+                return new Color(12,220,243);   //CYAN
+            else if(height < 60)
+                return new Color(63,245,10);    //GREEN
+            else if(height < 80)
+                return new Color(234,245,10);   //YELLOW
+            else if(height < 100)
+                return new Color(245,104,10);   //ORANGE
+
+            return Color.red;                   //RED         */
+        }else{
+            if(height < 4)
+                return Color.black;
+            else if(height < 10)
+                return new Color(50,50,50);
+            else if(height < 20)
+                return new Color(90,90,90);
+            else if(height < 30)
+                return new Color(140,140,140);
+            else if(height < 40)
+                return new Color(190,190,190);
+            else if(height < 60)
+                return new Color(210,210,210);
+            else if(height < 80)
+                return new Color(225,225,225);
+
+            return new Color(250,250,250); //almost Color.white
         }
     }
 }

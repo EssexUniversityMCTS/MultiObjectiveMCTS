@@ -139,6 +139,7 @@ public class ParetoTreeNode {
         boolean gameOver = false;
         for(int singleAction = 0; !gameOver && singleAction < ParetoMCTSController.MACRO_ACTION_LENGTH; ++singleAction)
         {
+            ((ParetoMCTSPlayer)m_player).m_heightMap[(int)st.getShip().s.x][(int)st.getShip().s.y]++;
             st.tick(action);
             gameOver = st.isEnded();
         }
