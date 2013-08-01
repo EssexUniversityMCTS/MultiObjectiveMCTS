@@ -3,6 +3,7 @@ package controllers.ParetoMCTS;
 import controllers.utils.*;
 import framework.core.Game;
 
+import javax.management.RuntimeErrorException;
 import java.util.LinkedList;
 import java.util.NavigableSet;
 import java.util.Random;
@@ -26,6 +27,7 @@ public class ParetoTreeNode {
     public double[] totValue;
     public int nVisits;
     public static Random m_rnd;
+    public boolean[] m_prunedChildren;
 
     public ParetoTreeNode()
     {
@@ -48,6 +50,7 @@ public class ParetoTreeNode {
         this.treePolicy = treePolicy;
         pa = new ParetoArchive();
         this.childIndex = childIndex;
+        this.m_prunedChildren = new boolean[ParetoMCTSController.NUM_ACTIONS];
         
         if(parent == null) //This is only for the root:
         {
@@ -61,7 +64,7 @@ public class ParetoTreeNode {
         long remaining = a_timeDue - System.currentTimeMillis();
         int its = 0;
 
-        //for (int i = 0; i < 400; i++) {
+        //for (int i = 0; i < 800; i++) {
         while(remaining > 10)   {
             m_runList.clear();
             m_runList.add(this); //root always in.
@@ -74,7 +77,7 @@ public class ParetoTreeNode {
             its++;
             remaining = a_timeDue - System.currentTimeMillis();
         }
-        //System.out.println(its);
+        System.out.print(its+",");
     }
 
     public ParetoTreeNode treePolicy() {
@@ -84,12 +87,30 @@ public class ParetoTreeNode {
         {
             if (cur.notFullyExpanded()) {
                 ParetoTreeNode tn = cur.expand();
-                m_runList.add(0,tn);
-                return tn;
+                if(tn != null) //Can happen: if all remaining nodes to be expanded must be pruned.
+                {
+                    m_runList.add(0,tn);
+                    return tn;
+                }
+
+                if(cur.allChildrenPruned())
+                {
+                    if(cur.parent != null)
+                    {
+                        cur.parent.m_prunedChildren[cur.childIndex] = true;
+                    }
+                    cur = cur.parent;
+
+                }else
+                {
+                    //Really, do nothing, next iteration we use UCT1
+                }
+
+
             } else {
                 cur = cur.bestChild();
+                m_runList.add(0,cur);
             }
-            m_runList.add(0,cur);
         }
         return cur;
     }
@@ -97,20 +118,49 @@ public class ParetoTreeNode {
 
     public ParetoTreeNode expand() {
         // choose a random unused action and add a new node for that
-        int bestAction = -1;
-        double bestValue = -1;
-        for (int i = 0; i < children.length; i++) {
-            double x = m_rnd.nextDouble();
-            if (x > bestValue && children[i] == null) {
-                bestAction = i;
-                bestValue = x;
+
+        ParetoTreeNode tn = null;
+        int prunedN = 0;
+
+        while(tn == null && prunedN < m_prunedChildren.length)
+        {
+            int bestAction = -1;
+            double bestValue = -1;
+            for (int i = 0; i < children.length; i++) {
+                double x = m_rnd.nextDouble();
+                if (x > bestValue && children[i] == null && !m_prunedChildren[i]) {
+                    bestAction = i;
+                    bestValue = x;
+                }
             }
+
+            if(bestValue==-1)
+            {
+                //No options (because of pruning!)
+                return null;
+            }
+
+            Game nextState = state.getCopy();
+            //nextState.next(bestAction);
+            advance(nextState, bestAction);
+
+            if(m_player.getHeuristic().mustBePruned(nextState, state))
+            {
+                m_prunedChildren[bestAction] = true;
+                prunedN++;
+            }else{
+                tn = new ParetoTreeNode(nextState, this, bestAction, this.roller, this.treePolicy, this.m_rnd, this.m_player);
+                children[bestAction] = tn;
+                return tn;
+            }
+
         }
-        Game nextState = state.getCopy();
-        //nextState.next(bestAction);
-        advance(nextState, bestAction);
-        ParetoTreeNode tn = new ParetoTreeNode(nextState, this, bestAction, this.roller, this.treePolicy, this.m_rnd, this.m_player);
-        children[bestAction] = tn;
+
+        if(tn == null)
+        {
+            //All children go pruned... prune myself?
+            parent.m_prunedChildren[childIndex] = true;
+        }
         return tn;
     }
 
@@ -260,7 +310,7 @@ public class ParetoTreeNode {
 
         if(selected == -1)
         {
-            System.out.println(" ********************* SELECTED -1, myPA.size(): " + myPA.size() + " ***************");
+            //System.out.println(" ********************* SELECTED -1, myPA.size(): " + myPA.size() + " ***************");
             return 0;
         }
 
@@ -398,12 +448,30 @@ public class ParetoTreeNode {
     }
 
     public boolean notFullyExpanded() {
+        int i = 0;
+        boolean allPruned = true;
         for (ParetoTreeNode tn : children) {
-            if (tn == null) {
+            allPruned &= m_prunedChildren[i];
+            if (tn == null && !m_prunedChildren[i]) {
                 return true;
             }
+            ++i;
         }
+
+        if(allPruned)
+            return true;
+
         return false;
+    }
+
+    public boolean allChildrenPruned()
+    {
+        for (int i = 0; i < m_prunedChildren.length; ++i) {
+            if (!m_prunedChildren[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isLeaf() {

@@ -2,8 +2,6 @@ package controllers.ParetoMCTS;
 
 import framework.core.*;
 import framework.graph.Graph;
-import framework.graph.Node;
-import framework.graph.Path;
 import framework.utils.JEasyFrame;
 
 import java.awt.*;
@@ -66,7 +64,8 @@ public class ParetoMCTSController extends Controller {
     /**
      * ParetoView - Debug
      */
-    private boolean m_viewOn = false;
+    public static boolean EXPLORATION_VIEW_ON;
+    public static boolean PARETO_VIEW_ON;
     private ParetoView m_paretoView;
 
 
@@ -81,9 +80,12 @@ public class ParetoMCTSController extends Controller {
                                   // new double[]{0.5, 0.5};
                                   // new double[]{0.9, 0.05, 0.05};
                                 // new double[]{0, 1, 0};
-                                 new double[]{1.0, 0.0, 0};
+                               // new double[]{1.0, 0.0, 0};
                                 // new double[]{0.0, 0.0, 1};
                                 //new double[]{0.0, 0.5, 0.5};
+                             //new double[]{0.5,0.5};
+                            //new double[]{0,1};
+                            new double[]{1,0};
     public static int NUM_TARGETS = targetWeights.length;
 
     /**
@@ -93,7 +95,9 @@ public class ParetoMCTSController extends Controller {
      */
     public ParetoMCTSController(Game a_game, long a_timeDue)
     {
+        //long seed = 1375315004579L;//System.currentTimeMillis();
         m_rnd = new Random();
+        //System.out.println("Seed: " + seed);
         m_resetRS = true;
         m_graph = new Graph(a_game);
         m_tspGraph = new TSPBranchBound(a_game, m_graph);
@@ -107,7 +111,7 @@ public class ParetoMCTSController extends Controller {
 
         JEasyFrame frame;
         m_paretoView = null;
-        if(m_viewOn)
+        if(PARETO_VIEW_ON)
         {
             //View of the game, if applicable.
             m_paretoView = new ParetoView(m_player.m_root.pa, new Dimension(300,300));
@@ -141,11 +145,20 @@ public class ParetoMCTSController extends Controller {
 
         if(cycle == 0)
         {
-            //First cycle of a match is special, we need to execute any action to start looking for the next one.
+            //First cycle of a match is special, only one macro-action mcts search cycle.
             m_lastMacroAction = 0;
             nextMacroAction = m_lastMacroAction;
             m_resetRS = true;
             m_currentMacroAction = ParetoMCTSController.MACRO_ACTION_LENGTH-1;
+
+            m_currentGameState = a_game; //no need to prepareGameCopy
+            m_heuristic.updateNextPickups(m_currentGameState, 3);
+            int suggestedAction = m_player.run(a_game, a_timeDue);
+
+            m_resetRS = true;
+            if(suggestedAction != -1)
+                m_lastMacroAction = suggestedAction;
+
         }else
         {
             //advance the game until the last action of the macro action
@@ -170,9 +183,9 @@ public class ParetoMCTSController extends Controller {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue);
+                System.out.println();
 
-
-                if(m_viewOn)
+                if(PARETO_VIEW_ON)
                 {
                     m_paretoView.setParetoArchive(m_player.m_root.pa.copy());
                     m_paretoView.repaint();
@@ -232,7 +245,8 @@ public class ParetoMCTSController extends Controller {
      */
     public void paint(Graphics2D a_gr)
     {
-        paintHeightMap(a_gr);
+        if(EXPLORATION_VIEW_ON)
+            paintHeightMap(a_gr);
 
         a_gr.setColor(Color.black);
         LinkedList<Waypoint> wps = m_currentGameState.getWaypoints();
@@ -275,17 +289,17 @@ public class ParetoMCTSController extends Controller {
         if(true)
         {
             if(height < 8)
-                return new Color(218,15,240);  //PINK
+                return new Color(199,247,252);    //PALE CYAN
             else if(height < 20)
-                return new Color(11,14,241);   //PURPLE
-            else if(height < 40)
-                return new Color(13,53,242);    //BLUE
-            else if(height < 50)
                 return new Color(12,220,243);   //CYAN
+            else if(height < 40)
+                return new Color(11,104,244);    //BLUE
+            else if(height < 50)
+                return new Color(4,33,134);   //DARK BLUE
             else if(height < 60)
-                return new Color(63,245,10);    //GREEN
+                return new Color(218,15,240);  //PINK
             else if(height < 80)
-                return new Color(234,245,10);   //YELLOW
+                return new Color(11,14,241);   //PURPLE
             else if(height < 100)
                 return new Color(245,104,10);   //ORANGE
 

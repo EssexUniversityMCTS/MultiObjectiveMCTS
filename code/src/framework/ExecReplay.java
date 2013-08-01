@@ -50,6 +50,7 @@ public class ExecReplay extends Exec
             for(int j=0;j<actionsToExecute.length;j++)
             {
                 m_game.tick(actionsToExecute[j]);
+                    System.out.printf("%.3f\n", m_game.getShip().v.mag());
 
                 waitStep(delay);
 
@@ -79,8 +80,8 @@ public class ExecReplay extends Exec
     public static void main(String[] args)
     {
 
-        m_mapName = "maps/ptsp_map01.map";  //Set here the name of the map to play in.
-        m_actionFilename = "example_route_map01.txt"; //Indicate here the name of the file with the actions saved TO SEE a replay.
+        m_mapName = "maps/ptsp_map02.map";  //Set here the name of the map to play in.
+        m_actionFilename = "route_31-Jul-2013_15.52.02.txt"; //Indicate here the name of the file with the actions saved TO SEE a replay.
         m_visibility = true; //Set here if the graphics must be displayed or not (for those modes where graphics are allowed).
         m_verbose = true;
         //m_warmUpTime = 750; //Change this to modify the wait time (in milliseconds) before starting the game in a visual mode
@@ -88,7 +89,7 @@ public class ExecReplay extends Exec
         /////// 1. Executes a replay.
         /////// Note: using a delay 0: quickest, 1:quickest (seeing something!), PTSPConstants.DELAY: human play speed,
         // //PTSPConstants.ACTION_TIME_MS: max. controller delay
-        int delay=1;
+        int delay=2;
         replayGame(m_visibility, delay);
     }
 

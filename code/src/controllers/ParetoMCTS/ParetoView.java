@@ -71,8 +71,15 @@ public class ParetoView extends JComponent
             g.drawImage(m_mapImage,0,0,null);
         }
 
-        //paint2(g);
-        paint3(g);
+        if(m_pa.m_members.size() > 0)
+        {
+            int card = m_pa.m_members.m_members.get(0).m_card;
+            if (card==2)
+                paint2(g);
+            else if(card==3)
+                paint3(g);
+        }
+
     }
 
     public void paint2(Graphics2D g)
@@ -80,7 +87,7 @@ public class ParetoView extends JComponent
         int previousP1=-1;
         int previousP2=-1;
         g.setColor(pointsA);
-        //System.out.println("###############################");
+        System.out.println("###############################");
         for(Solution s : m_pa.m_members.m_members)
         {
             double[] point = s.m_data;
@@ -89,7 +96,7 @@ public class ParetoView extends JComponent
             int p2 = (m_size.height-MARGIN) - (int) (point[1]*SCALE);
 
             g.fillOval(p1,p2,POINT_SIZE,POINT_SIZE);
-            //System.out.printf("(%.3f,%.3f):(%d,%d)\n", point[0], point[1], p1, p2);
+            System.out.printf("(%.3f,%.3f):(%d,%d)\n", point[0], point[1], p1, p2);
 
             if(previousP1 != -1)
             {

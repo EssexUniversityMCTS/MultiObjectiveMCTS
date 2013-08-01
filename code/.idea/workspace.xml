@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSController.java" line="78" />
+    <bookmark url="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSController.java" line="77" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f37f97cc-c191-48b7-9baf-a9379d4d0946" name="Default" comment="" />
@@ -23,7 +23,7 @@
   </component>
   <component name="DebuggerManager">
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreePolicy.java" line="60" class="controllers.ParetoMCTS.ParetoTreePolicy" package="controllers.ParetoMCTS">
+      <breakpoint url="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreePolicy.java" line="44" class="controllers.ParetoMCTS.ParetoTreePolicy" package="controllers.ParetoMCTS">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -77,48 +77,55 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ParetoMCTSController.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSController.java">
+      <file leaf-file-name="ExecSync.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/framework/ExecSync.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="62" selection-start="1927" selection-end="1927" vertical-scroll-proportion="0.5645757">
+            <state line="311" column="54" selection-start="11754" selection-end="11754" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PTSPView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/framework/core/PTSPView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="287" column="9" selection-start="10112" selection-end="10183" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ParetoView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="82" column="10" selection-start="2321" selection-end="2321" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Solution.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/controllers/utils/Solution.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="49" selection-start="208" selection-end="226" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HeuristicPTSP.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="HeuristicPTSP.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicPTSP.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="283" column="8" selection-start="12152" selection-end="12152" vertical-scroll-proportion="0.0">
+            <state line="295" column="39" selection-start="12444" selection-end="12444" vertical-scroll-proportion="0.41423357">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Node.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/framework/graph/Node.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="174" column="0" selection-start="4204" selection-end="4204" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Graph.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/framework/graph/Graph.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="497" column="0" selection-start="16769" selection-end="16769" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PathFinder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/framework/graph/PathFinder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="138" column="0" selection-start="4305" selection-end="4305" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ParetoMCTSController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="184" column="16" selection-start="6055" selection-end="6055" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -127,7 +134,16 @@
       <file leaf-file-name="ParetoMCTSPlayer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSPlayer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="20" selection-start="1493" selection-end="1493" vertical-scroll-proportion="0.0">
+            <state line="65" column="0" selection-start="1757" selection-end="1757" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ExecReplay.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/framework/ExecReplay.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="83" column="58" selection-start="2650" selection-end="2650" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -136,19 +152,17 @@
       <file leaf-file-name="ParetoTreeNode.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreeNode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="129" column="19" selection-start="4112" selection-end="4119" vertical-scroll-proportion="0.0">
+            <state line="79" column="8" selection-start="2578" selection-end="2578" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExecSync.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/framework/ExecSync.java">
+      <file leaf-file-name="ParetoTreePolicy.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreePolicy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="305" column="39" selection-start="11472" selection-end="11472" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="method#runGame#0;class#ExecSync#0" expanded="false" />
-              </folding>
+            <state line="45" column="0" selection-start="1408" selection-end="1408" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -163,22 +177,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/controllers/mctsdriver/AStarDriverController.java" />
-        <option value="$PROJECT_DIR$/src/controllers/mctsdriver/DriverController.java" />
-        <option value="$PROJECT_DIR$/src/controllers/mctsdriver/Parameters.java" />
-        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicMO.java" />
-        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/Player.java" />
-        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/SimpleTreeNode.java" />
-        <option value="$PROJECT_DIR$/src/framework/core/Ship.java" />
-        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSPlayer.java" />
-        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreeNode.java" />
         <option value="$PROJECT_DIR$/src/controllers/utils/Solution.java" />
-        <option value="$PROJECT_DIR$/src/controllers/utils/ParetoArchive.java" />
         <option value="$PROJECT_DIR$/src/controllers/utils/Utils.java" />
+        <option value="$PROJECT_DIR$/src/controllers/utils/ParetoArchive.java" />
         <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoView.java" />
-        <option value="$PROJECT_DIR$/src/framework/ExecSync.java" />
+        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/TSPBranchBound.java" />
+        <option value="$PROJECT_DIR$/src/framework/core/PTSPView.java" />
+        <option value="$PROJECT_DIR$/src/controllers/mctsdriver/FloodFillTspPlanner.java" />
+        <option value="$PROJECT_DIR$/src/controllers/mctsdriver/DriverController.java" />
+        <option value="$PROJECT_DIR$/src/framework/core/Ship.java" />
+        <option value="$PROJECT_DIR$/src/framework/ExecReplay.java" />
+        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicMO.java" />
+        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreePolicy.java" />
         <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicPTSP.java" />
+        <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreeNode.java" />
         <option value="$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSController.java" />
+        <option value="$PROJECT_DIR$/src/framework/ExecSync.java" />
       </list>
     </option>
   </component>
@@ -488,6 +502,22 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
+    <configuration default="false" name="ExecReplay" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="framework.ExecReplay" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Code" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -562,9 +592,10 @@
         <option name="Maven.BeforeRunTask" enabled="false" />
       </method>
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Application.ExecSync" />
       <item index="1" class="java.lang.String" itemvalue="Application.Test" />
+      <item index="2" class="java.lang.String" itemvalue="Application.ExecReplay" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -603,18 +634,18 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.40837696" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2715054" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24967742" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.51963353" sideWeight="0.9987937" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6169355" sideWeight="0.9987937" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2311828" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.40575916" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24967742" sideWeight="0.49462366" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32967743" sideWeight="0.4422043" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.087741934" sideWeight="0.4032258" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18258065" sideWeight="0.80241936" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5967742" sideWeight="0.9970617" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19758065" sideWeight="0.9970617" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24927256" sideWeight="0.8278237" order="3" side_tool="false" content_ui="combo" />
@@ -668,116 +699,114 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/TSPBranchBound.java">
+    <entry file="file://$PROJECT_DIR$/src/controllers/mctsdriver/DriverController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="11" selection-start="1461" selection-end="1461" vertical-scroll-proportion="-3.694737" />
+        <state line="554" column="75" selection-start="16216" selection-end="16216" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/framework/core/Game.java">
+    <entry file="file://$PROJECT_DIR$/src/controllers/mctsdriver/MctsDriverController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="713" column="19" selection-start="20510" selection-end="20510" vertical-scroll-proportion="0.0">
+        <state line="371" column="41" selection-start="9395" selection-end="9395" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/framework/core/Ship.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="377" column="54" selection-start="10851" selection-end="10851" vertical-scroll-proportion="0.0">
+        <state line="379" column="0" selection-start="10895" selection-end="10895" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/SimpleTreeNode.java">
+    <entry file="file://$PROJECT_DIR$/src/framework/ExecReplay.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="107" selection-start="3677" selection-end="3677" vertical-scroll-proportion="0.0">
+        <state line="83" column="58" selection-start="2650" selection-end="2650" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicMO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="58" selection-start="312" selection-end="312" vertical-scroll-proportion="0.62695926">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="12" selection-start="372" selection-end="372" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="20" selection-start="1493" selection-end="1493" vertical-scroll-proportion="0.0">
+        <state line="65" column="0" selection-start="1757" selection-end="1757" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreeNode.java">
+    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreePolicy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="129" column="19" selection-start="4112" selection-end="4119" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0/src.zip!/java/awt/Graphics.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="415" column="25" selection-start="17810" selection-end="17810" vertical-scroll-proportion="0.44517544">
+        <state line="45" column="0" selection-start="1408" selection-end="1408" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/framework/core/PTSPView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="287" column="9" selection-start="10112" selection-end="10183" vertical-scroll-proportion="0.0">
+        <state line="211" column="59" selection-start="6830" selection-end="6830" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/utils/Solution.java">
+    <entry file="file://$PROJECT_DIR$/src/framework/graph/Node.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="49" selection-start="208" selection-end="226" vertical-scroll-proportion="0.0">
+        <state line="174" column="0" selection-start="4204" selection-end="4204" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0/src.zip!/java/util/Formatter.java">
+    <entry file="file://$PROJECT_DIR$/src/framework/graph/PathFinder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4044" column="0" selection-start="164005" selection-end="164005" vertical-scroll-proportion="0.0">
+        <state line="138" column="0" selection-start="4305" selection-end="4305" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/utils/Utils.java">
+    <entry file="file://$PROJECT_DIR$/src/framework/graph/Graph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="26" selection-start="694" selection-end="694" vertical-scroll-proportion="0.33269963">
+        <state line="497" column="0" selection-start="16769" selection-end="16769" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/utils/ParetoArchive.java">
+    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoTreeNode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="38" selection-start="2562" selection-end="2562" vertical-scroll-proportion="0.24714829">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="10" selection-start="2321" selection-end="2321" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/framework/ExecSync.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="305" column="39" selection-start="11472" selection-end="11472" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="method#runGame#0;class#ExecSync#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicPTSP.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="283" column="8" selection-start="12152" selection-end="12152" vertical-scroll-proportion="0.0">
+        <state line="79" column="8" selection-start="2578" selection-end="2578" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/ParetoMCTSController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="62" selection-start="1927" selection-end="1927" vertical-scroll-proportion="0.5645757">
+        <state line="184" column="16" selection-start="6055" selection-end="6055" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/framework/ExecSync.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="311" column="54" selection-start="11754" selection-end="11754" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/controllers/ParetoMCTS/HeuristicPTSP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="295" column="39" selection-start="12444" selection-end="12444" vertical-scroll-proportion="0.41423357">
           <folding />
         </state>
       </provider>

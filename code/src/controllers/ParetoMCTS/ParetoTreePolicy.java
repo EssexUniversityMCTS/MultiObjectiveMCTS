@@ -20,42 +20,26 @@ public class ParetoTreePolicy implements TreePolicy{
 
         ParetoTreeNode selected = null;
         double bestValue = -Double.MAX_VALUE;
+        int i = 0;
         for (ParetoTreeNode child : node.children) {
 
-            //double childValue = child.getHV(true) / (child.nVisits + node.epsilon);
+            //If it is not prunned.
+            if(!node.m_prunedChildren[i])
+            {
+                double hvVal = child.getHV(false);
+                double childValue =  hvVal / (child.nVisits + node.epsilon);
 
-            /*double childValue1 = child.totValue[0]/(child.nVisits + node.epsilon);
-            childValue1 = Utils.normalise(childValue1, bounds[0][0], bounds[0][1]);
-            double childValue2 = child.totValue[1]/(child.nVisits + node.epsilon);
-            childValue2 = Utils.normalise(childValue2, bounds[1][0], bounds[1][1]);
-            double estimatedValue = childValue1 * childValue2;
-            double optParetoHV = child.getHV(true);
-            double childValue = 0;
-            if(optParetoHV != 0)
-                childValue = estimatedValue / (optParetoHV * (child.nVisits + node.epsilon));    */
+                double uctValue = childValue +
+                        K * Math.sqrt(Math.log(node.nVisits + 1) / (child.nVisits + node.epsilon)) +
+                        node.m_rnd.nextDouble() * node.epsilon;
 
-            /*double childValue1 = child.totValue[0]/(child.nVisits + node.epsilon);
-            childValue1 = Utils.normalise(childValue1, bounds[0][0], bounds[0][1]);
-            double childValue2 = child.totValue[1]/(child.nVisits + node.epsilon);
-            childValue2 = Utils.normalise(childValue2, bounds[1][0], bounds[1][1]);
-            double childValue = (childValue1 * childValue2) / (child.nVisits + node.epsilon);
-                        */
-
-            //double hvProp = child.getHV(true) / Play.optimalHValue;
-            //double childValue = hvProp / (child.nVisits + node.epsilon);
-
-            double hvVal = child.getHV(false);
-            //double hvVal = child.totValue[0];
-            double childValue =  hvVal / (child.nVisits + node.epsilon);
-
-            double uctValue = childValue +
-                    K * Math.sqrt(Math.log(node.nVisits + 1) / (child.nVisits + node.epsilon)) +
-                    node.m_rnd.nextDouble() * node.epsilon;
-            // small random numbers: break ties in unexpanded nodes
-            if (uctValue > bestValue) {
-                selected = child;
-                bestValue = uctValue;
+                // small random numbers: break ties in unexpanded nodes
+                if (uctValue > bestValue) {
+                    selected = child;
+                    bestValue = uctValue;
+                }
             }
+            ++i;
         }
         if (selected == null)
             throw new RuntimeException("Warning! returning null: " + bestValue + " : " + node.children.length);

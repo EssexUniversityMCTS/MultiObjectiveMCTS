@@ -54,6 +54,11 @@ public class PTSPView extends JComponent
     private LinkedList<Vector2d> m_positions;
 
     /**
+     * List of positions where the ship has been located. Used to draw the ship's trajectory.
+     */
+    private LinkedList<Boolean> m_thrustOn;
+
+    /**
      * Random number generator.
      */
     private Random m_rnd;
@@ -69,6 +74,7 @@ public class PTSPView extends JComponent
     //Execution format:
     private Color background = new Color(102,64,43);                      //Dark brown
     private Color trajectory = Color.black;
+    private Color trajectoryThrust = Color.red;
     private Color obstacle = Color.black;
     private Color elasticObstacle = Color.cyan;
     private Color damageObstacle = Color.red;
@@ -114,6 +120,7 @@ public class PTSPView extends JComponent
         m_font = new Font("Courier", Font.PLAIN, 14);
         m_font2 = new Font("Courier", Font.BOLD, 14);
         m_positions = new LinkedList<Vector2d>();
+        m_thrustOn = new LinkedList<Boolean>();
         m_firstDraw = true;
         m_mapImage = null;
         m_controller = a_controller;
@@ -203,13 +210,22 @@ public class PTSPView extends JComponent
         if(m_ship.ps.x != m_ship.s.x || m_ship.ps.y != m_ship.s.y)
         {
             m_positions.add(m_ship.s.copy());
+            m_thrustOn.add(m_game.getShip().isThrusting());
         }
 
         //Draw the trajectory
         g.setColor(trajectory);
         Vector2d oldPos = null;
+        int i = 0;
         for(Vector2d pos : m_positions)
         {
+            if(m_thrustOn.get(i))
+            {
+                g.setColor(trajectoryThrust);
+            }
+            else
+                g.setColor(trajectory);
+
             if(oldPos == null)
             {
                 oldPos = pos;
@@ -218,6 +234,7 @@ public class PTSPView extends JComponent
                 g.drawLine((int)Math.round(oldPos.x),(int)Math.round(oldPos.y),(int)Math.round(pos.x),(int)Math.round(pos.y));
                 oldPos = pos;
             }
+            ++i;
         }
 
         //Paint stats of the m_game.

@@ -1,5 +1,6 @@
 package framework;
 
+import controllers.ParetoMCTS.ParetoMCTSController;
 import controllers.keycontroller.KeyController;
 import controllers.utils.StatSummary;
 import framework.core.*;
@@ -128,6 +129,7 @@ public class ExecSync extends Exec
                 //if(spent > PTSPConstants.ACTION_TIME_MS)
                 //    actionToExecute = 0;
                 m_game.tick(actionToExecute);
+                //    System.out.printf("%.3f\n", m_game.getShip().v.mag());
             //}
 
             int remaining = (int) Math.max(0, delay - (now-then));//To adjust to the proper framerate.
@@ -290,7 +292,7 @@ public class ExecSync extends Exec
         m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
         m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
-        //m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
+       // m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
 
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";
@@ -306,10 +308,13 @@ public class ExecSync extends Exec
         //playGame(delay);
 
         /////// 2. Executes one game.
+        //ParetoMCTSController.EXPLORATION_VIEW_ON = true;
+        //ParetoMCTSController.PARETO_VIEW_ON = false;
         //int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
         //runGame(m_visibility, delay);
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
+        //m_writeOutput = true;
         int numTrials=10;
         runGames(numTrials);
 

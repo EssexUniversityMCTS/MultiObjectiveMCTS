@@ -10,4 +10,5 @@ public interface HeuristicMO
 {
      public double[] value(Game a_gameState);
      public double[][] getValueBounds();
+     public boolean mustBePruned(Game a_newGameState, Game a_previousGameState);
 }
