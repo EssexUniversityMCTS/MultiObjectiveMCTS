@@ -146,8 +146,12 @@ public class ExecSync extends Exec
         }
 
         if(m_verbose)
+        {
             m_game.printResults();
-
+            if(m_controller instanceof ParetoMCTSController)
+                System.out.format("Average iterations: %.3f\n", ((double)  ((ParetoMCTSController)m_controller).m_player.m_numIters /
+                ((ParetoMCTSController)m_controller).m_player.m_numCalls));
+        }
         //And save the route, if requested:
         if(m_writeOutput)
             m_game.saveRoute();
@@ -239,6 +243,9 @@ public class ExecSync extends Exec
                 {
                     System.out.print(i+"\t");
                     m_game.printResults();
+                    if(m_controller instanceof ParetoMCTSController)
+                        System.out.format("Average iterations: %.3f\n", ((double)  ((ParetoMCTSController)m_controller).m_player.m_numIters /
+                            ((ParetoMCTSController)m_controller).m_player.m_numCalls));
                 }
 
                 //And save the route, if requested:

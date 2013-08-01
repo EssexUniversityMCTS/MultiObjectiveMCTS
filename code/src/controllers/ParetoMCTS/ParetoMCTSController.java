@@ -34,7 +34,7 @@ public class ParetoMCTSController extends Controller {
     /**
      * Pareto MCTS player to find the optimal macro-action to execute.
      */
-    private ParetoMCTSPlayer m_player;
+    public ParetoMCTSPlayer m_player;
 
     /**
      * Flag that indicates if the RS engine must be restarted (a new action has been decided).
@@ -165,6 +165,11 @@ public class ParetoMCTSController extends Controller {
             prepareGameCopy(a_game);
             m_currentGameState = a_game;
             m_heuristic.updateNextPickups(m_currentGameState, 3);
+
+            if(m_heuristic.m_nextPickups == null)
+            {
+            }
+
             if(m_currentMacroAction > 0)
             {
                 if(m_resetRS)
@@ -183,7 +188,7 @@ public class ParetoMCTSController extends Controller {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue);
-                System.out.println();
+                //System.out.println();
 
                 if(PARETO_VIEW_ON)
                 {

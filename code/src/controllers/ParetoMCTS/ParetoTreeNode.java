@@ -28,6 +28,7 @@ public class ParetoTreeNode {
     public int nVisits;
     public static Random m_rnd;
     public boolean[] m_prunedChildren;
+    public int m_numIters;
 
     public ParetoTreeNode()
     {
@@ -51,6 +52,7 @@ public class ParetoTreeNode {
         pa = new ParetoArchive();
         this.childIndex = childIndex;
         this.m_prunedChildren = new boolean[ParetoMCTSController.NUM_ACTIONS];
+        this.m_numIters = 0;
         
         if(parent == null) //This is only for the root:
         {
@@ -62,10 +64,10 @@ public class ParetoTreeNode {
     public void mctsSearch(long a_timeDue) {
 
         long remaining = a_timeDue - System.currentTimeMillis();
-        int its = 0;
 
         //for (int i = 0; i < 800; i++) {
-        while(remaining > 10)   {
+        //while(remaining > 10)   {
+        while(remaining > 5)   {
             m_runList.clear();
             m_runList.add(this); //root always in.
 
@@ -74,10 +76,10 @@ public class ParetoTreeNode {
             Solution deltaSol = new Solution(delta);
             selected.backUp(delta, deltaSol, true, selected.childIndex);
 
-            its++;
+            m_numIters++;
             remaining = a_timeDue - System.currentTimeMillis();
         }
-        System.out.print(its+",");
+        //System.out.print(its+",");
     }
 
     public ParetoTreeNode treePolicy() {
