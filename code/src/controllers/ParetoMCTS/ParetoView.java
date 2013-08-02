@@ -96,7 +96,7 @@ public class ParetoView extends JComponent
             int p2 = (m_size.height-MARGIN) - (int) (point[1]*SCALE);
 
             g.fillOval(p1,p2,POINT_SIZE,POINT_SIZE);
-            System.out.printf("(%.3f,%.3f):(%d,%d)\n", point[0], point[1], p1, p2);
+            System.out.printf("(%.3f,%.3f):(%d,%d):%d\n", point[0], point[1], p1, p2, s.m_through);
 
             if(previousP1 != -1)
             {

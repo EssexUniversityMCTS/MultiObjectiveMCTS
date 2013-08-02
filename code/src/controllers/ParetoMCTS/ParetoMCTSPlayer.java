@@ -21,7 +21,7 @@ public class ParetoMCTSPlayer implements Player {
     public ParetoArchive m_globalPA;
     Roller m_randomRoller;
     HeuristicMO m_heuristic;
-
+    PlayoutInfo m_playoutInfo;
 
     /**
      * Debug height map
@@ -33,21 +33,23 @@ public class ParetoMCTSPlayer implements Player {
 
     public ParetoMCTSPlayer(TreePolicy a_treePolicy, HeuristicMO a_h, Random a_rnd, double[] a_targetWeights, Game a_game)
     {
+        m_playoutInfo = new PlayoutPTSPInfo();
         m_heightMap = new int[a_game.getMap().getMapWidth()][a_game.getMap().getMapHeight()];
         m_heuristic = a_h;
+        m_heuristic.setPlayoutInfo(m_playoutInfo);
         m_treePolicy = a_treePolicy;
         this.m_rnd = a_rnd;
         this.m_targetWeights = a_targetWeights;
         m_globalPA = new ParetoArchive();
         m_randomRoller = new RandomRoller(RandomRoller.RANDOM_ROLLOUT, this.m_rnd);
-        m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy, m_rnd, this);
+        m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy, m_rnd, this,m_playoutInfo);
         this.m_numCalls = 0;
         this.m_numIters = 0;
     }
 
     public void init()
     {
-        m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy,m_rnd, this);
+        m_root = new ParetoTreeNode(null, m_randomRoller,m_treePolicy,m_rnd, this,m_playoutInfo);
         m_heightMap = new int[m_heightMap.length][m_heightMap[0].length];
     }
 

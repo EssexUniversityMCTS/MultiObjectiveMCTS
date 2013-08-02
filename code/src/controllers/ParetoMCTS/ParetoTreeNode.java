@@ -29,18 +29,19 @@ public class ParetoTreeNode {
     public static Random m_rnd;
     public boolean[] m_prunedChildren;
     public int m_numIters;
+    public PlayoutInfo m_pi;
 
     public ParetoTreeNode()
     {
-        this(null, null, -1, null, null, null, null);
+        this(null, null, -1, null, null, null, null,null);
     }
 
-    public ParetoTreeNode(Game state, Roller roller, TreePolicy treePolicy, Random rnd, Player a_player) {
-        this(state, null, -1, roller, treePolicy, rnd, a_player);
+    public ParetoTreeNode(Game state, Roller roller, TreePolicy treePolicy, Random rnd, Player a_player, PlayoutInfo pi) {
+        this(state, null, -1, roller, treePolicy, rnd, a_player,pi);
     }
 
     public ParetoTreeNode(Game state, ParetoTreeNode parent, int childIndex, Roller roller,
-                          TreePolicy treePolicy, Random rnd, Player a_player) {
+                          TreePolicy treePolicy, Random rnd, Player a_player, PlayoutInfo pi) {
         this.m_player = a_player;
         this.state = state;
         this.parent = parent;
@@ -53,6 +54,7 @@ public class ParetoTreeNode {
         this.childIndex = childIndex;
         this.m_prunedChildren = new boolean[ParetoMCTSController.NUM_ACTIONS];
         this.m_numIters = 0;
+        this.m_pi = pi;
         
         if(parent == null) //This is only for the root:
         {
@@ -71,7 +73,9 @@ public class ParetoTreeNode {
             m_runList.clear();
             m_runList.add(this); //root always in.
 
+            m_pi.reset();
             ParetoTreeNode selected = treePolicy();
+            addPlayoutInfoTree();
             double delta[] = selected.rollOut();
             Solution deltaSol = new Solution(delta);
             selected.backUp(delta, deltaSol, true, selected.childIndex);
@@ -101,6 +105,7 @@ public class ParetoTreeNode {
                     {
                         cur.parent.m_prunedChildren[cur.childIndex] = true;
                     }
+                    m_runList.remove(0);
                     cur = cur.parent;
 
                 }else
@@ -151,7 +156,8 @@ public class ParetoTreeNode {
                 m_prunedChildren[bestAction] = true;
                 prunedN++;
             }else{
-                tn = new ParetoTreeNode(nextState, this, bestAction, this.roller, this.treePolicy, this.m_rnd, this.m_player);
+                tn = new ParetoTreeNode(nextState, this, bestAction, this.roller, this.treePolicy,
+                                        this.m_rnd, this.m_player, this.m_pi);
                 children[bestAction] = tn;
                 return tn;
             }
@@ -178,6 +184,7 @@ public class ParetoTreeNode {
         // while (!rollerState.isTerminal() && action != -1) {
         while (!finishRollout(rollerState,thisDepth,action)) {
             action = roller.roll(rollerState);
+            m_player.getHeuristic().addPlayoutInfo(action);
             //rollerState.next(action);
             advance(rollerState, action);
             thisDepth++;
@@ -261,6 +268,16 @@ public class ParetoTreeNode {
 
             }
 
+        }
+    }
+
+    public void addPlayoutInfoTree()
+    {
+        int numNodes = m_runList.size();
+        for(int i = 0; i < numNodes; ++i)
+        {
+            ParetoTreeNode pn = m_runList.get(i);
+            m_player.getHeuristic().addPlayoutInfo(pn.childIndex);
         }
     }
 

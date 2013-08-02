@@ -28,7 +28,9 @@ public class Solution{
     {
         double []newArray = new double[m_card];
         System.arraycopy(m_data,0,newArray,0,m_card);
-        return new Solution(newArray);
+        Solution s = new Solution(newArray);
+        s.m_through = this.m_through;
+        return s;
     }
 
 }

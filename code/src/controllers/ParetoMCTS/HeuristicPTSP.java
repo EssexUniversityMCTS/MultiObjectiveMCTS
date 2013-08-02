@@ -35,6 +35,7 @@ public class HeuristicPTSP implements HeuristicMO
     public int m_lastVisitTick;
     public int m_numTargets;
     public double maxDist = 0;
+    public PlayoutPTSPInfo m_playoutInfo;
 
     public double[][] m_bounds;
     public double[] segmentsCost;
@@ -320,6 +321,10 @@ public class HeuristicPTSP implements HeuristicMO
         //Fuel and damage points:
         //double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
         double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
+        //double fuelPoints = /*1 - */((double) m_playoutInfo.m_thurstCount/playoutLength);
+
+        double consumption = ((double) m_playoutInfo.m_thurstCount/playoutLength);
+
 
         //double damagePoints = 1 - (damageTakenInterval/playoutLength);
         double damagePoints = 1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
@@ -331,11 +336,32 @@ public class HeuristicPTSP implements HeuristicMO
         //double[] moScore = new double[]{speedPoints*distancePoints,distancePoints*fuelPoints,distancePoints*damagePoints};
         //double[] moScore = new double[]{distancePoints*fuelPoints,distancePoints*damagePoints};
 
-        double[] moScore = new double[]{distancePoints,distancePoints*fuelPoints};
-        //double[] moScore = new double[]{distancePoints,distancePoints};
+        //double[] moScore = new double[]{1+distancePoints,1+distancePoints*fuelPoints};
+        //double a = 1 + (distancePoints*consumption);
+        //double b = 1 + (distancePoints* (1-consumption) );
+
+        //double[] moScore = new double[]{a,b};
+        double fuelPower = distancePoints*0.9 + fuelPoints*0.1;
+
+        double[] moScore = new double[]{fuelPower, fuelPower};
 
         return moScore;
     }
+
+
+    public void setPlayoutInfo(PlayoutInfo a_pi)
+    {
+        m_playoutInfo = (PlayoutPTSPInfo) a_pi;
+    }
+
+    public void addPlayoutInfo(int a_lastAction)
+    {
+        if(Controller.getThrust(a_lastAction))
+        {
+            m_playoutInfo.m_thurstCount += MACRO_ACTION_LENGTH;
+        }
+    }
+
 
     public double[][] getValueBounds()
     {
