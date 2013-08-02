@@ -318,11 +318,11 @@ public class HeuristicPTSP implements HeuristicMO
 
 
         //Fuel and damage points:
-        double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
-        //double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
+        //double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
+        double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
 
-        double damagePoints = 1 - (damageTakenInterval/playoutLength);
-        //double damagePoints = 1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
+        //double damagePoints = 1 - (damageTakenInterval/playoutLength);
+        double damagePoints = 1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
 
         //int stepsPerWp = PTSPConstants.getStepsPerWaypoints(a_gameState.getNumWaypoints());
         //double timePoints = 1 - ((stepsPerWp - a_gameState.getStepsLeft()) / stepsPerWp); == 1!!!   -> (double) stepsPerWp
@@ -331,8 +331,8 @@ public class HeuristicPTSP implements HeuristicMO
         //double[] moScore = new double[]{speedPoints*distancePoints,distancePoints*fuelPoints,distancePoints*damagePoints};
         //double[] moScore = new double[]{distancePoints*fuelPoints,distancePoints*damagePoints};
 
-        //double[] moScore = new double[]{distancePoints,distancePoints*fuelPoints};
-        double[] moScore = new double[]{distancePoints,distancePoints};
+        double[] moScore = new double[]{distancePoints,distancePoints*fuelPoints};
+        //double[] moScore = new double[]{distancePoints,distancePoints};
 
         return moScore;
     }

@@ -65,9 +65,9 @@ public class ParetoTreeNode {
 
         long remaining = a_timeDue - System.currentTimeMillis();
 
-        //for (int i = 0; i < 800; i++) {
+        for (int i = 0; i < 500; i++) {
         //while(remaining > 10)   {
-        while(remaining > 5)   {
+        //while(remaining > 5)   {
             m_runList.clear();
             m_runList.add(this); //root always in.
 

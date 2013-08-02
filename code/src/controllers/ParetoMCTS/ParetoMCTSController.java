@@ -84,8 +84,8 @@ public class ParetoMCTSController extends Controller {
                                 // new double[]{0.0, 0.0, 1};
                                 //new double[]{0.0, 0.5, 0.5};
                              //new double[]{0.5,0.5};
-                            //new double[]{0,1};
-                            new double[]{1,0};
+                            new double[]{0,1};
+                            //new double[]{1,0};
     public static int NUM_TARGETS = targetWeights.length;
 
     /**
