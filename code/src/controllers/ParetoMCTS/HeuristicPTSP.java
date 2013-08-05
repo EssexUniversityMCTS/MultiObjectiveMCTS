@@ -320,8 +320,8 @@ public class HeuristicPTSP implements HeuristicMO
 
         //Fuel and damage points:
         //double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
-        double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
-        //double fuelPoints = /*1 - */((double) m_playoutInfo.m_thurstCount/playoutLength);
+        //double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
+        double fuelPoints = 1 - ((double) m_playoutInfo.m_thurstCount/playoutLength);
 
         double consumption = ((double) m_playoutInfo.m_thurstCount/playoutLength);
 
@@ -341,7 +341,7 @@ public class HeuristicPTSP implements HeuristicMO
         //double b = 1 + (distancePoints* (1-consumption) );
 
         //double[] moScore = new double[]{a,b};
-        double fuelPower = distancePoints*0.9 + fuelPoints*0.1;
+        double fuelPower = distancePoints*0.75 + fuelPoints*0.25;
 
         double[] moScore = new double[]{fuelPower, fuelPower};
 
