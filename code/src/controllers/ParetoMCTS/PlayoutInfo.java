@@ -1,5 +1,7 @@
 package controllers.ParetoMCTS;
 
+import framework.core.Game;
+
 /**
  * Created by IntelliJ IDEA.
  * User: diego
@@ -9,5 +11,5 @@ package controllers.ParetoMCTS;
  */
 public interface PlayoutInfo
 {
-    public void reset();
+    public void reset(Game a_gameState);
 }

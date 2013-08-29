@@ -19,8 +19,8 @@ public class HeuristicPTSP implements HeuristicMO
     public int F_CHECKS;
     public int VALUE_CALLS;
     public double FUEL_OPTIMUM_PROPORTION = 0.0;
-    public int MACRO_ACTION_LENGTH = 15;
-    public int ROLLOUT_DEPTH = 8;
+    public static int MACRO_ACTION_LENGTH = 15;
+    public static int ROLLOUT_DEPTH = 8;
 
     /** STATE VARIABLES **/
     public double[] targetWeights;
@@ -323,6 +323,19 @@ public class HeuristicPTSP implements HeuristicMO
         //double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
         double fuelPoints = 1 - ((double) m_playoutInfo.m_thurstCount/playoutLength);
 
+        if(is1Collected)
+        {
+            fuelPoints = 0.75;
+            int firstAction = m_playoutInfo.m_playoutHistory[0];
+            if(!Controller.getThrust(firstAction))
+            {
+                fuelPoints = 1;
+            }
+        }else{
+            fuelPoints = 0.5;
+        }
+
+
         double consumption = ((double) m_playoutInfo.m_thurstCount/playoutLength);
 
 
@@ -354,11 +367,23 @@ public class HeuristicPTSP implements HeuristicMO
         m_playoutInfo = (PlayoutPTSPInfo) a_pi;
     }
 
-    public void addPlayoutInfo(int a_lastAction)
+    public void addPlayoutInfo(int a_lastAction, Game a_gameState)
     {
         if(Controller.getThrust(a_lastAction))
         {
             m_playoutInfo.m_thurstCount += MACRO_ACTION_LENGTH;
+        }
+
+        //Add action to history.
+        m_playoutInfo.m_playoutHistory[m_playoutInfo.m_numMoves] = a_lastAction;
+        m_playoutInfo.m_numMoves++;
+
+        //Store when the waypoint is collected.
+        if(a_gameState.getWaypointsVisited() > m_playoutInfo.m_visitedWaypoints)
+        {
+            m_playoutInfo.m_visitedWaypoints = a_gameState.getWaypointsVisited();
+            if(m_playoutInfo.m_actionFirstPickup == -1)
+                m_playoutInfo.m_actionFirstPickup = m_playoutInfo.m_numMoves-1;
         }
     }
 

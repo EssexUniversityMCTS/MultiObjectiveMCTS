@@ -73,7 +73,7 @@ public class ParetoTreeNode {
             m_runList.clear();
             m_runList.add(this); //root always in.
 
-            m_pi.reset();
+            m_pi.reset(this.state);
             ParetoTreeNode selected = treePolicy();
             addPlayoutInfoTree();
             double delta[] = selected.rollOut();
@@ -184,7 +184,7 @@ public class ParetoTreeNode {
         // while (!rollerState.isTerminal() && action != -1) {
         while (!finishRollout(rollerState,thisDepth,action)) {
             action = roller.roll(rollerState);
-            m_player.getHeuristic().addPlayoutInfo(action);
+            m_player.getHeuristic().addPlayoutInfo(action, rollerState);
             //rollerState.next(action);
             advance(rollerState, action);
             thisDepth++;
@@ -277,7 +277,8 @@ public class ParetoTreeNode {
         for(int i = 0; i < numNodes; ++i)
         {
             ParetoTreeNode pn = m_runList.get(i);
-            m_player.getHeuristic().addPlayoutInfo(pn.childIndex);
+            if(pn.childIndex > -1)
+                m_player.getHeuristic().addPlayoutInfo(pn.childIndex, pn.state);
         }
     }
 

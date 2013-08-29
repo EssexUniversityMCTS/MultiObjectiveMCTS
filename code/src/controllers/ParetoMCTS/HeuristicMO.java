@@ -12,5 +12,5 @@ public interface HeuristicMO
      public double[][] getValueBounds();
      public boolean mustBePruned(Game a_newGameState, Game a_previousGameState);
      public void setPlayoutInfo(PlayoutInfo a_pi);
-    public void addPlayoutInfo(int a_lastAction);
+     public void addPlayoutInfo(int a_lastAction, Game a_gameState);
 }
