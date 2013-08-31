@@ -53,13 +53,16 @@ public class ParetoMCTSPlayer implements Player {
         m_heightMap = new int[m_heightMap.length][m_heightMap[0].length];
     }
 
-    public int run(Game a_gameState, long a_timeDue)
+    public int run(Game a_gameState, long a_timeDue, boolean a)
     {
         m_root.state = a_gameState;
         m_root.m_numIters = 0;
 
         m_root.mctsSearch(a_timeDue);
-        int nextAction = m_root.bestActionIndex(m_targetWeights);
+        int nextAction = 0;
+        if(a)
+            nextAction = m_root.bestActionIndex(m_targetWeights);
+        //int nextAction = m_root.bestActionIndexExpected(); //m_root.bestActionIndex();
 
         this.m_numCalls++;
         this.m_numIters += m_root.m_numIters;

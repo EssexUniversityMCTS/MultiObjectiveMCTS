@@ -11,7 +11,7 @@ import framework.core.Game;
  */
 public interface Player {
     void init();
-    int run(Game a_gameState, long a_timeDue);
+    int run(Game a_gameState, long a_timeDue, boolean a);
     double getHV(boolean a_normalized);
     void reset();
     HeuristicMO getHeuristic();

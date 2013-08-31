@@ -41,8 +41,11 @@ public class ParetoTreePolicy implements TreePolicy{
             }
             ++i;
         }
-        if (selected == null)
+        if (selected == null)          {
+            node.children[0].getHV(false);
             throw new RuntimeException("Warning! returning null: " + bestValue + " : " + node.children.length);
+        }
+
         return selected;
     }
 

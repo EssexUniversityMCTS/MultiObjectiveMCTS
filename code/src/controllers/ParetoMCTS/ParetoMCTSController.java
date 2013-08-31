@@ -153,7 +153,7 @@ public class ParetoMCTSController extends Controller {
 
             m_currentGameState = a_game; //no need to prepareGameCopy
             m_heuristic.updateNextPickups(m_currentGameState, 3);
-            int suggestedAction = m_player.run(a_game, a_timeDue);
+            int suggestedAction = m_player.run(a_game, a_timeDue, true);
 
             m_resetRS = true;
             if(suggestedAction != -1)
@@ -174,7 +174,7 @@ public class ParetoMCTSController extends Controller {
                     m_player.init();
                 }
                 //keep searching, but it is not time to retrieve the best action found
-                m_player.run(a_game, a_timeDue);
+                m_player.run(a_game, a_timeDue, false);
                 //we keep executing the same action decided in the past.
                 nextMacroAction = m_lastMacroAction;
                 m_currentMacroAction--;
@@ -183,7 +183,7 @@ public class ParetoMCTSController extends Controller {
             {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
-                int suggestedAction = m_player.run(a_game, a_timeDue);
+                int suggestedAction = m_player.run(a_game, a_timeDue, true);
                 //System.out.println();
 
                 if(PARETO_VIEW_ON)

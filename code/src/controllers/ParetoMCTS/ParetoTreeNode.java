@@ -89,7 +89,8 @@ public class ParetoTreeNode {
     public ParetoTreeNode treePolicy() {
 
         ParetoTreeNode cur = this;
-        while (cur.nonTerminal() && !cur.state.isEnded())
+        int depth = 0;
+        while (cur.nonTerminal() && !cur.state.isEnded() && depth < ParetoMCTSController.ROLLOUT_DEPTH)
         {
             if (cur.notFullyExpanded()) {
                 ParetoTreeNode tn = cur.expand();
@@ -107,17 +108,23 @@ public class ParetoTreeNode {
                     }
                     m_runList.remove(0);
                     cur = cur.parent;
+                    depth--;
 
                 }else
                 {
-                    //Really, do nothing, next iteration we use UCT1
+                    //Really, do nothing, next iteration we use UCB1
                 }
 
 
             } else {
                 cur = cur.bestChild();
+                depth++;
                 m_runList.add(0,cur);
             }
+           /* if(cur == null)
+                System.out.println("CUR is null");
+            if(cur.state == null)
+                System.out.println("CUR.STATE is null");   */
         }
         return cur;
     }
@@ -167,6 +174,8 @@ public class ParetoTreeNode {
         if(tn == null)
         {
             //All children go pruned... prune myself?
+            if(parent.m_prunedChildren == null)
+                System.out.println("parent.m_prunedChildren is Null");
             parent.m_prunedChildren[childIndex] = true;
         }
         return tn;
@@ -184,9 +193,9 @@ public class ParetoTreeNode {
         // while (!rollerState.isTerminal() && action != -1) {
         while (!finishRollout(rollerState,thisDepth,action)) {
             action = roller.roll(rollerState);
-            m_player.getHeuristic().addPlayoutInfo(action, rollerState);
             //rollerState.next(action);
             advance(rollerState, action);
+            m_player.getHeuristic().addPlayoutInfo(action, rollerState);
             thisDepth++;
         }
 
@@ -303,7 +312,7 @@ public class ParetoTreeNode {
         double[][] bounds = m_player.getHeuristic().getValueBounds();
         double bestValue = -Double.MAX_VALUE;
         OrderedSolutionList myPA = pa.m_members;
-        //System.out.println("----------------");
+       // System.out.println("Choosing among " + myPA.size() + " members.");
         for(int i = 0; i < myPA.size(); ++i)
         {
             double[] thisRes = myPA.get(i).m_data;
@@ -320,13 +329,16 @@ public class ParetoTreeNode {
                 val += v*targets[t];
             }
 
+          //  System.out.format("   [%.2f, %.2f] => %.2f, from %d\n", thisRes[0], thisRes[1], val, myPA.get(i).m_through);
            // System.out.println("Element in PA " + i + ": " + val);
 
             if(val > bestValue) {
                 bestValue = val;
                 selected = i;
             }
+
         }
+           // System.out.println("   Selected: " + selected);
 
         if(selected == -1)
         {
@@ -382,18 +394,50 @@ public class ParetoTreeNode {
 
     public int bestActionIndex() {
         int selected = -1;
-        double bestValue = Double.MIN_VALUE;
+        double bestValue = -Double.MAX_VALUE;
         for (int i=0; i<children.length; i++) {
-            double sol[] = children[i].pa.m_members.get(0).m_data;
-           // System.out.println("Child " + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[i].nVisits);
-            if (children[i] != null && children[i].nVisits + m_rnd.nextDouble() * epsilon > bestValue) {
-                bestValue = children[i].nVisits;
-                selected = i;
+
+            if(!this.m_prunedChildren[i])
+            {
+                double sol[] = children[i].pa.m_members.get(0).m_data;
+               // System.out.println("Child " + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[i].nVisits);
+                if (children[i] != null && children[i].nVisits + m_rnd.nextDouble() * epsilon > bestValue) {
+                    bestValue = children[i].nVisits;
+                    selected = i;
+                }
             }
         }
         if (selected == -1) throw new RuntimeException("Unexpected selection!");
 
-        double sol[] = children[selected].pa.m_members.get(0).m_data;
+        //double sol[] = children[selected].pa.m_members.get(0).m_data;
+        //System.out.println("SELECTED: " + (int)bestValue + "," + sol[0] + "," + sol[1] + ": " + selected);
+
+        return selected;
+    }
+
+
+    public int bestActionIndexExpected() {
+        int selected = -1;
+        double bestValue = -Double.MAX_VALUE;
+        for (int i=0; i<children.length; i++) {
+
+            if(!this.m_prunedChildren[i])
+            {
+                double sol[] = children[i].pa.m_members.get(0).m_data;
+               // System.out.println("Child " + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[i].nVisits);
+                if (children[i] != null)
+                {
+                    double val = children[i].totValue[0] / children[i].nVisits;
+                    if(val + m_rnd.nextDouble() * epsilon > bestValue){
+                        bestValue = val;
+                        selected = i;
+                    }
+                }
+            }
+        }
+        if (selected == -1) throw new RuntimeException("Unexpected selection!");
+
+        //double sol[] = children[selected].pa.m_members.get(0).m_data;
         //System.out.println("SELECTED: " + (int)bestValue + "," + sol[0] + "," + sol[1] + ": " + selected);
 
         return selected;
@@ -452,8 +496,8 @@ public class ParetoTreeNode {
     {
         if(a_normalized)
             return pa.computeHV(m_player.getHeuristic().getValueBounds());
-        else return
-                pa.computeHV();
+        else
+            return pa.computeHV();
 
     }
 
