@@ -77,12 +77,15 @@ public class ParetoMCTSController extends Controller {
 
     public static double[] targetWeights= //new double[]{0.33,0.33,0.33};
 
+                                    //new double[]{0.0,0.5,0.5};
+                                //new double[]{0.5,0.0,0.5};
+                                new double[]{0.5,0.5,0.0};
                                 //new double[]{1.0, 0.0, 0.0};
                                 //new double[]{0.0, 1.0, 0.0};
-                                //new double[]{0.0, 0.0, 1.0};
+                                //    new double[]{0.0, 0.0, 1.0};
 
                             //new double[]{0.5, 0.5};
-                            new double[]{0.0,1.0};
+                            //new double[]{0.0,1.0};
                             //new double[]{1.0,0.0};
 
     public static double FUEL_POWER_MULT = 0.66;
