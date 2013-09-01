@@ -17,7 +17,7 @@ import java.util.PriorityQueue;
  */
 public class ParetoArchive
 {
-    public static double EPSILON = 0.1;
+    public static double EPSILON = 0.0; //0.01
     public OrderedSolutionList m_members;
     public double m_hv;
     public boolean m_hvClean;

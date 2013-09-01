@@ -308,12 +308,15 @@ public class ParetoTreeNode {
 
 
     public int bestActionIndex(double[] targets) {
+        boolean verbose = false;
         int selected = -1;
         double[][] bounds = m_player.getHeuristic().getValueBounds();
         double bestValue = -Double.MAX_VALUE;
         OrderedSolutionList myPA = pa.m_members;
-       // System.out.println("Choosing among " + myPA.size() + " members.");
-        for(int i = 0; i < myPA.size(); ++i)
+        int numMembers =  myPA.size();
+        if(verbose && numMembers>1)
+            System.out.println("Choosing among " + myPA.size() + " members.");
+        for(int i = 0; i < numMembers; ++i)
         {
             double[] thisRes = myPA.get(i).m_data;
             /*
@@ -329,8 +332,10 @@ public class ParetoTreeNode {
                 val += v*targets[t];
             }
 
-          //  System.out.format("   [%.2f, %.2f] => %.2f, from %d\n", thisRes[0], thisRes[1], val, myPA.get(i).m_through);
-           // System.out.println("Element in PA " + i + ": " + val);
+
+            if(verbose && numMembers>1)
+                System.out.format("   [%.4f, %.4f, %.4f] => %.4f, from %d\n", thisRes[0], thisRes[1], thisRes[2], val, myPA.get(i).m_through);
+            //System.out.println("Element in PA " + i + ": " + val);
 
             if(val > bestValue) {
                 bestValue = val;
@@ -338,7 +343,9 @@ public class ParetoTreeNode {
             }
 
         }
-           // System.out.println("   Selected: " + selected);
+
+        if(verbose && numMembers>1)
+            System.out.println("   Selected: " + selected);
 
         if(selected == -1)
         {

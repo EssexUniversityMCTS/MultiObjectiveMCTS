@@ -76,16 +76,19 @@ public class ParetoMCTSController extends Controller {
     public static double K = Math.sqrt(2);
 
     public static double[] targetWeights= //new double[]{0.33,0.33,0.33};
-                                       //  new double[]{0.8,0.1,0.1};
-                                  // new double[]{0.5, 0.5};
-                                  // new double[]{0.9, 0.05, 0.05};
-                                // new double[]{0, 1, 0};
-                               // new double[]{1.0, 0.0, 0};
-                                // new double[]{0.0, 0.0, 1};
-                                //new double[]{0.0, 0.5, 0.5};
-                             //new double[]{0.25,0.75};
-                            //new double[]{0,1};
-                            new double[]{1,0};
+
+                                //new double[]{1.0, 0.0, 0.0};
+                                //new double[]{0.0, 1.0, 0.0};
+                                //new double[]{0.0, 0.0, 1.0};
+
+                            //new double[]{0.5, 0.5};
+                            new double[]{0.0,1.0};
+                            //new double[]{1.0,0.0};
+
+    public static double FUEL_POWER_MULT = 0.66;
+    public static double DAMAGE_POWER_MULT = 0.6;
+
+
     public static int NUM_TARGETS = targetWeights.length;
 
     /**
