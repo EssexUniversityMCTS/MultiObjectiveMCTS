@@ -370,8 +370,12 @@ public class HeuristicPTSP implements HeuristicMO
         double damagePoints =  1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
         double damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT);
 
+
+        double allInOne = distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
+
         //double[] moScore = new double[]{distancePoints, fuelPower};
         double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
+        //double[] moScore = new double[]{allInOne, allInOne};
 
         //double[] moScore = new double[]{damagePower, damagePower};
 
