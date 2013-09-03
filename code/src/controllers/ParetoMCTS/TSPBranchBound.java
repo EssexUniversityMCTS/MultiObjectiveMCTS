@@ -129,8 +129,8 @@ public class TSPBranchBound
 
         if(USE_PUROFVIO_ROUTES)
         {
-            //m_PreRoutes.put("maps/ptsp_map01.map", getArrayObject(new int[]{7,8,11,6,2,1,10,4,0,3,12,5,9}));  //This is the proper one
-            m_PreRoutes.put("maps/ptsp_map01.map", getArrayObject(new int[]{7,8,6,2,1,4,0,3,5,9,10,11,12,13})); //This is the one without fueltanks.
+            m_PreRoutes.put("maps/ptsp_map01.map", getArrayObject(new int[]{7,8,11,6,2,1,10,4,0,3,12,5,9}));  //This is the proper one
+            //m_PreRoutes.put("maps/ptsp_map01.map", getArrayObject(new int[]{7,8,6,2,1,4,0,3,5,9,10,11,12,13})); //This is the one without fueltanks.
             m_PreRoutes.put("maps/ptsp_map02.map", getArrayObject(new int[]{4,1,2,10,0,3,11,6,9,7,5,8,13,12}));
             m_PreRoutes.put("maps/ptsp_map08.map", getArrayObject(new int[]{7,2,10,1,6,9,8,5,4,11,3,0,12,13}));
             m_PreRoutes.put("maps/ptsp_map19.map", getArrayObject(new int[]{9,4,12,6,8,13,7,5,0,2,3,1,11,10}));

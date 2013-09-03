@@ -27,8 +27,9 @@ public class ParetoView extends JComponent
     private Color axis = Color.black;
 
     private int MARGIN = 10;
+    private int MARGIN_EXTRA = 50;
     private int POINT_SIZE = 5;
-    private double SCALE = 50.0;
+    private double SCALE = 10000.0;
 
     public ParetoView(ParetoArchive pa, Dimension size)
     {
@@ -87,16 +88,45 @@ public class ParetoView extends JComponent
         int previousP1=-1;
         int previousP2=-1;
         g.setColor(pointsA);
-        System.out.println("###############################");
+        //System.out.println("###############################");
+
+        double xRange[] = new double[]{Double.MAX_VALUE, -Double.MAX_VALUE};
+        double yRange[] = new double[]{Double.MAX_VALUE, -Double.MAX_VALUE};
+
+        for(Solution s : m_pa.m_members.m_members)
+        {
+            double[] point = s.m_data;
+            if(point[0] < xRange[0])
+                xRange[0] = point[0];
+            if(point[0] > xRange[1])
+                xRange[1] = point[0];
+
+            if(point[1] < yRange[0])
+                yRange[0] = point[1];
+            if(point[1] > yRange[1])
+                yRange[1] = point[1];
+        }
+
+        //System.out.printf("R:(%.3f,%.3f)\n", xRange[0], yRange[1]);
         for(Solution s : m_pa.m_members.m_members)
         {
             double[] point = s.m_data;
 
-            int p1 = MARGIN + (int) (point[0]*SCALE);
-            int p2 = (m_size.height-MARGIN) - (int) (point[1]*SCALE);
+            double xVal0 = point[0] - xRange[0];
+            double yVal0 = point[1] - yRange[0];
+
+            double xVal1 = point[1] - xRange[0];
+            double yVal1 = point[1] - yRange[0];
+
+
+            int p1 = MARGIN_EXTRA + (int) (xVal0*SCALE);
+            int p2 = (m_size.height-MARGIN_EXTRA) - (int) (yVal0*SCALE);
 
             g.fillOval(p1,p2,POINT_SIZE,POINT_SIZE);
-            System.out.printf("(%.3f,%.3f):(%d,%d):%d\n", point[0], point[1], p1, p2, s.m_through);
+            //System.out.printf("(%.3f,%.3f):(%d,%d):%d\n", point[0], point[1], p1, p2, s.m_through);
+            //System.out.printf("(%.3f,%.3f):(%.3f,%.3f):(%d,%d):%d\n", point[0], point[1], xVal0,yVal0, p1, p2, s.m_through);
+
+            g.drawString(s.m_through+"",p1+5,p2-5);
 
             if(previousP1 != -1)
             {

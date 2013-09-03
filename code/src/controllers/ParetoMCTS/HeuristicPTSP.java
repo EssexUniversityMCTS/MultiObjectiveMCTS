@@ -361,9 +361,7 @@ public class HeuristicPTSP implements HeuristicMO
         if(Controller.getThrust(firstAction))
             fuelPoints -= (nlastCyclesThrusting*0.25);         */
 
-
         //double damagePoints = 1 - (damageTakenInterval/playoutLength);
-
 
         //THIS WORKED OK
         double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
@@ -372,8 +370,10 @@ public class HeuristicPTSP implements HeuristicMO
         double damagePoints =  1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
         double damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT);
 
-        //double[] moScore = new double[]{distancePoints, damagePower};
+        //double[] moScore = new double[]{distancePoints, fuelPower};
         double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
+
+        //double[] moScore = new double[]{damagePower, damagePower};
 
         return moScore;
     }
@@ -558,6 +558,17 @@ public class HeuristicPTSP implements HeuristicMO
         {
             return true;
         }
+
+        //Collision with high damage.
+        if(a_newGameState.getShip().getCollLastStep())
+        {
+            int collType = a_newGameState.getShip().getLastCollisionType();
+            if(collType == PTSPConstants.DAMAGE_COLLISION_TYPE)
+            {
+                return true;
+            }
+        }
+
 
         return false;
     }

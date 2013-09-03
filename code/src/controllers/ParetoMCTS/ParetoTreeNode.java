@@ -67,7 +67,8 @@ public class ParetoTreeNode {
 
         long remaining = a_timeDue - System.currentTimeMillis();
 
-        for (int i = 0; i < 500; i++) {
+        //for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 1500; i++) {
         //while(remaining > 10)   {
         //while(remaining > 5)   {
             m_runList.clear();
@@ -334,7 +335,12 @@ public class ParetoTreeNode {
 
 
             if(verbose && numMembers>1)
-                System.out.format("   [%.4f, %.4f, %.4f] => %.4f, from %d\n", thisRes[0], thisRes[1], thisRes[2], val, myPA.get(i).m_through);
+            {
+                if(thisRes.length==3)
+                    System.out.format("   [%.4f, %.4f, %.4f] => %.4f, from %d\n", thisRes[0], thisRes[1], thisRes[2], val, myPA.get(i).m_through);
+                if(thisRes.length==2)
+                    System.out.format("   [%.4f, %.4f] => %.4f, from %d\n", thisRes[0], thisRes[1], val, myPA.get(i).m_through);
+            }
             //System.out.println("Element in PA " + i + ": " + val);
 
             if(val > bestValue) {
