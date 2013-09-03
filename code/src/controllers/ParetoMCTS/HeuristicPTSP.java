@@ -40,6 +40,7 @@ public class HeuristicPTSP implements HeuristicMO
     public double[][] m_bounds;
     public double[] segmentsCost;
     public double distanceToFinal1, distanceToFinal2, distanceToFinal3;
+    public double m_currentShipSpeed;
     public int nlastCyclesThrusting;
 
     public HeuristicPTSP(Game a_game, double[] tWeights, int []bestRoute, int maLength, int rollDepth)
@@ -368,12 +369,20 @@ public class HeuristicPTSP implements HeuristicMO
         double fuelPower = fuelPoints*ParetoMCTSController.FUEL_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.FUEL_POWER_MULT);
 
         double damagePoints =  1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
-        double damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT);
+        //double damagePoints = 1 - (damageTakenInterval/playoutLength);
+
+        double damagePower = 0.0;
+        if(m_currentShipSpeed > ParetoMCTSController.THRESHOLD_HIGH_SPEED)
+            damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT +
+                    distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT);
+        else
+            damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT_SLOW +
+                    distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT_SLOW);
 
 
         double allInOne = distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
 
-        //double[] moScore = new double[]{distancePoints, fuelPower};
+        //double[] moScore = new double[]{distancePoints, damagePower};
         double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
         //double[] moScore = new double[]{allInOne, allInOne};
 
@@ -431,7 +440,6 @@ public class HeuristicPTSP implements HeuristicMO
         int indexInRoute[];
 
         try{
-
             //All my waypoints
             LinkedList<Waypoint> waypoints = a_gameState.getWaypoints();
 
@@ -550,6 +558,10 @@ public class HeuristicPTSP implements HeuristicMO
             }
 
         }
+
+        m_currentShipSpeed = a_gameState.getShip().v.mag();
+        //System.out.println( (m_currentShipSpeed>ParetoMCTSController.THRESHOLD_HIGH_SPEED)?
+        //        "High speed "+m_currentShipSpeed : "Low Speed "+m_currentShipSpeed );
     }
 
 
@@ -558,7 +570,8 @@ public class HeuristicPTSP implements HeuristicMO
         //Previous speed:
         //double prevSpeed = a_previousGameState.getShip().v.mag();
         double newSpeed = a_newGameState.getShip().v.mag();
-        if(newSpeed < 0.001)
+        //if(newSpeed < 0.001)
+        if(newSpeed < 0.01)
         {
             return true;
         }
