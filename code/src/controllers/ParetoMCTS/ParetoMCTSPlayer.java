@@ -64,6 +64,7 @@ public class ParetoMCTSPlayer implements Player {
         {
             //System.out.println(a_gameState.getShip().v.mag());
             nextAction = m_root.bestActionIndex(m_targetWeights);
+            //nextAction = m_root.bestActionIndexEuqDistance(m_targetWeights);
         }
         //int nextAction = m_root.bestActionIndexExpected(); //m_root.bestActionIndex();
 

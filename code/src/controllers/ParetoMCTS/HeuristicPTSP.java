@@ -380,11 +380,13 @@ public class HeuristicPTSP implements HeuristicMO
                     distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT_SLOW);
 
 
-        double allInOne = distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
+        double allInOne = //distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
+                        //distancePoints*0.1 + fuelPoints*0.3 + damagePoints*0.6;
+                    distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
 
         //double[] moScore = new double[]{distancePoints, damagePower};
-        double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
-        //double[] moScore = new double[]{allInOne, allInOne};
+        //double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
+        double[] moScore = new double[]{allInOne, allInOne, allInOne};
 
         //double[] moScore = new double[]{damagePower, damagePower};
 

@@ -306,6 +306,62 @@ public class ParetoTreeNode {
 
     }
 
+    public int bestActionIndexEuqDistance(double[] targets) {
+        boolean verbose = false;
+        int selected = -1;
+        double[][] bounds = m_player.getHeuristic().getValueBounds();
+        double distance = Double.MAX_VALUE;
+        OrderedSolutionList myPA = pa.m_members;
+        int numMembers =  myPA.size();
+        if(verbose && numMembers>1)
+            System.out.println("Choosing among " + myPA.size() + " members.");
+
+        for(int i = 0; i < numMembers; ++i)
+        {
+            double[] thisRes = myPA.get(i).m_data;
+
+            double val[] = new double[targets.length];
+            for(int t = 0; t < targets.length; ++t)
+            {
+                double v =  Utils.normalise(thisRes[t], bounds[t][0], bounds[t][1]);
+                val[t] = v;
+            }
+
+            double thisDist = Utils.distanceEuq(val, targets);
+            if(thisDist < distance)
+            {
+                distance = thisDist;
+                selected = i;
+            }
+        }
+
+        if(verbose && numMembers>1)
+            System.out.println("   Selected: " + selected);
+
+        double selectedTarget[] = myPA.get(selected).m_data;
+        NavigableSet<Integer> navSet = valueRoute.navigableKeySet();
+        for(Integer key : navSet)
+        {
+            LinkedList<Solution> resFromThisChild = valueRoute.get(key);
+
+            for(int i =0; i < resFromThisChild.size(); ++i)
+            {
+                double[] sol = resFromThisChild.get(i).m_data;
+
+                if(sol.length == 3 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1] && sol[2] == selectedTarget[2])
+                {
+                    return key;
+                }else if(sol.length == 2 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
+                {
+                    return key;
+                }
+            }
+        }
+        //throw new RuntimeException("Unexpected selection: " + selected);
+        return selected;
+
+    }
+
 
     public int bestActionIndex(double[] targets) {
         boolean verbose = false;
@@ -456,49 +512,7 @@ public class ParetoTreeNode {
     }
 
 
-    public int bestActionIndex(ParetoArchive globalPA, double[] targets) {
-        int selected = -1;
-        double[][] bounds = m_player.getHeuristic().getValueBounds();
-        OrderedSolutionList paMembers = pa.m_members;
 
-        //if(pa.m_members.size() > 1)
-        //    System.out.println("HEY: " + pa.m_members.size());
-
-        double distance = Double.MAX_VALUE;
-        for(int i = 0; i < paMembers.size(); ++i)
-        {
-            double[] thisRes = paMembers.get(i).m_data;
-
-            //if(pa.contains(thisRes))
-            {
-                double val0 = Utils.normalise(thisRes[0], bounds[0][0], bounds[0][1]);
-                double val1 = Utils.normalise(thisRes[1], bounds[1][0], bounds[1][1]);
-                double[] thisResNorm = new double[]{val0, val1};
-                double thisDist = Utils.distanceEuq(thisResNorm, targets);
-                if(thisDist < distance)
-                {
-                    distance = thisDist;
-                    selected = i;
-                }
-            }
-        }
-
-        double selectedTarget[] = paMembers.get(selected).m_data;
-        NavigableSet<Integer> navSet = valueRoute.navigableKeySet();
-        for(Integer key : navSet)
-        {
-            LinkedList<Solution> resFromThisChild = valueRoute.get(key);
-
-            for(int i =0; i < resFromThisChild.size(); ++i)
-            {
-                double[] sol = resFromThisChild.get(i).m_data;
-                if(sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
-                    return key;
-            }
-        }
-        throw new RuntimeException("Unexpected selection: " + selected);
-
-    }
 
     public void backUp(double[] result) {
         //Nothing to do.
