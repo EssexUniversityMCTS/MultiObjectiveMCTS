@@ -157,7 +157,9 @@ public abstract class DriverController extends Controller
 			Constructor evaluatorCtor = evaluatorClass.getConstructor(Parameters.class);
 			m_evaluator = (StateEvaluator)evaluatorCtor.newInstance(m_par);
 		}
-		catch (Exception e)
+		catch (ClassNotFoundException | NoSuchMethodException | SecurityException
+				| InstantiationException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException e)
 		{
 			e.printStackTrace();
 		}
@@ -549,9 +551,9 @@ public abstract class DriverController extends Controller
 							if (Math.abs(v - (int)Math.round(v*20)/20.0) < 0.001)
 								rgb = 0x80FFFFFF;
 
-							//for (int x2=x; x2<x+wh && x2<copy.getMapSize().width; x2++)
-							//	for (int y2=y; y2<y+wh && y2<copy.getMapSize().height; y2++)
-							//	m_rewardImage.setRGB(x2, y2, rgb);
+							for (int x2=x; x2<x+wh && x2<copy.getMapSize().width; x2++)
+								for (int y2=y; y2<y+wh && y2<copy.getMapSize().height; y2++)
+								m_rewardImage.setRGB(x2, y2, rgb);
 						}
 					}
 				}
@@ -566,8 +568,8 @@ public abstract class DriverController extends Controller
 	{
 		Game copy = m_rootGameState.getCopy();
 		
-	//	if (m_rewardImage == null)
-	//		m_rewardImage = new BufferedImage(copy.getMapSize().width, copy.getMapSize().height, BufferedImage.TYPE_INT_ARGB);
+		if (m_rewardImage == null)
+			m_rewardImage = new BufferedImage(copy.getMapSize().width, copy.getMapSize().height, BufferedImage.TYPE_INT_ARGB);
 
 		if (copy.getWaypointsVisited() + copy.getFuelTanksCollected() != m_rewardImageLastWaypointCount && copy.getWaypointsLeft() > 0)
 		{
