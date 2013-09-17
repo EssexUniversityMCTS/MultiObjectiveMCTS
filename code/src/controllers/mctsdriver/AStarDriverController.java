@@ -364,7 +364,7 @@ public class AStarDriverController extends DriverController
 							
 							m_bestWinningLineScore = score;
 							
-							m_bestWinningLine = new LinkedList<MetaAction>();
+							m_bestWinningLine = new LinkedList<>();
 							m_bestWinningLine.add(0, action);
 							
 							for (Node node = current; node.m_parent != null; node = node.m_parent)

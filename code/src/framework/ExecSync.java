@@ -291,7 +291,7 @@ public class ExecSync extends Exec
      */
     public static void main(String[] args)
     {
-        m_mapNames = new String[]{"maps/ptsp_map01.map"}; //Set here the name of the map to play in.
+        m_mapNames = new String[]{"maps/ptsp_map08.map"}; //Set here the name of the map to play in.
        // m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
        //         "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
        //         "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
@@ -299,7 +299,7 @@ public class ExecSync extends Exec
         m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
         m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
-       // m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
+        m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
 
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";
