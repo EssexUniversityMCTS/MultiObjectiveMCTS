@@ -53,12 +53,13 @@ public class HeuristicLunar implements HeuristicMO {
 
     // Full disclosure: not entirely sure how vital some of the features of the HeuristicPTSP class are,
     // so this might be a tiny bit cargo cult-y.
-    public double[] value(LunarGame a_gameState)
+    public double[] value(Game gameState)
     {
+        LunarGame lunarState = (LunarGame)gameState;
         VALUE_CALLS++;
 
         int playoutLength = MACRO_ACTION_LENGTH * ROLLOUT_DEPTH;
-        if(a_gameState.landed && a_gameState.landedSuccessfully)
+        if(lunarState.landed && lunarState.landedSuccessfully)
         {
             //In this case, the game as ended for sure: IT ENDS DURING THE
             //MACRO-ACTION BEING EXECUTED NOW.
@@ -69,20 +70,20 @@ public class HeuristicLunar implements HeuristicMO {
             return superReward;
         }
 
-        if((a_gameState.isEnded() && !a_gameState.landedSuccessfully))
+        if((lunarState.isEnded() && !lunarState.landedSuccessfully))
         {
             double superPunishment[] = new double[targetWeights.length];
             for(int i = 0; i < targetWeights.length; ++i)
                 superPunishment[i] = -2;
-            //System.out.println("SUPER PUNISHMENT! "+matching+" "+a_gameState.getTotalTime());
+            //System.out.println("SUPER PUNISHMENT! "+matching+" "+lunarState.getTotalTime());
             return superPunishment; // Game finished - game over.
         }
 
         // linear reward for approaching pad
-        double distFromPad = a_gameState.getShip().s.dist(a_gameState.terrain.getNearestSafeLandingPoint(a_gameState.getShip().s));
+        double distFromPad = lunarState.getShip().s.dist(lunarState.terrain.getNearestSafeLandingPoint(lunarState.getShip().s));
         double distancePoints = (maxDistance - distFromPad)/maxDistance;
 
-        double fuelPoints = 1 - ((LunarParams.startingFuel-a_gameState.getShip().getRemainingFuel()) / LunarParams.startingFuel);
+        double fuelPoints = 1 - ((LunarParams.startingFuel-lunarState.getShip().getRemainingFuel()) / LunarParams.startingFuel);
 //        double fuelPower = fuelPoints* ParetoMCTSController.FUEL_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.FUEL_POWER_MULT);
 
         double allInOne = //distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
@@ -99,9 +100,6 @@ public class HeuristicLunar implements HeuristicMO {
     }
 
 
-    // ignore these, these are just to make this legal although broken code
-    public double[] value(Game a_gameState) { return new double[0]; }
-    public boolean mustBePruned(Game a_newGameState, Game a_previousGameState) { return false; }
 
 
 
@@ -109,11 +107,13 @@ public class HeuristicLunar implements HeuristicMO {
         return bounds;
     }
 
-    public boolean mustBePruned(LunarGame a_newGameState, LunarGame a_previousGameState) {
+    public boolean mustBePruned(Game a_newGameState, Game a_previousGameState) {
+
+        LunarGame lunarState = (LunarGame)a_newGameState;
 
         boolean prune = false;
         // if the ship crashed, prune state
-        if(a_newGameState.landed && !a_newGameState.landedSuccessfully) {
+        if(lunarState.landed && !lunarState.landedSuccessfully) {
             prune = true;
         }
         // if the ship went too far upwards, prune state
@@ -128,11 +128,11 @@ public class HeuristicLunar implements HeuristicMO {
         playoutInfo = (PlayoutLunarInfo) a_pi;
     }
 
-    public void addPlayoutInfo(int a_lastAction, Game a_gameState) {
+    public void addPlayoutInfo(int a_lastAction, Game lunarState) {
         if(Controller.getThrust(a_lastAction)) playoutInfo.m_thurstCount++;
         playoutInfo.m_playoutHistory[playoutInfo.m_numMoves] = a_lastAction;
         playoutInfo.m_numMoves++;
 
-        playoutInfo.m_landed = a_gameState.isEnded();
+        playoutInfo.m_landed = lunarState.isEnded();
     }
 }

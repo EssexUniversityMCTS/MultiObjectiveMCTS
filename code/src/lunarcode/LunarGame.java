@@ -1,5 +1,6 @@
 package lunarcode;
 
+import framework.core.Game;
 import framework.utils.Vector2d;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by Samuel Roberts, 2013
  */
-public class LunarGame implements IGame {
+public class LunarGame extends Game {
 
 
     public LunarTerrain terrain;
@@ -56,7 +57,7 @@ public class LunarGame implements IGame {
         return landed;
     }
 
-    public IGame getCopy() {
+    public Game getCopy() {
         LunarGame copy = new LunarGame();
         // no need to copy terrain, an identical terrain object will have
         // already been made in the game copy as parameters are identical
@@ -67,7 +68,7 @@ public class LunarGame implements IGame {
         return copy;
     }
 
-    public LunarShip getShip() {
+    public LunarShip getLunarShip() {
         return ship;
     }
 }
