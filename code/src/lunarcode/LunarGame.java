@@ -1,6 +1,7 @@
 package lunarcode;
 
 import framework.core.Game;
+import framework.core.Ship;
 import framework.utils.Vector2d;
 
 import java.awt.*;
@@ -24,7 +25,7 @@ public class LunarGame extends Game {
 
     public LunarGame() {
         terrain = new LunarTerrain(LunarParams.numPoints, LunarParams.numLandingPads, LunarParams.randomSeed, LunarParams.flatLandscape);
-        ship = new LunarShip();
+        ship = new LunarShip(this);
         ticks = 0;
     }
 
@@ -68,7 +69,7 @@ public class LunarGame extends Game {
         return copy;
     }
 
-    public LunarShip getLunarShip() {
+    public Ship getShip() {
         return ship;
     }
 }

@@ -1,7 +1,9 @@
 package lunarcode;
 
 import framework.core.Controller;
+import framework.core.Game;
 import framework.core.GameObject;
+import framework.core.Ship;
 import framework.utils.Vector2d;
 
 import java.awt.*;
@@ -10,7 +12,7 @@ import java.awt.geom.AffineTransform;
 /**
  * Created by Samuel Roberts, 2013
  */
-public class LunarShip extends GameObject {
+public class LunarShip extends Ship {
 
 
     // rendering details!
@@ -29,12 +31,13 @@ public class LunarShip extends GameObject {
     // upon depletion, ship no longer thrusts
     public double fuel;
 
-    public LunarShip() {
-        super();
-        s = LunarParams.startingPoint.copy();
-        ps = s.copy();
+    public Game game;
+
+
+    public LunarShip(Game a_game) {
+        super(a_game, LunarParams.startingPoint);
+        game = a_game;
         fuel = LunarParams.startingFuel;
-        d = new Vector2d(0, 1);
         thrustForce = 0;
         radius = LunarParams.shipRadius;
     }
@@ -115,8 +118,8 @@ public class LunarShip extends GameObject {
         g.setTransform(at);
     }
 
-    public double getRemainingFuel() {
-        return fuel;
+    public int getRemainingFuel() {
+        return (int)fuel;
     }
 
 
@@ -131,7 +134,7 @@ public class LunarShip extends GameObject {
     }
 
     public LunarShip copyShip() {
-        LunarShip copy = new LunarShip();
+        LunarShip copy = new LunarShip(game);
         copy.s = s.copy();
         copy.ps = ps.copy();
         copy.d = d.copy();
