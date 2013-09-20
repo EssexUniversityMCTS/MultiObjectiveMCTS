@@ -283,7 +283,7 @@ public class ParetoMCTSController extends Controller {
 
     private void paintHeightMap(Graphics2D a_gr)
     {
-        for(int i = 0; i < m_player.m_heightMap.length; ++i)
+        /*for(int i = 0; i < m_player.m_heightMap.length; ++i)
         {
             for(int j = 0; j < m_player.m_heightMap[0].length; ++j)
             {
@@ -298,7 +298,7 @@ public class ParetoMCTSController extends Controller {
                 }
 
             }
-        }
+        } */
     }
 
     private Color getColorByHeight(int height)
