@@ -8,11 +8,11 @@ import java.util.Random;
  * Created by Samuel Roberts, 2013
  */
 public class LunarParams {
-    public static int screenWidth = 600;
-    public static int screenHeight = 800;
+    public static int screenWidth = 800;
+    public static int screenHeight = 600;
 
-    public static int worldWidth = 600;
-    public static int worldHeight = 800;
+    public static int worldWidth = 800;
+    public static int worldHeight = 600;
 
     public static int delay = 20;
     // approximately how many seconds a tick should take if everything is running at full capacity

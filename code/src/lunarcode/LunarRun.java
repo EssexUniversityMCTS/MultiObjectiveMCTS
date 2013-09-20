@@ -5,6 +5,7 @@ import controllers.utils.StatSummary;
 import framework.core.Controller;
 import framework.core.Game;
 import framework.core.PTSPConstants;
+import framework.utils.JEasyFrame;
 
 /**
  * Created by Samuel Roberts, 2013
@@ -18,13 +19,40 @@ public class LunarRun {
     public static Controller cont;
 
     public static void main(String[] args) {
-        runGames(1);
+        runGame();
     }
 
     public static void prepareGame() {
         game = new LunarGame();
         cont = new LunarParetoMCTSController(game, 1);
     }
+
+    public static void runGame() {
+        prepareGame();
+        LunarView view = new LunarView((LunarGame)game, (LunarShip)game.getShip());
+        JEasyFrame frame = new JEasyFrame(view, "Lunar Lander MCTS");
+
+        while(!game.isEnded())
+        {
+            long due = System.currentTimeMillis()+ PTSPConstants.ACTION_TIME_MS;
+
+            int actionToExecute = cont.getAction(game.getCopy(), due);
+
+            game.tick(actionToExecute);
+            view.repaint();
+            try {
+                Thread.sleep(LunarParams.delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        }
+    }
+
+
+
+
+
 
     public static void runGames(int trials) {
         //Prepare the average results.
@@ -70,6 +98,8 @@ public class LunarRun {
 
                 game.tick(actionToExecute);
                 //}
+
+
 
             }
 
