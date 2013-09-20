@@ -133,9 +133,11 @@ public class LunarParetoMCTSController extends Controller {
     @Override
     public int getAction(Game a_game, long a_timeDue)
     {
+        LunarGame lgame = (LunarGame)a_game;
+
         FLAG = false;
         HV_COUNTS = 0;
-        int cycle = a_game.getTotalTime();
+        int cycle = lgame.getTicks();
         int nextMacroAction;
 
         if(cycle == 0)
@@ -177,7 +179,7 @@ public class LunarParetoMCTSController extends Controller {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue, true);
-                //System.out.println();
+                System.out.println(suggestedAction);
 
                 if(PARETO_VIEW_ON)
                 {

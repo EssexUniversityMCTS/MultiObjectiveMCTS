@@ -90,6 +90,14 @@ public class ParetoTreeNode {
 
         ParetoTreeNode cur = this;
         int depth = 0;
+
+        if(cur == null)
+            System.out.println("cur is NULL");
+
+        if(cur.state == null)
+            System.out.println("cur.state is NULL");
+
+        try{
         while (cur.nonTerminal() && !cur.state.isEnded() && depth < ParetoMCTSController.ROLLOUT_DEPTH)
         {
             if (cur.notFullyExpanded()) {
@@ -126,6 +134,11 @@ public class ParetoTreeNode {
             if(cur.state == null)
                 System.out.println("CUR.STATE is null");   */
         }
+        }catch(Exception e)
+        {
+            System.out.println(e);
+        }
+
         return cur;
     }
 
