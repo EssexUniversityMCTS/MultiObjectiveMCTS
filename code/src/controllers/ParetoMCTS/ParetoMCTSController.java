@@ -119,7 +119,7 @@ public class ParetoMCTSController extends Controller {
         m_tspGraph = new TSPBranchBound(a_game, m_graph);
         int []bestRoute = m_tspGraph.getPreRouteArray(a_game.getMap().getFilename());
         m_heuristic = new HeuristicPTSP(a_game, targetWeights, bestRoute, MACRO_ACTION_LENGTH, ROLLOUT_DEPTH);
-        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_heuristic, m_rnd, targetWeights, a_game);
+        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_heuristic, m_rnd, targetWeights, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new SimpleHVTreePolicy(K), m_rnd, targetWeights);
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;

@@ -157,9 +157,7 @@ public abstract class DriverController extends Controller
 			Constructor evaluatorCtor = evaluatorClass.getConstructor(Parameters.class);
 			m_evaluator = (StateEvaluator)evaluatorCtor.newInstance(m_par);
 		}
-		catch (ClassNotFoundException | NoSuchMethodException | SecurityException
-				| InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

@@ -15,7 +15,7 @@ import java.util.Random;
 public class ParetoMCTSPlayer implements Player {
 
     TreePolicy m_treePolicy;
-    ParetoTreeNode m_root;
+    public ParetoTreeNode m_root;
     Random m_rnd;
     double[] m_targetWeights;
     public ParetoArchive m_globalPA;
@@ -31,9 +31,9 @@ public class ParetoMCTSPlayer implements Player {
     public int m_numIters;
 
 
-    public ParetoMCTSPlayer(TreePolicy a_treePolicy, HeuristicMO a_h, Random a_rnd, double[] a_targetWeights, Game a_game)
+    public ParetoMCTSPlayer(TreePolicy a_treePolicy, HeuristicMO a_h, Random a_rnd, double[] a_targetWeights, Game a_game, PlayoutInfo pInfo)
     {
-        m_playoutInfo = new PlayoutPTSPInfo();
+        m_playoutInfo = pInfo;
         m_heightMap = new int[a_game.getMap().getMapWidth()][a_game.getMap().getMapHeight()];
         m_heuristic = a_h;
         m_heuristic.setPlayoutInfo(m_playoutInfo);
