@@ -113,9 +113,10 @@ public class HeuristicLunar implements HeuristicMO {
 
         boolean prune = false;
         // if the ship crashed, prune state
-        if(lunarState.landed && !lunarState.landedSuccessfully) {
-            prune = true;
-        }
+
+// if(lunarState.landed && !lunarState.landedSuccessfully) {
+//     prune = true;
+// }
         // if the ship went too far upwards, prune state
         if(a_newGameState.getShip().s.y <= 0) {
             prune = true;

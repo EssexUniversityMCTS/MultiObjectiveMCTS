@@ -2,6 +2,7 @@ package controllers.ParetoMCTS;
 
 import controllers.utils.*;
 import framework.core.Game;
+import lunarcode.LunarGame;
 
 import javax.management.RuntimeErrorException;
 import java.util.LinkedList;
@@ -91,12 +92,6 @@ public class ParetoTreeNode {
         ParetoTreeNode cur = this;
         int depth = 0;
 
-        if(cur == null)
-            System.out.println("cur is NULL");
-
-        if(cur.state == null)
-            System.out.println("cur.state is NULL");
-
         try{
         while (cur.nonTerminal() && !cur.state.isEnded() && depth < ParetoMCTSController.ROLLOUT_DEPTH)
         {
@@ -116,6 +111,7 @@ public class ParetoTreeNode {
                     }
                     m_runList.remove(0);
                     cur = cur.parent;
+
                     depth--;
 
                 }else

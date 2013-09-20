@@ -179,7 +179,6 @@ public class LunarParetoMCTSController extends Controller {
                 nextMacroAction = m_lastMacroAction; //default value
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue, true);
-                System.out.println(suggestedAction);
 
                 if(PARETO_VIEW_ON)
                 {
