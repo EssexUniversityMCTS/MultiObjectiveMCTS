@@ -26,8 +26,8 @@ public class LunarParams {
     public static int shipRadius = 10;
 
     // These are in units PER SECOND (approximately), not per step/tick
-    public static double thrustAmount = 10;
-    public static double turnAmount = Math.PI/4;
+    public static double thrustAmount = 200;
+    public static double turnAmount = Math.PI/2;
 
     // The tolerance for the ship landing "upright"
     public static double uprightAngularTolerance = Math.PI/2;
@@ -42,7 +42,7 @@ public class LunarParams {
     public static int numLandingPads = 1;
     public static int landingPadSize = 5;
     // how fast is too fast when landing?
-    public static double survivableVelocity = 15;
+    public static double survivableVelocity = 4;
 
     public static double startingFuel = 10000;
 

@@ -47,6 +47,7 @@ public class LunarRun {
             }
 
         }
+        System.out.println("Ship landed with velocity " + ((LunarShip) game.getShip()).v.mag());
     }
 
 
