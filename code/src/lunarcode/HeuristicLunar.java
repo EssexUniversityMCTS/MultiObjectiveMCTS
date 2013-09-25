@@ -1,7 +1,6 @@
 package lunarcode;
 
 import controllers.ParetoMCTS.HeuristicMO;
-import controllers.ParetoMCTS.ParetoMCTSController;
 import controllers.ParetoMCTS.PlayoutInfo;
 import framework.core.*;
 import framework.graph.Path;
@@ -90,9 +89,9 @@ public class HeuristicLunar implements HeuristicMO {
                 //distancePoints*0.1 + fuelPoints*0.3 + damagePoints*0.6;
                 distancePoints*0.25 + fuelPoints*0.75;
 
-        //double[] moScore = new double[]{distancePoints, damagePower};
+        double[] moScore = new double[]{distancePoints, fuelPoints};
         //double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
-        double[] moScore = new double[]{allInOne, allInOne};
+        //double[] moScore = new double[]{allInOne, allInOne};
 
         //double[] moScore = new double[]{damagePower, damagePower};
 

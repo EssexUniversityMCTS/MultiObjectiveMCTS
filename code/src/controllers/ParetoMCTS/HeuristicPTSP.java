@@ -43,12 +43,12 @@ public class HeuristicPTSP implements HeuristicMO
     public double m_currentShipSpeed;
     public int nlastCyclesThrusting;
 
-    public HeuristicPTSP(Game a_game, double[] tWeights, int []bestRoute, int maLength, int rollDepth)
+    public HeuristicPTSP(Game a_game, int []bestRoute)
     {
-        this.targetWeights = tWeights;
+        this.targetWeights = ParetoMCTSParameters.targetWeights;
         m_numTargets = targetWeights.length;
-        MACRO_ACTION_LENGTH = maLength;
-        ROLLOUT_DEPTH = rollDepth;
+        MACRO_ACTION_LENGTH = ParetoMCTSParameters.MACRO_ACTION_LENGTH;
+        ROLLOUT_DEPTH = ParetoMCTSParameters.ROLLOUT_DEPTH;
         m_nodeLookup = new TreeMap<Integer, Node>();
         m_bestRoute = bestRoute;
 

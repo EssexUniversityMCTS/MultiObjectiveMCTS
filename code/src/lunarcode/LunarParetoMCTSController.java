@@ -54,39 +54,7 @@ public class LunarParetoMCTSController extends Controller {
     /**
      * ParetoView - Debug
      */
-    public static boolean EXPLORATION_VIEW_ON;
-    public static boolean PARETO_VIEW_ON;
     private ParetoView m_paretoView;
-
-
-    public static int MACRO_ACTION_LENGTH = 15;
-    public static int ROLLOUT_DEPTH = 8;
-    public static int NUM_ACTIONS = 6;
-    public static double K = Math.sqrt(2);
-
-    public static double[] targetWeights= //new double[]{0.33,0.33,0.33};
-
-                                //new double[]{0.6,0.3,0.1};
-                                //new double[]{0.3,0.6,0.1};
-                                //new double[]{0.6,0.1,0.3};
-                                //new double[]{0.3,0.1,0.6};
-                                //new double[]{0.1,0.3,0.6};
-                                //new double[]{0.1,0.6,0.3};
-
-                                 //   new double[]{0.0,0.5,0.5};
-                                // new double[]{0.5,0.0,0.5};
-                                //new double[]{0.5,0.5,0.0};
-                                //new double[]{1.0, 0.0, 0.0};
-                                //new double[]{0.0, 1.0, 0.0};
-                                //new double[]{0.0, 0.0, 1.0};
-
-                            //new double[]{0.25, 0.75};
-                            new double[]{0.5, 0.5};
-                            //new double[]{0.0,1.0};
-                            //new double[]{1.0,0.0};
-
-
-    public static int NUM_TARGETS = targetWeights.length;
 
     /**
      * Constructor of the controller
@@ -97,8 +65,8 @@ public class LunarParetoMCTSController extends Controller {
     {
         m_rnd = new Random();
         m_resetRS = true;
-        m_heuristic = new HeuristicLunar(targetWeights);
-        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(K), m_heuristic, m_rnd, targetWeights, a_game, new PlayoutLunarInfo());
+        m_heuristic = new HeuristicLunar(ParetoMCTSParameters.targetWeights);
+        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(ParetoMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutLunarInfo());
         //m_player = new ParetoMCTSPlayer(new SimpleHVTreePolicy(K), m_rnd, targetWeights);
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;
@@ -106,7 +74,7 @@ public class LunarParetoMCTSController extends Controller {
 
         JEasyFrame frame;
         m_paretoView = null;
-        if(PARETO_VIEW_ON)
+        if(ParetoMCTSParameters.PARETO_VIEW_ON)
         {
             //View of the game, if applicable.
             m_paretoView = new ParetoView(m_player.m_root.pa, new Dimension(300,300));
@@ -146,7 +114,7 @@ public class LunarParetoMCTSController extends Controller {
             m_lastMacroAction = 0;
             nextMacroAction = m_lastMacroAction;
             m_resetRS = true;
-            m_currentMacroAction = LunarParetoMCTSController.MACRO_ACTION_LENGTH-1;
+            m_currentMacroAction = ParetoMCTSParameters.MACRO_ACTION_LENGTH-1;
 
             m_currentGameState = a_game; //no need to prepareGameCopy
             int suggestedAction = m_player.run(a_game, a_timeDue, true);
@@ -180,7 +148,7 @@ public class LunarParetoMCTSController extends Controller {
                 //keep searching and retrieve the action suggested by the random search engine.
                 int suggestedAction = m_player.run(a_game, a_timeDue, true);
 
-                if(PARETO_VIEW_ON)
+                if(ParetoMCTSParameters.PARETO_VIEW_ON)
                 {
                     m_paretoView.setParetoArchive(m_player.m_root.pa.copy());
                     m_paretoView.repaint();
@@ -195,7 +163,7 @@ public class LunarParetoMCTSController extends Controller {
                     m_lastMacroAction = suggestedAction;
 
                 if(m_lastMacroAction != -1)
-                    m_currentMacroAction = LunarParetoMCTSController.MACRO_ACTION_LENGTH-1;
+                    m_currentMacroAction = ParetoMCTSParameters.MACRO_ACTION_LENGTH-1;
 
             }else{
                 throw new RuntimeException("This should not be happening: " + m_currentMacroAction);
@@ -219,8 +187,8 @@ public class LunarParetoMCTSController extends Controller {
         if(m_lastMacroAction != -1)
         {
             //Find out how long have we executed this macro-action
-            int first = LunarParetoMCTSController.MACRO_ACTION_LENGTH - m_currentMacroAction - 1;
-            for(int i = first; i < LunarParetoMCTSController.MACRO_ACTION_LENGTH; ++i)
+            int first = ParetoMCTSParameters.MACRO_ACTION_LENGTH - m_currentMacroAction - 1;
+            for(int i = first; i < ParetoMCTSParameters.MACRO_ACTION_LENGTH; ++i)
             {
                 //make the moves to advance the game state.
                 a_game.tick(m_lastMacroAction);

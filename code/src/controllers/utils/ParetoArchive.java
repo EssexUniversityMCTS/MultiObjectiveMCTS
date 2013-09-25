@@ -1,7 +1,7 @@
 package controllers.utils;
 
 
-import controllers.ParetoMCTS.ParetoMCTSController;
+//import controllers.ParetoMCTS.ParetoMCTSController;
 import framework.utils.Cube;
 
 import java.util.ArrayList;
@@ -210,7 +210,7 @@ public class ParetoArchive
     private double lebesgue3()         //Assumes maximization.
     {
         //long now = System.currentTimeMillis();
-        ParetoMCTSController.HV_COUNTS++;
+        //ParetoMCTSController.HV_COUNTS++;
 
         OrderedList pointsInX = new OrderedList();
         OrderedList pointsInY = new OrderedList();

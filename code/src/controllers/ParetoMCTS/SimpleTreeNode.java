@@ -32,7 +32,7 @@ public class SimpleTreeNode {
         this.m_player = a_player;
         this.parent = parent;
         children = new SimpleTreeNode[ParetoMCTSController.NUM_ACTIONS];
-        totValue = new double[ParetoMCTSController.NUM_TARGETS];
+        totValue = new double[ParetoMCTSParameters.NUM_TARGETS];
         this.roller = roller;
         this.treePolicy = treePolicy;
         // System.out.println("Made a TreeNode of depth " + depth() + ", arity " + children.length);

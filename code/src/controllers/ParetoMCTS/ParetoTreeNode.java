@@ -3,6 +3,7 @@ package controllers.ParetoMCTS;
 import controllers.utils.*;
 import framework.core.Game;
 import lunarcode.LunarGame;
+import lunarcode.LunarParetoMCTSController;
 
 import javax.management.RuntimeErrorException;
 import java.util.LinkedList;
@@ -32,12 +33,14 @@ public class ParetoTreeNode {
     public int m_numIters;
     public PlayoutInfo m_pi;
 
+
     public ParetoTreeNode()
     {
         this(null, null, -1, null, null, null, null,null);
     }
 
-    public ParetoTreeNode(Game state, Roller roller, TreePolicy treePolicy, Random rnd, Player a_player, PlayoutInfo pi) {
+    public ParetoTreeNode(Game state, Roller roller, TreePolicy treePolicy, Random rnd,
+                          Player a_player, PlayoutInfo pi) {
         this(state, null, -1, roller, treePolicy, rnd, a_player,pi);
     }
 
@@ -47,13 +50,13 @@ public class ParetoTreeNode {
         this.state = state;
         this.parent = parent;
         this.m_rnd = rnd;
-        children = new ParetoTreeNode[ParetoMCTSController.NUM_ACTIONS];
-        totValue = new double[ParetoMCTSController.NUM_TARGETS];
+        children = new ParetoTreeNode[ParetoMCTSParameters.NUM_ACTIONS];
+        totValue = new double[ParetoMCTSParameters.NUM_TARGETS];
         this.roller = roller;
         this.treePolicy = treePolicy;
         pa = new ParetoArchive();
         this.childIndex = childIndex;
-        this.m_prunedChildren = new boolean[ParetoMCTSController.NUM_ACTIONS];
+        this.m_prunedChildren = new boolean[ParetoMCTSParameters.NUM_ACTIONS];
         this.m_numIters = 0;
         this.m_pi = pi;
         
@@ -93,7 +96,7 @@ public class ParetoTreeNode {
         int depth = 0;
 
         try{
-        while (cur.nonTerminal() && !cur.state.isEnded() && depth < ParetoMCTSController.ROLLOUT_DEPTH)
+        while (cur.nonTerminal() && !cur.state.isEnded() && depth < ParetoMCTSParameters.ROLLOUT_DEPTH)
         {
             if (cur.notFullyExpanded()) {
                 ParetoTreeNode tn = cur.expand();
@@ -214,7 +217,7 @@ public class ParetoTreeNode {
     public void advance(Game st, int action)
     {
         boolean gameOver = false;
-        for(int singleAction = 0; !gameOver && singleAction < ParetoMCTSController.MACRO_ACTION_LENGTH; ++singleAction)
+        for(int singleAction = 0; !gameOver && singleAction < ParetoMCTSParameters.MACRO_ACTION_LENGTH; ++singleAction)
         {
             //((ParetoMCTSPlayer)m_player).m_heightMap[(int)st.getShip().s.x][(int)st.getShip().s.y]++;
             st.tick(action);
@@ -225,7 +228,7 @@ public class ParetoTreeNode {
 
     public boolean finishRollout(Game rollerState, int depth, int action)
     {
-        if(depth >= ParetoMCTSController.ROLLOUT_DEPTH)      //rollout end condition.
+        if(depth >= ParetoMCTSParameters.ROLLOUT_DEPTH)      //rollout end condition.
             return true;
 
         if(action == -1)                           //end

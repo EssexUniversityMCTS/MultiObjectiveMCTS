@@ -1,6 +1,7 @@
 package lunarcode;
 
 import controllers.ParetoMCTS.HeuristicPTSP;
+import controllers.ParetoMCTS.ParetoMCTSParameters;
 import controllers.ParetoMCTS.PlayoutInfo;
 import framework.core.Game;
 
@@ -17,7 +18,7 @@ public class PlayoutLunarInfo implements PlayoutInfo {
     public PlayoutLunarInfo()
     {
         m_thurstCount = 0;
-        m_playoutHistory = new int[HeuristicPTSP.ROLLOUT_DEPTH];
+        m_playoutHistory = new int[ParetoMCTSParameters.ROLLOUT_DEPTH];
         m_numMoves = 0;
         m_landed = false;
     }
@@ -25,7 +26,7 @@ public class PlayoutLunarInfo implements PlayoutInfo {
     public void reset(Game a_gameState)
     {
         m_thurstCount = 0;
-        m_playoutHistory = new int[HeuristicPTSP.ROLLOUT_DEPTH];
+        m_playoutHistory = new int[ParetoMCTSParameters.ROLLOUT_DEPTH];
         m_numMoves = 0;
         m_landed = false;
     }

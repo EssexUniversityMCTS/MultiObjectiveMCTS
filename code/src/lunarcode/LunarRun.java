@@ -1,6 +1,5 @@
 package lunarcode;
 
-import controllers.ParetoMCTS.ParetoMCTSController;
 import controllers.utils.StatSummary;
 import framework.core.Controller;
 import framework.core.Game;

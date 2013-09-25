@@ -20,16 +20,19 @@ public class RandomRoller implements Roller
     
     private Random m_r;
 
-    public RandomRoller(int a_rT, Random a_r)
+    private int m_numActions;
+
+    public RandomRoller(int a_rT, Random a_r, int a_numActions)
     {
         m_rolloutType = a_rT;
         m_r = a_r;
+        m_numActions = a_numActions;
     }
 
     public int roll(Game a_gameState)
     {
         if(this.m_rolloutType == RANDOM_ROLLOUT)
-            return m_r.nextInt(ParetoMCTSController.NUM_ACTIONS);
+            return m_r.nextInt(m_numActions);
         else throw new RuntimeException("Unknown rollout mode: " + this.m_rolloutType);
     }
     
