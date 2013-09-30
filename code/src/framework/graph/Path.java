@@ -81,5 +81,22 @@ public class Path
 	    }
     }
 
+
+    /**
+     * Creates a path as a copy of another path.
+     * @param a_p path to copy from.
+     */
+    public Path(Path a_p,boolean t)
+    {
+        m_originID = a_p.m_destinationID;
+        m_destinationID = a_p.m_originID;
+        m_cost = a_p.m_cost;
+        m_points = new Vector<Integer>();
+        for(int i = a_p.m_points.size()-1; i >=0 ; --i)
+        {
+            m_points.add(a_p.m_points.get(i));
+        }
+    }
+
 }
 

@@ -1,14 +1,14 @@
 package controllers.ParetoMCTS;
 
-import framework.core.FuelTank;
-import framework.core.Game;
-import framework.core.Waypoint;
+import controllers.utils.SightPath;
+import framework.core.*;
 import framework.graph.Graph;
 import framework.graph.Node;
 import framework.graph.Path;
 import framework.utils.Vector2d;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 /**
@@ -61,6 +61,8 @@ public class TSPBranchBound
      * Minimum cost from orders found.
      */
     private double m_minCost = Double.MAX_VALUE;
+
+    public SightPath m_sps[];
 
     /** CACHE OF ROUTES TO SPEED UP EXPERIMENTS **/
     private TreeMap<String,ArrayList<Integer>> m_PreRoutes;
@@ -153,14 +155,117 @@ public class TSPBranchBound
             m_PreRoutes.put("maps/ptsp_map61.map",  getArrayObject(new int[]{13,8,7,4,11,6,1,3,0,2,10,5,12,9}));
         }
 
-
-        /*
-        {,"maps/ptsp_map02.map","maps/ptsp_map08.map",
-                "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
-                "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"};
-         */
-
     }
+
+    public int getCost(int[] a_bestRoute, Graph a_graph, Game a_game)
+    {
+        m_sps = new SightPath[a_bestRoute.length];
+        LinkedList<Integer> inSightNodeList = new LinkedList<Integer>();
+        LinkedList<Vector2d> inSightVectorList = new LinkedList<Vector2d>();
+
+        //All my waypoints
+        LinkedList<Waypoint> waypoints = a_game.getWaypoints();
+
+        //All my fuel tanks
+        LinkedList<FuelTank> fuelTanks = a_game.getFuelTanks();
+
+        //Get the sight path for every path between waypoints in the order of the path obtained.
+        for(int index = 0; index < m_sps.length; ++index)
+        {
+            Node originIDNode = null;
+            if(index == 0)
+            {
+                originIDNode = a_graph.getClosestNodeTo(a_game.getMap().getStartingPoint().x,
+                                                        a_game.getMap().getStartingPoint().y);
+            }else
+            {
+                int elementIndex = a_bestRoute[index - 1];
+                if(elementIndex >= 10)
+                    originIDNode = a_graph.getClosestNodeTo(fuelTanks.get(elementIndex-10).s.x, fuelTanks.get(elementIndex-10).s.y);
+                else
+                    originIDNode = a_graph.getClosestNodeTo(waypoints.get(elementIndex).s.x, waypoints.get(elementIndex).s.y);
+            }
+
+            Node destIDNode = null;
+            int elementIndex = a_bestRoute[index];
+            if(elementIndex >= 10)
+                destIDNode = a_graph.getClosestNodeTo(fuelTanks.get(elementIndex-10).s.x, fuelTanks.get(elementIndex-10).s.y);
+            else
+                destIDNode = a_graph.getClosestNodeTo(waypoints.get(elementIndex).s.x, waypoints.get(elementIndex).s.y);
+
+
+            Path toNextWaypoint  = a_graph.getPath(originIDNode.id(), destIDNode.id());
+            m_sps[index] = new SightPath(toNextWaypoint,a_graph,a_game);
+
+            //Now, add the nodes to the list:
+            inSightNodeList.add(originIDNode.id()); //Origin always in.
+            for(int i = 0; i < m_sps[index].midDistances.size()-1; ++i)
+            {
+                int idx = m_sps[index].midPoints.get(i);
+                int nodeId = m_sps[index].p.m_points.get(idx);
+                inSightNodeList.add(nodeId);
+            }
+
+            if(index == m_sps.length-1)
+                inSightNodeList.add(destIDNode.id());
+        }
+
+
+        for(int i = 0; i < inSightNodeList.size()-1; ++i)
+        {
+            Node n_org = a_graph.getNode(inSightNodeList.get(i));
+            Node n_dest = a_graph.getNode(inSightNodeList.get(i+1));
+
+            Vector2d dest = new Vector2d (n_dest.x(), n_dest.y());
+            Vector2d dir = dest.subtract(new Vector2d (n_org.x(), n_org.y()));
+            dir.normalise();
+
+            inSightVectorList.add(dir);
+        }
+
+        int numPoints = inSightNodeList.size();
+        double speed = 0;
+        int ticks = 0;
+        //All points are in a straight line distance to the next.
+        for(int i = 0; i < numPoints-1; ++i)
+        {
+            Node p_org = a_graph.getNode(inSightNodeList.get(i));
+            Node p_dest = a_graph.getNode(inSightNodeList.get(i + 1));
+            double distance = p_org.euclideanDistanceTo(p_dest);
+
+            //System.out.format("d: %.3f, in. speed: %.3f,", distance, speed) ;
+            while(distance > 0)
+            {
+                double newSpeed = (Ship.loss*speed + PTSPConstants.T * 0.025);
+                distance -= newSpeed;
+                speed = newSpeed;
+                ticks++;
+            }
+
+            //Adjust the speed to turn
+            if(i < numPoints-2)
+            {
+                Vector2d to = inSightVectorList.get(i);
+                Vector2d from = inSightVectorList.get(i+1);
+                double dot = to.dot(from);
+                double penalization = pen_func(dot);
+                speed *= penalization;
+
+            }
+        }
+
+        return ticks;
+    }
+
+    public static final double CONSTANT = 0.156517643;
+    public double pen_func(double a_x)
+    {
+        double d = (Math.exp(a_x+1) - 1) * CONSTANT;
+        if(d < 0) return 0;
+        if(d > 1) return 1;
+        return d;
+    }
+
 
     /**
      * Gets the path from position a_org to a_dest

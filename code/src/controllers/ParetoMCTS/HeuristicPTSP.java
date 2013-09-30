@@ -439,7 +439,7 @@ public class HeuristicPTSP implements HeuristicMO
         distanceToFinal1 = -1;
         distanceToFinal2 = -1;
         distanceToFinal3 = -1;
-        int indexInRoute[];
+        int indexInRoute[] = null;
 
         try{
             //All my waypoints
@@ -564,6 +564,8 @@ public class HeuristicPTSP implements HeuristicMO
         m_currentShipSpeed = a_gameState.getShip().v.mag();
         //System.out.println( (m_currentShipSpeed>ParetoMCTSController.THRESHOLD_HIGH_SPEED)?
         //        "High speed "+m_currentShipSpeed : "Low Speed "+m_currentShipSpeed );
+
+        //System.out.println(indexInRoute[0] + " " + indexInRoute[1] + " " + indexInRoute[2]);
     }
 
 
