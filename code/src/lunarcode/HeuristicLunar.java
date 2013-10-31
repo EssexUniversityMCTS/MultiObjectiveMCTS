@@ -16,11 +16,14 @@ public class HeuristicLunar implements HeuristicMO {
     public int VALUE_CALLS;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
-    public static int NUM_OBJECTIVES = 2;
+    public static int NUM_OBJECTIVES = 3;
     public double targetWeights[];
 
     // maximum possible distance from target
     public double maxDistance;
+
+    // desired landing angle
+    Vector2d desiredDirection = new Vector2d(0, -1);
 
     // bounds of the objective parameter values
     public double[][] bounds;
@@ -85,11 +88,14 @@ public class HeuristicLunar implements HeuristicMO {
         double fuelPoints = 1 - ((LunarParams.startingFuel-lunarState.getShip().getRemainingFuel()) / LunarParams.startingFuel);
 //        double fuelPower = fuelPoints* ParetoMCTSController.FUEL_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.FUEL_POWER_MULT);
 
+
+        double anglePoints = lunarState.getShip().d.dist(desiredDirection);
+
         double allInOne = //distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
                 //distancePoints*0.1 + fuelPoints*0.3 + damagePoints*0.6;
                 distancePoints*0.25 + fuelPoints*0.75;
 
-        double[] moScore = new double[]{distancePoints, fuelPoints};
+        double[] moScore = new double[]{distancePoints, 0, 0};
         //double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
         //double[] moScore = new double[]{allInOne, allInOne};
 

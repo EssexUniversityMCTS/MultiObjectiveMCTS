@@ -21,7 +21,7 @@ public class LunarShip extends Ship {
 
     private final double SHIP_RADIUS = 10;
 
-    public double thrustForce;
+    boolean isThrusting = false;
     public double rotVel;
 
     // what last move given to ship was
@@ -38,7 +38,6 @@ public class LunarShip extends Ship {
         super(a_game, LunarParams.startingPoint);
         game = a_game;
         fuel = LunarParams.startingFuel;
-        thrustForce = 0;
         radius = LunarParams.shipRadius;
     }
 
@@ -53,6 +52,9 @@ public class LunarShip extends Ship {
         // adjust thrust and spin
         if(Controller.getThrust(move)) {
             thrust(LunarParams.thrustAmount * LunarParams.dt);
+            isThrusting = true;
+        } else {
+            isThrusting = false;
         }
         int turnDir = Controller.getTurning(move);
         spin(turnDir * LunarParams.turnAmount * LunarParams.dt);
@@ -75,8 +77,6 @@ public class LunarShip extends Ship {
 //        if(force > LunarParams.thrustLimit) force = LunarParams.thrustLimit;
 //        else if(force < 0) force = 0;
 
-        // keep track of force for drawing purposes
-        thrustForce = force;
         Vector2d thrustDirection = new Vector2d(0, -1);
         thrustDirection.rotate(d.theta());
 
@@ -112,8 +112,10 @@ public class LunarShip extends Ship {
         g.drawPolygon(xpShip, ypShip, xpShip.length);
 
         // draw a line to indicate thrust force
-        g.setColor(Color.RED);
-        g.drawLine(0, 0, 0, ((int)thrustForce));
+        if(isThrusting) {
+            g.setColor(Color.RED);
+            g.drawLine(0, 0, 0, 20);
+        }
 
         g.setTransform(at);
     }

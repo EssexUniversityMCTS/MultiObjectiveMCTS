@@ -39,11 +39,12 @@ public class LunarGame extends Game {
 
         // wrap ship around screen based on centre x (basic but works)
         ship.s.x %= LunarParams.worldWidth;
+        if(ship.s.x < 0) ship.s.x += LunarParams.worldWidth;
 
         // check for collision
         if(terrain.isShipColliding(ship)) {
             landed = true;
-            if(ship.v.mag() <= LunarParams.survivableVelocity) landedSuccessfully = true;
+            if(terrain.onLandingPad(ship) && ship.v.mag() <= LunarParams.survivableVelocity) landedSuccessfully = true;
         }
 
         ticks++;
