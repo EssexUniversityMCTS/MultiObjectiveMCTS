@@ -82,136 +82,17 @@ public class HeuristicPTSP implements HeuristicMO
         m_bounds = new double[m_numTargets][2];
         m_bounds[0][0] = 0;
         m_bounds[0][1] = 1;
-        m_bounds[1][0] = 0;
-        m_bounds[1][1] = 1;
-        if(m_numTargets == 3)
+        if(m_numTargets >= 2)
         {
-            m_bounds[2][0] = 0;
-            m_bounds[2][1] = 1;
-        }
-    }
-
-    /*public double[] value(Game a_gameState)
-    {
-        VALUE_CALLS++;
-        if(m_nextPickups == null)
-        {
-            double superReward[] = new double[targetWeights.length];
-            for(int i = 0; i < targetWeights.length; ++i)
-                superReward[i] = 5;
-            //System.out.println("SUPER-REWARD");
-            return superReward; // Game finished successfully.
-        }
-
-        if(a_gameState.isEnded() && a_gameState.getWaypointsLeft()>0)
-        {
-            double superPunishment[] = new double[targetWeights.length];
-            for(int i = 0; i < targetWeights.length; ++i)
-                superPunishment[i] = -2;
-            //System.out.println("SUPER PUNISHMENT! " + a_gameState.getTotalTime());
-            return superPunishment; // Game finished - game over.
-        }
-
-        //All my waypoints
-        LinkedList<Waypoint> waypoints = a_gameState.getWaypoints();
-
-        //All my fuel tanks
-        LinkedList<FuelTank> fuelTanks = a_gameState.getFuelTanks();
-
-        double collectionBonus = 0;
-        double feasibility = 1;
-        double visitHistory = 1;
-        int playoutLength = MACRO_ACTION_LENGTH * ROLLOUT_DEPTH;
-        double consumedFuelInterval = (PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) - m_preRolloutFuel ;
-        double damageTakenInterval = a_gameState.getShip().getDamage() - m_preRolloutDamage;
-
-        //First object. Is it collected?
-        double distanceScore1 = GAMMA; //1*GAMMA;
-        double distance1 = 0;
-        boolean is1Collected = (m_nextPickups[0] < 10) ? (waypoints.get(m_nextPickups[0])).isCollected() : (fuelTanks.get(m_nextPickups[0]-10)).isCollected();
-        GameObject firstObj = (m_nextPickups[0] < 10) ? waypoints.get(m_nextPickups[0]) : fuelTanks.get(m_nextPickups[0]-10);
-        if(!is1Collected)
-        {
-            Path pathToFirst = getPathToGameObject(a_gameState, firstObj, m_nextPickups[0]);
-            distance1 = pathToFirst.m_cost;
-            distanceScore1 = 1 - (distance1/m_preRolloutDistance1);
-
-            //Feasibility check:
-            double v = (m_preRolloutDistance1 - distance1) / playoutLength;
-            double pot_dist = v * a_gameState.getStepsLeft();
-            if(distanceScore1>0 && pot_dist < distance1)
+            m_bounds[1][0] = 0;
+            m_bounds[1][1] = 1;
+            if(m_numTargets == 3)
             {
-                feasibility = -1;
-               // System.out.println("FEASIBILITY CHECK: " + pot_dist + " < " + distance1);
-                F_CHECKS++;
+                m_bounds[2][0] = 0;
+                m_bounds[2][1] = 1;
             }
         }
-
-        double alpha = ALPHA;
-        double beta = BETA;
-        double distanceScore2 = GAMMA;
-        double distance2 = 0;
-        if(m_nextPickups.length>1)
-        {
-            boolean is2Collected = (m_nextPickups[1] < 10) ? (waypoints.get(m_nextPickups[1])).isCollected() : (fuelTanks.get(m_nextPickups[1]-10)).isCollected();
-            GameObject secondObject = (m_nextPickups[1] < 10) ? waypoints.get(m_nextPickups[1]) : fuelTanks.get(m_nextPickups[1]-10);
-            if(!is2Collected)
-            {
-                if(!is1Collected)
-                {
-                    distance2 = distance1; //Plus distance between objects.
-                    Path pathToSecond = getPathBetweenGameObjects(a_gameState, firstObj, m_nextPickups[0], secondObject, m_nextPickups[1]);
-                    distance2 += pathToSecond.m_cost;
-
-                }else
-                {
-                    Path pathToSecond = getPathToGameObject(a_gameState, secondObject, m_nextPickups[1]);
-                    distance2 = pathToSecond.m_cost;
-                    collectionBonus = 10;
-
-                    int whenDidItHappen = a_gameState.getShip().getVisitHistory().get(m_nextPickups[0]);
-                    int timeSpent = whenDidItHappen - m_lastVisitTick;
-                    //System.out.println("Seen on " + whenDidItHappen);
-
-                    //visitHistory = 2 - (whenDidItHappen/8000); //8000=numWaypoints*timePerWaypoint
-                    visitHistory = 2 - (timeSpent/PTSPConstants.getStepsInit(10));
-                }
-                distanceScore2 = 1 - (distance2/m_preRolloutDistance2);
-            }
-        }else
-        {
-            alpha = 10;
-            beta = 0;
-        }
-
-        //Distance points:
-        double distancePoints = alpha * distanceScore1 + beta * distanceScore2;
-
-        //Fuel and damage points:
-        //double fuelDifference = Math.abs((consumedFuelInterval/playoutLength) - FUEL_OPTIMUM_PROPORTION);
-        //double fuelPoints = 1 - fuelDifference;   //THIS ONE SEEMS TO BE SHIT!
-        double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
-        double damagePoints = 1 - (damageTakenInterval/playoutLength);
-        double speedPoints = a_gameState.getShip().v.mag();
-
-        int stepsPerWp = PTSPConstants.getStepsPerWaypoints(a_gameState.getNumWaypoints());
-        //double timePoints = 1 - (a_gameState.getTotalTime()/10000.0);
-        double timePoints = 1 - ((stepsPerWp - a_gameState.getStepsLeft()) / stepsPerWp);
-
-
-        //double[] moScore = new double[]{visitHistory*distancePoints*feasibility,
-        //                                visitHistory*fuelPoints*feasibility*speedPoints,
-        //                                visitHistory*damagePoints*feasibility*speedPoints};
-        double[] moScore = new double[]{distancePoints*timePoints,distancePoints*fuelPoints,distancePoints*damagePoints};
-        //double[] moScore = new double[]{distancePoints,fuelPoints,damagePoints};
-
-        //double[] moScore = new double[]{distancePoints*fuelPoints+collectionBonus,distancePoints*damagePoints+collectionBonus};
-        //double[] moScore = new double[]{distancePoints*fuelPoints,distancePoints*damagePoints};
-        //double[] moScore = new double[]{timePoints*distancePoints*fuelPoints,timePoints*distancePoints*damagePoints};
-
-        return moScore;
     }
-    */
 
     public double[] value(Game a_gameState)
     {
@@ -321,49 +202,6 @@ public class HeuristicPTSP implements HeuristicMO
         //double distancePoints = 1 - (distanceToEnd / segmentsCost[0]);
         double speedPoints = a_gameState.getShip().v.mag();
 
-
-        //Fuel and damage points:
-        //double fuelPoints = 1 - (consumedFuelInterval/playoutLength);
-        //double fuelPoints; // = 1 - ((double) m_playoutInfo.m_thurstCount/playoutLength);
-                      /*
-        if(is1Collected)
-        {
-            fuelPoints = 0.75;
-            int firstAction = m_playoutInfo.m_playoutHistory[0];
-            if(!Controller.getThrust(firstAction))
-            {
-                fuelPoints = 1;
-            }
-        }else{
-            fuelPoints = 0.5;
-        }      */
-
-        /*fuelPoints = 0.5;
-        if(is1Collected)
-        {
-            int thrustCount = 0;
-            int numActions =  m_playoutInfo.m_actionFirstPickup+1;
-            for(int i = 0; i < numActions; ++i)
-            {
-                int thisAction = m_playoutInfo.m_playoutHistory[i];
-                thrustCount += Controller.getThrust(thisAction) ? 1 : 0;
-            }
-
-            double percThrustNotUsed = 1.0 - (double)thrustCount/numActions;
-            fuelPoints += percThrustNotUsed*0.5;
-
-        }else{
-            fuelPoints = 0.25;
-        }*/
-
-
-       /* fuelPoints = 1.0;
-        int firstAction = m_playoutInfo.m_playoutHistory[0];
-        if(Controller.getThrust(firstAction))
-            fuelPoints -= (nlastCyclesThrusting*0.25);         */
-
-        //double damagePoints = 1 - (damageTakenInterval/playoutLength);
-
         //THIS WORKED OK
         double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
         double fuelPower = fuelPoints*ParetoMCTSController.FUEL_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.FUEL_POWER_MULT);
@@ -379,16 +217,18 @@ public class HeuristicPTSP implements HeuristicMO
             damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT_SLOW +
                     distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT_SLOW);
 
-
-        double allInOne = //distancePoints*0.33 + fuelPoints*0.33 + damagePoints*0.33;
-                        //distancePoints*0.1 + fuelPoints*0.3 + damagePoints*0.6;
-                    distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
+        double[] tw = ParetoMCTSParameters.targetWeights;
+        double allInOne = //distancePoints*0.33 + fuelPower*0.33 + damagePower*0.33;
+                        distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
+                    //distancePoints*tw[0] + fuelPower*tw[1] + damagePower*tw[2];
 
         //double[] moScore = new double[]{distancePoints, damagePower};
-        double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
         //double[] moScore = new double[]{allInOne, allInOne, allInOne};
 
         //double[] moScore = new double[]{damagePower, damagePower};
+
+        //double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
+        double[] moScore = new double[]{allInOne};
 
         return moScore;
     }

@@ -42,7 +42,7 @@ public class LunarParams {
     public static int numLandingPads = 1;
     public static int landingPadSize = 5;
     // how fast is too fast when landing?
-    public static double survivableVelocity = 4;
+    public static double survivableVelocity = 5;
 
     public static double startingFuel = 10000;
 

@@ -66,14 +66,15 @@ public class ParetoTreeNode {
         }
     }
 
-
+    public static int NEXT_TICKS;
     public void mctsSearch(long a_timeDue) {
 
         long remaining = a_timeDue - System.currentTimeMillis();
 
+        NEXT_TICKS=0;
         for (int i = 0; i < 500; i++) {
         //while(remaining > 10)   {
-        //while(remaining > 5)   {
+        //while(remaining > 0)   {
             m_runList.clear();
             m_runList.add(this); //root always in.
 
@@ -87,7 +88,7 @@ public class ParetoTreeNode {
             m_numIters++;
             remaining = a_timeDue - System.currentTimeMillis();
         }
-        //System.out.print(its+",");
+        //System.out.println("TICKS IN 40 ms: " + NEXT_TICKS);
     }
 
     public ParetoTreeNode treePolicy() {
@@ -221,6 +222,7 @@ public class ParetoTreeNode {
         {
             //((ParetoMCTSPlayer)m_player).m_heightMap[(int)st.getShip().s.x][(int)st.getShip().s.y]++;
             st.tick(action);
+            NEXT_TICKS++;
             gameOver = st.isEnded();
         }
     }
@@ -479,8 +481,6 @@ public class ParetoTreeNode {
 
             if(!this.m_prunedChildren[i])
             {
-                double sol[] = children[i].pa.m_members.get(0).m_data;
-               // System.out.println("Child " + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[i].nVisits);
                 if (children[i] != null && children[i].nVisits + m_rnd.nextDouble() * epsilon > bestValue) {
                     bestValue = children[i].nVisits;
                     selected = i;
@@ -488,10 +488,23 @@ public class ParetoTreeNode {
             }
         }
         if (selected == -1) throw new RuntimeException("Unexpected selection!");
+        return selected;
+    }
 
-        //double sol[] = children[selected].pa.m_members.get(0).m_data;
-        //System.out.println("SELECTED: " + (int)bestValue + "," + sol[0] + "," + sol[1] + ": " + selected);
+    public int bestActionIndexValue() {
+        int selected = -1;
+        double bestValue = -Double.MAX_VALUE;
+        for (int i=0; i<children.length; i++) {
 
+            if(!this.m_prunedChildren[i])
+            {
+                if (children[i] != null && children[i].totValue[0] + m_rnd.nextDouble() * epsilon > bestValue) {
+                    bestValue = children[i].totValue[0];
+                    selected = i;
+                }
+            }
+        }
+        if (selected == -1) throw new RuntimeException("Unexpected selection!");
         return selected;
     }
 

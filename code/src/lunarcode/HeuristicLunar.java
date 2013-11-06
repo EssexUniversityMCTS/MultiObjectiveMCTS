@@ -95,7 +95,7 @@ public class HeuristicLunar implements HeuristicMO {
                 //distancePoints*0.1 + fuelPoints*0.3 + damagePoints*0.6;
                 distancePoints*0.25 + fuelPoints*0.75;
 
-        double[] moScore = new double[]{distancePoints, 0, 0};
+        double[] moScore = new double[]{distancePoints, fuelPoints, anglePoints};
         //double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
         //double[] moScore = new double[]{allInOne, allInOne};
 

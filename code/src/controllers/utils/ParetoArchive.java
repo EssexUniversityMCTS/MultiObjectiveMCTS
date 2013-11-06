@@ -179,6 +179,9 @@ public class ParetoArchive
         if(m_members.size() > 0)
         {
             double card = m_members.get(0).m_card;
+
+            if(card == 1)
+                return lebesgue1();
             if(card == 2)
                 return lebesgue2();
             else if(card == 3)
@@ -186,6 +189,11 @@ public class ParetoArchive
         }
 
         return -1;
+    }
+
+    private double lebesgue1()    //Assumes maximization.
+    {
+        return m_members.get(0).m_data[0];
     }
 
     private double lebesgue2()    //Assumes maximization.
