@@ -227,8 +227,8 @@ public class HeuristicPTSP implements HeuristicMO
 
         //double[] moScore = new double[]{damagePower, damagePower};
 
-        //double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
-        double[] moScore = new double[]{allInOne};
+        double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
+        //double[] moScore = new double[]{allInOne};
 
         return moScore;
     }

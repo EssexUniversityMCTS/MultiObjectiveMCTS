@@ -27,6 +27,9 @@ public class SingleMCTSPlayer implements Player
     public int m_numIters;
 
 
+    public int bestChildFoundIndex = -1;
+    public double bestValueFound = -1;
+
     public SingleMCTSPlayer(TreePolicy a_treePolicy, Heuristic a_h, Random a_rnd, Game a_game, PlayoutInfo pInfo)
     {
         m_playoutInfo = pInfo;
@@ -51,13 +54,16 @@ public class SingleMCTSPlayer implements Player
     {
         m_root.state = a_gameState;
         m_root.m_numIters = 0;
+        bestChildFoundIndex = -1;
+        bestValueFound = -1;
 
         m_root.mctsSearch(a_timeDue);
         int nextAction = 0;
         if(a)
         {
             //nextAction = m_root.bestActionIndexValue();
-            nextAction = m_root.bestActionIndex();
+            //nextAction = m_root.bestActionIndex();
+            nextAction = m_root.maxValueActionIndex();
         }
 
         this.m_numCalls++;

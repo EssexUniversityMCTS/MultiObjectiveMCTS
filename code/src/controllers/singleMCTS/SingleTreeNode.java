@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class SingleTreeNode
 {
-    public Player m_player; //owner of this tree.
+    public SingleMCTSPlayer m_player; //owner of this tree.
     public static LinkedList<SingleTreeNode> m_runList = new LinkedList<SingleTreeNode>();
     public int childIndex;
 
@@ -25,6 +25,8 @@ public class SingleTreeNode
     public int m_numIters;
     public PlayoutInfo m_pi;
 
+    public int comingFrom = -1;
+
 
     public SingleTreeNode()
     {
@@ -38,7 +40,7 @@ public class SingleTreeNode
 
     public SingleTreeNode(Game state, SingleTreeNode parent, int childIndex, Roller roller,
                           TreePolicy treePolicy, Random rnd, Player a_player, PlayoutInfo pi) {
-        this.m_player = a_player;
+        this.m_player = (SingleMCTSPlayer) a_player;
         this.state = state;
         this.parent = parent;
         this.m_rnd = rnd;
@@ -56,7 +58,6 @@ public class SingleTreeNode
     public void mctsSearch(long a_timeDue) {
 
         long remaining = a_timeDue - System.currentTimeMillis();
-
         NEXT_TICKS=0;
         for (int i = 0; i < 500; i++) {
             //while(remaining > 10)   {
@@ -72,6 +73,9 @@ public class SingleTreeNode
 
             m_numIters++;
             remaining = a_timeDue - System.currentTimeMillis();
+
+            //System.out.println("BEST VALUE SO FAR: " + m_player.bestValueFound + " from " + m_player.bestChildFoundIndex);
+
         }
         //System.out.println("TICKS IN 40 ms: " + NEXT_TICKS);
     }
@@ -110,7 +114,13 @@ public class SingleTreeNode
 
 
                 } else {
-                    cur = cur.bestChild();
+                    SingleTreeNode next = cur.bestChild();
+                    cur.comingFrom = next.childIndex;
+                    /*if(cur.parent == null)
+                    {
+                        System.out.println("Starting rollout from " + cur.comingFrom);
+                    }*/
+                    cur = next;
                     depth++;
                     m_runList.add(0,cur);
                 }
@@ -243,6 +253,13 @@ public class SingleTreeNode
             {
                 if(pn.parent != null)
                     throw new RuntimeException("This should be the root... and it's not.");
+
+                if(result > m_player.bestValueFound)
+                {
+                    m_player.bestValueFound = result;
+                    m_player.bestChildFoundIndex = pn.comingFrom;
+                    //System.out.println("new best value found (" + m_player.bestValueFound + "), from " + m_player.bestChildFoundIndex);
+                }
             }
 
         }
@@ -272,7 +289,11 @@ public class SingleTreeNode
                 }
             }
         }
-        if (selected == -1) throw new RuntimeException("Unexpected selection!");
+        if (selected == -1)
+        {
+            System.out.println("Unexpected selection!");
+            selected = 0;
+        }
         return selected;
     }
 
@@ -289,7 +310,11 @@ public class SingleTreeNode
                 }
             }
         }
-        if (selected == -1) throw new RuntimeException("Unexpected selection!");
+        if (selected == -1)
+        {
+            System.out.println("Unexpected selection!");
+            selected = 0;
+        }
         return selected;
     }
 
@@ -311,11 +336,18 @@ public class SingleTreeNode
                 }
             }
         }
-        if (selected == -1) throw new RuntimeException("Unexpected selection!");
+        if (selected == -1)
+        {
+            System.out.println("Unexpected selection!");
+            selected = 0;
+        }
 
         return selected;
     }
 
+    public int maxValueActionIndex() {
+        return m_player.bestChildFoundIndex;
+    }
 
 
 
