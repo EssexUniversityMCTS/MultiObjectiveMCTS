@@ -47,6 +47,6 @@ public class SimpleHVTreePolicy implements TreePolicy
     }
 
     public SimpleTreeNode bestChild(SimpleTreeNode node, double[][] bounds) {
-        throw new RuntimeException("Warning! Not implemented bestChild(SimpleTreeNode,double[][])");
+        throw new RuntimeException("Warning! Not implemented bestChild(SingleTreeNode,double[][])");
     }
 }

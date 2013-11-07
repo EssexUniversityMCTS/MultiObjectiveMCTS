@@ -516,7 +516,6 @@ public class ParetoTreeNode {
 
             if(!this.m_prunedChildren[i])
             {
-                double sol[] = children[i].pa.m_members.get(0).m_data;
                // System.out.println("Child " + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[i].nVisits);
                 if (children[i] != null)
                 {

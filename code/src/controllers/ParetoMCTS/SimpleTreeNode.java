@@ -93,7 +93,7 @@ public class SimpleTreeNode {
     }
 
     public int bestActionIndex(double target0, double target1) {
-        throw new RuntimeException("Not implemented in SimpleTreeNode!");
+        throw new RuntimeException("Not implemented in SingleTreeNode!");
     }
 
     public SimpleTreeNode expand() {
