@@ -72,7 +72,16 @@ public class ParetoTreeNode {
         long remaining = a_timeDue - System.currentTimeMillis();
 
         NEXT_TICKS=0;
-        for (int i = 0; i < 500; i++) {
+        int numIters = 500;
+        double invIters = 0.0;
+
+        if(treePolicy instanceof ParetoEGreedyTreePolicy)
+        {
+            ((ParetoEGreedyTreePolicy) treePolicy).epsilon = 0.1;
+            invIters = 0.1/numIters;
+        }
+
+        for (int i = 0; i < numIters; i++) {
         //while(remaining > 10)   {
         //while(remaining > 0)   {
             m_runList.clear();
@@ -87,6 +96,11 @@ public class ParetoTreeNode {
 
             m_numIters++;
             remaining = a_timeDue - System.currentTimeMillis();
+
+            if(treePolicy instanceof ParetoEGreedyTreePolicy)
+            {
+                ((ParetoEGreedyTreePolicy) treePolicy).epsilon -= invIters;
+            }
         }
         //System.out.println("TICKS IN 40 ms: " + NEXT_TICKS);
     }

@@ -59,7 +59,16 @@ public class SingleTreeNode
 
         long remaining = a_timeDue - System.currentTimeMillis();
         NEXT_TICKS=0;
-        for (int i = 0; i < 500; i++) {
+        int numIters = 500;
+        double invIters = 0.0;
+
+        if(treePolicy instanceof SingleEGreedyTreePolicy)
+        {
+            ((SingleEGreedyTreePolicy) treePolicy).epsilon = 0.1;
+            invIters = 0.1/numIters;
+        }
+
+        for (int i = 0; i < numIters; i++) {
             //while(remaining > 10)   {
             //while(remaining > 0)   {
             m_runList.clear();
@@ -74,7 +83,12 @@ public class SingleTreeNode
             m_numIters++;
             remaining = a_timeDue - System.currentTimeMillis();
 
-            //System.out.println("BEST VALUE SO FAR: " + m_player.bestValueFound + " from " + m_player.bestChildFoundIndex);
+            if(treePolicy instanceof SingleEGreedyTreePolicy)
+            {
+                ((SingleEGreedyTreePolicy) treePolicy).epsilon -= invIters;
+            }
+
+                //System.out.println("BEST VALUE SO FAR: " + m_player.bestValueFound + " from " + m_player.bestChildFoundIndex);
 
         }
         //System.out.println("TICKS IN 40 ms: " + NEXT_TICKS);
