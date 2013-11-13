@@ -91,7 +91,8 @@ public class ParetoMCTSController extends Controller {
         m_tspGraph.getCost(bestRoute, m_graph, a_game);
 
         m_heuristic = new HeuristicPTSP(a_game, bestRoute);
-        m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(ParetoMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
+        //m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(ParetoMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
+        m_player = new ParetoMCTSPlayer(new ParetoEGreedyTreePolicy(), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new SimpleHVTreePolicy(K), m_rnd, targetWeights);
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;
