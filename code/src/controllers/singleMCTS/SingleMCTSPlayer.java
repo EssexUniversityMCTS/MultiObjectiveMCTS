@@ -64,6 +64,17 @@ public class SingleMCTSPlayer implements Player
             //nextAction = m_root.bestActionIndexValue();
             //nextAction = m_root.bestActionIndex();
             nextAction = m_root.maxValueActionIndex();
+
+            /*    System.out.print("(");
+                for(int i = 0; i < m_root.children.length; ++i)
+                {
+                    if(!m_root.m_prunedChildren[i])
+                    {
+                        System.out.print(i + ":" + m_root.children[i].nVisits + ",");
+                    }
+                }
+                System.out.println(")"); */
+
         }
 
         this.m_numCalls++;
