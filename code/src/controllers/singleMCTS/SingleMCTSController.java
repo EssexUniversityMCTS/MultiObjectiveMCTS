@@ -89,7 +89,8 @@ public class SingleMCTSController extends Controller
         m_tspGraph.getCost(bestRoute, m_graph, a_game);
 
         m_heuristic = new HeuristicPTSP(a_game, bestRoute);
-        m_player = new SingleMCTSPlayer(new SingleTreePolicy(SingleMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
+        //m_player = new SingleMCTSPlayer(new SingleTreePolicy(SingleMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
+        m_player = new SingleMCTSPlayer(new SingleEGreedyTreePolicy(), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
 
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;

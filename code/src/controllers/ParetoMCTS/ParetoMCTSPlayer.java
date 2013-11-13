@@ -64,8 +64,20 @@ public class ParetoMCTSPlayer implements Player {
         {
             if(m_targetWeights.length == 1)
                 nextAction = m_root.bestActionIndexValue();
-            else
+            else{
+/*                System.out.print("(");
+                for(int i = 0; i < m_root.children.length; ++i)
+                {
+                    if(!m_root.m_prunedChildren[i])
+                    {
+                        System.out.print(i + ":" + m_root.children[i].nVisits + ",");
+                    }
+                }
+                System.out.println(")");
+*/
                 nextAction = m_root.bestActionIndex(m_targetWeights);
+            }
+
         }
 
         this.m_numCalls++;
