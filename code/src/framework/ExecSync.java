@@ -318,13 +318,13 @@ public class ExecSync extends Exec
         /////// 2. Executes one game.
         //ParetoMCTSController.EXPLORATION_VIEW_ON = true;
         //ParetoMCTSController.PARETO_VIEW_ON = true;
-        int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
-        runGame(m_visibility, delay);
+        //int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
+        //runGame(m_visibility, delay);
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
         //m_writeOutput = true;
-        //int numTrials=10;
-        //runGames(numTrials);
+        int numTrials=10;
+        runGames(numTrials);
 
     }
 

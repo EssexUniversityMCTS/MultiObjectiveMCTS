@@ -180,7 +180,8 @@ public double ALPHA = 0.9;
             distancePoints *= ticksScore;
         }
 
-        distancePoints += 1; //To set it in the range (0,1)
+        //distancePoints += 1; //To set it in the range (0,1)
+        distancePoints += 2; //
 
         //double distancePoints = 1 - (distanceToEnd / segmentsCost[0]);
         double speedPoints = a_gameState.getShip().v.mag();

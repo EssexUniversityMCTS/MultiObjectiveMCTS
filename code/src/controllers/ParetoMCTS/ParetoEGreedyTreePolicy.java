@@ -32,6 +32,9 @@ public class ParetoEGreedyTreePolicy implements TreePolicy{
                 double hvVal = child.getHV(false);
                 double childValue =  hvVal / (child.nVisits + node.epsilon);
 
+                if(hvVal < 0)
+                    System.out.println("Negative HyperVolume: " + hvVal);
+
                 if (childValue > bestValue)
                 {
                     if(selected != null)

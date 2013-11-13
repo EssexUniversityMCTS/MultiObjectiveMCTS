@@ -197,7 +197,9 @@ public class HeuristicPTSP implements HeuristicMO
             distancePoints *= ticksScore;
         }
 
-        distancePoints += 1; //To set it in the range (0,1)
+        //distancePoints += 1; //To set it in the range (0,1)
+        distancePoints += 2; //To set it in the range (and avoid <0 HVs)
+
 
         //double distancePoints = 1 - (distanceToEnd / segmentsCost[0]);
         double speedPoints = a_gameState.getShip().v.mag();
@@ -216,6 +218,11 @@ public class HeuristicPTSP implements HeuristicMO
         else
             damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT_SLOW +
                     distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT_SLOW);
+
+        if(distancePoints < 0 || fuelPower < 0 || damagePower < 0)
+        {
+            int a = 0 ;
+        }
 
         double[] tw = ParetoMCTSParameters.targetWeights;
         double allInOne = //distancePoints*0.33 + fuelPower*0.33 + damagePower*0.33;

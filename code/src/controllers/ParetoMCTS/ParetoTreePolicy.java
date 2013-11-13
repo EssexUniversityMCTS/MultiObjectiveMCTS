@@ -29,6 +29,9 @@ public class ParetoTreePolicy implements TreePolicy{
                 double hvVal = child.getHV(false);
                 double childValue =  hvVal / (child.nVisits + node.epsilon);
 
+                if(hvVal < 0)
+                    System.out.println("Negative HyperVolume: " + hvVal);
+
                 double uctValue = childValue +
                         K * Math.sqrt(Math.log(node.nVisits + 1) / (child.nVisits + node.epsilon)) +
                         node.m_rnd.nextDouble() * node.epsilon;

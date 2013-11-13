@@ -11,7 +11,7 @@ public class ParetoMCTSParameters
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
     public static int NUM_ACTIONS = 6;
-    public static double K = Math.sqrt(2) / 100;
+    public static double K = Math.sqrt(2);
     public static boolean EXPLORATION_VIEW_ON;
     public static boolean PARETO_VIEW_ON;
 
