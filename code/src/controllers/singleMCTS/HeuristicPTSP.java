@@ -204,7 +204,7 @@ public double ALPHA = 0.9;
         double allInOne = //distancePoints*0.6 + fuelPower*0.3 + damagePower*0.1;
                 distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
 
-        allInOne = Math.pow(allInOne,3);
+        //allInOne = Math.pow(allInOne,3);
         return allInOne;
     }
 

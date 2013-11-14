@@ -1,10 +1,13 @@
-package controllers.ParetoMCTS;
+package controllers.nsga2Controller;
 
 import framework.core.*;
 import framework.graph.Node;
 import framework.graph.Path;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.NavigableSet;
+import java.util.TreeMap;
 
 /**
  * Created by Diego Perez, University of Essex.
@@ -35,7 +38,6 @@ public class HeuristicPTSP implements HeuristicMO
     public int m_lastVisitTick;
     public int m_numTargets;
     public double maxDist = 0;
-    public PlayoutPTSPInfo m_playoutInfo;
 
     public double[][] m_bounds;
     public double[] segmentsCost;
@@ -45,10 +47,10 @@ public class HeuristicPTSP implements HeuristicMO
 
     public HeuristicPTSP(Game a_game, int []bestRoute)
     {
-        this.targetWeights = ParetoMCTSParameters.targetWeights;
+        this.targetWeights = NSGAIIParameters.targetWeights;
         m_numTargets = targetWeights.length;
-        MACRO_ACTION_LENGTH = ParetoMCTSParameters.MACRO_ACTION_LENGTH;
-        ROLLOUT_DEPTH = ParetoMCTSParameters.ROLLOUT_DEPTH;
+        MACRO_ACTION_LENGTH = NSGAIIParameters.MACRO_ACTION_LENGTH;
+        ROLLOUT_DEPTH = NSGAIIParameters.ROLLOUT_DEPTH;
         m_nodeLookup = new TreeMap<Integer, Node>();
         m_bestRoute = bestRoute;
 
@@ -206,20 +208,20 @@ public class HeuristicPTSP implements HeuristicMO
 
         //THIS WORKED OK
         double fuelPoints = 1 - ((PTSPConstants.INITIAL_FUEL-a_gameState.getShip().getRemainingFuel()) / (double) PTSPConstants.INITIAL_FUEL);
-        double fuelPower = fuelPoints*ParetoMCTSController.FUEL_POWER_MULT + distancePoints*(1.0-ParetoMCTSController.FUEL_POWER_MULT);
+        double fuelPower = fuelPoints*NSGAIIController.FUEL_POWER_MULT + distancePoints*(1.0-NSGAIIController.FUEL_POWER_MULT);
 
         double damagePoints =  1 - (a_gameState.getShip().getDamage() / (double) PTSPConstants.MAX_DAMAGE);
         //double damagePoints = 1 - (damageTakenInterval/playoutLength);
 
         double damagePower = 0.0;
-        if(m_currentShipSpeed > ParetoMCTSController.THRESHOLD_HIGH_SPEED)
-            damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT +
-                    distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT);
+        if(m_currentShipSpeed > NSGAIIController.THRESHOLD_HIGH_SPEED)
+            damagePower = damagePoints*NSGAIIController.DAMAGE_POWER_MULT +
+                    distancePoints*(1.0-NSGAIIController.DAMAGE_POWER_MULT);
         else
-            damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT_SLOW +
-                    distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT_SLOW);
+            damagePower = damagePoints*NSGAIIController.DAMAGE_POWER_MULT_SLOW +
+                    distancePoints*(1.0-NSGAIIController.DAMAGE_POWER_MULT_SLOW);
 
-        double[] tw = ParetoMCTSParameters.targetWeights;
+        double[] tw = NSGAIIParameters.targetWeights;
         double allInOne = //distancePoints*0.33 + fuelPower*0.33 + damagePower*0.33;
                         distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
                     //distancePoints*tw[0] + fuelPower*tw[1] + damagePower*tw[2];
@@ -234,34 +236,6 @@ public class HeuristicPTSP implements HeuristicMO
 
         return moScore;
     }
-
-
-    public void setPlayoutInfo(PlayoutInfo a_pi)
-    {
-        m_playoutInfo = (PlayoutPTSPInfo) a_pi;
-    }
-
-    public void addPlayoutInfo(int a_lastAction, Game a_gameState)
-    {
-        if(Controller.getThrust(a_lastAction))
-        {
-            m_playoutInfo.m_thurstCount += MACRO_ACTION_LENGTH;
-        }
-
-        //Add action to history.
-        m_playoutInfo.m_playoutHistory[m_playoutInfo.m_numMoves] = a_lastAction;
-        m_playoutInfo.m_numMoves++;
-
-        //Store when the waypoint is collected.
-        if(a_gameState.getWaypointsVisited() > m_playoutInfo.m_visitedWaypoints)
-        {
-            //System.out.println(m_playoutInfo.m_visitedWaypoints + " " + a_gameState.getWaypointsVisited() + " " + m_playoutInfo.m_actionFirstPickup);
-            m_playoutInfo.m_visitedWaypoints = a_gameState.getWaypointsVisited();
-            if(m_playoutInfo.m_actionFirstPickup == -1)
-                m_playoutInfo.m_actionFirstPickup = m_playoutInfo.m_numMoves-1;
-        }
-    }
-
 
     public double[][] getValueBounds()
     {
@@ -404,7 +378,7 @@ public class HeuristicPTSP implements HeuristicMO
         }
 
         m_currentShipSpeed = a_gameState.getShip().v.mag();
-        //System.out.println( (m_currentShipSpeed>ParetoMCTSController.THRESHOLD_HIGH_SPEED)?
+        //System.out.println( (m_currentShipSpeed>NSGAIIController.THRESHOLD_HIGH_SPEED)?
         //        "High speed "+m_currentShipSpeed : "Low Speed "+m_currentShipSpeed );
 
         //System.out.println(indexInRoute[0] + " " + indexInRoute[1] + " " + indexInRoute[2]);
@@ -447,20 +421,20 @@ public class HeuristicPTSP implements HeuristicMO
     private Path getPathToGameObject(Game a_game, GameObject a_gObj, int a_objKey)
     {
         //The closest node to the ship's location.
-        Node shipNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_game.getShip().s.x, a_game.getShip().s.y);
+        Node shipNode = NSGAIIController.m_graph.getClosestNodeTo(a_game.getShip().s.x, a_game.getShip().s.y);
 
-        //Node objectNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
+        //Node objectNode = NSGAIIController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
         //The closest node to the target's location (checking the cache).
         Node objectNode = null;
         if(m_nodeLookup.containsKey(a_objKey))
             objectNode = m_nodeLookup.get(a_objKey);
         else{
-            objectNode = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
+            objectNode = NSGAIIController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
             m_nodeLookup.put(a_objKey, objectNode);
         }
 
         //Get the parh between the nodes.
-        return ParetoMCTSController.m_graph.getPath(shipNode.id(), objectNode.id());
+        return NSGAIIController.m_graph.getPath(shipNode.id(), objectNode.id());
     }
 
     /**
@@ -476,7 +450,7 @@ public class HeuristicPTSP implements HeuristicMO
         if(m_nodeLookup.containsKey(a_objKey))
             object1Node = m_nodeLookup.get(a_objKey);
         else{
-            object1Node = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
+            object1Node = NSGAIIController.m_graph.getClosestNodeTo(a_gObj.s.x, a_gObj.s.y);
             m_nodeLookup.put(a_objKey, object1Node);
         }
 
@@ -485,11 +459,11 @@ public class HeuristicPTSP implements HeuristicMO
         if(m_nodeLookup.containsKey(a_objKey2))
             object2Node = m_nodeLookup.get(a_objKey2);
         else{
-            object2Node = ParetoMCTSController.m_graph.getClosestNodeTo(a_gObj2.s.x, a_gObj2.s.y);
+            object2Node = NSGAIIController.m_graph.getClosestNodeTo(a_gObj2.s.x, a_gObj2.s.y);
             m_nodeLookup.put(a_objKey2, object2Node);
         }
         //Get the parh between the nodes.
-        return ParetoMCTSController.m_graph.getPath(object1Node.id(), object2Node.id());
+        return NSGAIIController.m_graph.getPath(object1Node.id(), object2Node.id());
     }
 
     /**
