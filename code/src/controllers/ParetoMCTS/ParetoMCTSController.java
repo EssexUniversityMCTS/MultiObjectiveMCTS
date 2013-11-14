@@ -72,7 +72,6 @@ public class ParetoMCTSController extends Controller {
     public static double DAMAGE_POWER_MULT_SLOW = DAMAGE_POWER_MULT / 3.0;
     public static double THRESHOLD_HIGH_SPEED = 0.8;
 
-
     /**
      * Constructor of the controller
      * @param a_game Copy of the initial game state.
@@ -89,8 +88,19 @@ public class ParetoMCTSController extends Controller {
         int []bestRoute = m_tspGraph.getPreRouteArray(a_game.getMap().getFilename());
 
         m_tspGraph.getCost(bestRoute, m_graph, a_game);
+        double[] percLavaSegment = new double[bestRoute.length];
+        int[] dirChangesSegment = new int[bestRoute.length];
+        double angleSumSegment[] = new double[bestRoute.length];
 
-        m_heuristic = new HeuristicPTSP(a_game, bestRoute);
+        for(int i = 0; i < dirChangesSegment.length; ++i)
+        {
+            percLavaSegment[i] = m_tspGraph.m_sps[i].m_percLava;
+            dirChangesSegment[i] = m_tspGraph.m_sps[i].midDistances.size(); //Note: dir change includes one due to waypoint change
+            angleSumSegment[i] = m_tspGraph.m_sps[i].angleSumPlus;
+            //System.out.format("Segment %d perc. lava: %.3f, num dir. changes: %d, angle sum: %.3f, angle sum plus: %.3f\n",  i, percLavaSegment[i], dirChangesSegment[i],  m_tspGraph.m_sps[i].angleSum, angleSumSegment[i]);
+        }
+
+        m_heuristic = new HeuristicPTSP(a_game, bestRoute, percLavaSegment, dirChangesSegment, angleSumSegment);
         m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(ParetoMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new ParetoEGreedyTreePolicy(), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new SimpleHVTreePolicy(K), m_rnd, targetWeights);

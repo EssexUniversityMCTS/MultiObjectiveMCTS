@@ -1,5 +1,6 @@
 package controllers.ParetoMCTS;
 
+import controllers.utils.ARCCOS;
 import controllers.utils.SightPath;
 import framework.core.*;
 import framework.graph.Graph;
@@ -169,6 +170,8 @@ public class TSPBranchBound
         //All my fuel tanks
         LinkedList<FuelTank> fuelTanks = a_game.getFuelTanks();
 
+
+
         //Get the sight path for every path between waypoints in the order of the path obtained.
         for(int index = 0; index < m_sps.length; ++index)
         {
@@ -210,6 +213,21 @@ public class TSPBranchBound
                 inSightNodeList.add(destIDNode.id());
         }
 
+
+        Vector2d lastSegmentPrevious = null;
+        for(int index = 0; index < m_sps.length; ++index)
+        {
+            if(index > 0)
+            {
+                Vector2d firstSegmentThis = m_sps[index].first;
+                double dot = lastSegmentPrevious.dot(firstSegmentThis);
+                double angle = ARCCOS.getArcos(dot);
+                m_sps[index-1].angleSumPlus = m_sps[index-1].angleSum + angle;
+            }
+
+            lastSegmentPrevious = m_sps[index].last;
+        }
+        m_sps[m_sps.length-1].angleSumPlus = m_sps[m_sps.length-1].angleSum;
 
         for(int i = 0; i < inSightNodeList.size()-1; ++i)
         {

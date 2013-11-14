@@ -1,6 +1,7 @@
 package lunarcode;
 
 import controllers.ParetoMCTS.HeuristicMO;
+import controllers.ParetoMCTS.ParetoMCTSParameters;
 import controllers.ParetoMCTS.PlayoutInfo;
 import framework.core.*;
 import framework.graph.Path;
@@ -141,4 +142,7 @@ public class HeuristicLunar implements HeuristicMO {
 
         playoutInfo.m_landed = lunarState.isEnded();
     }
+
+
+    public double[] getTargetWeights() {return ParetoMCTSParameters.targetWeights;}
 }

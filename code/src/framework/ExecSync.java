@@ -172,13 +172,15 @@ public class ExecSync extends Exec
         int totalNumGamesPlayed=0;
         boolean moreMaps = true;
 
-        StatSummary ssWp = new StatSummary();
-        StatSummary ssTime = new StatSummary();
-        StatSummary ssFuel = new StatSummary();
-        StatSummary ssDamage = new StatSummary();
+        StatSummary ssWp, ssTime, ssFuel, ssDamage;
 
         for(int m = 0; moreMaps && m < m_mapNames.length; ++m)
         {
+            ssWp = new StatSummary();
+            ssTime = new StatSummary();
+            ssFuel = new StatSummary();
+            ssDamage = new StatSummary();
+
             String mapName = m_mapNames[m];
             double avgWaypoints=0;
             double avgTimeSpent=0;
@@ -264,23 +266,23 @@ public class ExecSync extends Exec
             if(m_verbose)
             {
                 System.out.println("--------");
-                System.out.format("Average waypoints: %.3f, average time spent: %.3f\n",
-                        (avgWaypoints / numGamesPlayed), (avgTimeSpent / numGamesPlayed));
-                System.out.println("Disqualifications: " + (trials - numGamesPlayed) + "/" + trials);
+                //System.out.format("Average waypoints: %.3f, average time spent: %.3f\n",
+                //        (avgWaypoints / numGamesPlayed), (avgTimeSpent / numGamesPlayed));
+                //System.out.println("Disqualifications: " + (trials - numGamesPlayed) + "/" + trials);
+
+                System.out.format("Average waypoints: %.3f +- %.3f, average time spent: %.3f +- %.3f" +
+                        ", average fuel consumed: %.3f +- %.3f, average damage taken: %.3f +- %.3f\n",
+                        ssWp.mean(), ssWp.stdErr(), ssTime.mean(), ssTime.stdErr(), ssFuel.mean(), ssFuel.stdErr(), ssDamage.mean(), ssDamage.stdErr());
             }
         }
 
         //Print the average score.
-        if(m_verbose)
+        /*if(m_verbose)
         {
             System.out.println("-------- Final score --------");
             //System.out.format("Average waypoints: %.3f, average time spent: %.3f\n", (avgTotalWaypoints / m_mapNames.length), (avgTotalTimeSpent / m_mapNames.length));
             //System.out.println("Disqualifications: " + (trials*m_mapNames.length - totalNumGamesPlayed) + "/" + trials*m_mapNames.length);
-            System.out.format("Average waypoints: %.3f +- %.3f, average time spent: %.3f +- %.3f" +
-                    ", average fuel consumed: %.3f +- %.3f, average damage taken: %.3f +- %.3f\n",
-                    ssWp.mean(), ssWp.stdErr(), ssTime.mean(), ssTime.stdErr(), ssFuel.mean(), ssFuel.stdErr(), ssDamage.mean(), ssDamage.stdErr());
-
-        }
+        }        */
     }
 
 
@@ -291,17 +293,17 @@ public class ExecSync extends Exec
      */
     public static void main(String[] args)
     {
-        m_mapNames = new String[]{"maps/ptsp_map56.map"}; //Set here the name of the map to play in.
-       // m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
-       //         "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
-       //         "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
+        //m_mapNames = new String[]{"maps/ptsp_map19.map"}; //Set here the name of the map to play in.
+        m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
+                "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
+                "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
 
         m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
         m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
 //        m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
-   //     m_controllerName = "controllers.singleMCTS.SingleMCTSController";
-        m_controllerName = "controllers.nsga2Controller.NSGAIIController";
+        m_controllerName = "controllers.singleMCTS.SingleMCTSController";
+        //m_controllerName = "controllers.nsga2Controller.NSGAIIController";
 
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";
@@ -319,8 +321,8 @@ public class ExecSync extends Exec
         /////// 2. Executes one game.
         //ParetoMCTSController.EXPLORATION_VIEW_ON = true;
         //ParetoMCTSController.PARETO_VIEW_ON = true;
-    //    int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
-    //    runGame(m_visibility, delay);
+        //int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
+        //runGame(m_visibility, delay);
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
         //m_writeOutput = true;

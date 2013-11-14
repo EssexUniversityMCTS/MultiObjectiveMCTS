@@ -21,6 +21,7 @@ public class HeuristicPTSP implements HeuristicMO
     public double FUEL_OPTIMUM_PROPORTION = 0.0;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
+    public boolean VARIABLE_WEIGHTS = false;
 
     /** STATE VARIABLES **/
     public double[] targetWeights;
@@ -43,14 +44,30 @@ public class HeuristicPTSP implements HeuristicMO
     public double m_currentShipSpeed;
     public int nlastCyclesThrusting;
 
-    public HeuristicPTSP(Game a_game, int []bestRoute)
+
+    public double percLavaSegment[];
+    public int dirChangesSegment[];
+    public double angleSumSegment[];
+    public double currentPickupPercLava;
+    public int currentPickupDirChanges;
+    public double currentAngleSum;
+
+    public HeuristicPTSP(Game a_game, int []bestRoute, double percLavaSegment[], int dirChangesSegment[], double angleSumSegment[])
     {
+        this.percLavaSegment = percLavaSegment;
+        this.dirChangesSegment = dirChangesSegment;
+        this.angleSumSegment = angleSumSegment;
         this.targetWeights = ParetoMCTSParameters.targetWeights;
         m_numTargets = targetWeights.length;
         MACRO_ACTION_LENGTH = ParetoMCTSParameters.MACRO_ACTION_LENGTH;
         ROLLOUT_DEPTH = ParetoMCTSParameters.ROLLOUT_DEPTH;
         m_nodeLookup = new TreeMap<Integer, Node>();
         m_bestRoute = bestRoute;
+
+        //default
+        currentPickupPercLava = percLavaSegment[0];
+        currentPickupDirChanges = dirChangesSegment[0];
+        currentAngleSum = angleSumSegment[0];
 
         initBounds();
 
@@ -219,22 +236,27 @@ public class HeuristicPTSP implements HeuristicMO
             damagePower = damagePoints*ParetoMCTSController.DAMAGE_POWER_MULT_SLOW +
                     distancePoints*(1.0-ParetoMCTSController.DAMAGE_POWER_MULT_SLOW);
 
-        double[] tw = ParetoMCTSParameters.targetWeights;
-        double allInOne = //distancePoints*0.33 + fuelPower*0.33 + damagePower*0.33;
-                        distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
-                    //distancePoints*tw[0] + fuelPower*tw[1] + damagePower*tw[2];
-
-        //double[] moScore = new double[]{distancePoints, damagePower};
-        //double[] moScore = new double[]{allInOne, allInOne, allInOne};
-
-        //double[] moScore = new double[]{damagePower, damagePower};
 
         double[] moScore = new double[]{distancePoints, fuelPower, damagePower};
-        //double[] moScore = new double[]{allInOne};
 
         return moScore;
     }
 
+    public double[] getTargetWeights()
+    {
+        if(!VARIABLE_WEIGHTS)
+            return ParetoMCTSParameters.targetWeights;
+
+        if(currentPickupPercLava > 0.5)
+            return new double[]{0.1,0.6,0.3};
+        if(currentAngleSum > 1.5)
+            return new double[]{0.1,0.3,0.6};
+        if(currentPickupPercLava > 0.25 || currentAngleSum > 0.5)
+        if(currentPickupPercLava > 0.25 || currentAngleSum > 0.5)
+            return new double[]{0.2,0.4,0.4};
+
+        return new double[]{0.3,0.3,0.3};
+    }
 
     public void setPlayoutInfo(PlayoutInfo a_pi)
     {
@@ -310,6 +332,13 @@ public class HeuristicPTSP implements HeuristicMO
                         //It's a waypoint.
                         if(!waypoints.get(key).isCollected())
                         {
+                            if(j == 0)
+                            {
+                                currentPickupPercLava = percLavaSegment[i];
+                                currentPickupDirChanges = dirChangesSegment[i];
+                                currentAngleSum = angleSumSegment[i];
+                            }
+
                             //The first pLength elements not visited are selected.
                             m_nextPickups[j] = key;
                             indexInRoute[j] = i+1;
@@ -320,6 +349,13 @@ public class HeuristicPTSP implements HeuristicMO
                         //Fuel tank
                         if(!fuelTanks.get(key-10).isCollected())
                         {
+                            if(j == 0)
+                            {
+                                currentPickupPercLava = percLavaSegment[i];
+                                currentPickupDirChanges = dirChangesSegment[i];
+                                currentAngleSum = angleSumSegment[i];
+                            }
+
                             //The first pLength elements not visited are selected.
                             m_nextPickups[j] = key;
                             indexInRoute[j] = i+1;
@@ -408,6 +444,13 @@ public class HeuristicPTSP implements HeuristicMO
         //        "High speed "+m_currentShipSpeed : "Low Speed "+m_currentShipSpeed );
 
         //System.out.println(indexInRoute[0] + " " + indexInRoute[1] + " " + indexInRoute[2]);
+        /*if(m_nextPickups!=null) for(int i = 0; i < m_bestRoute.length ; ++i)
+        {
+            if(m_nextPickups[0] == m_bestRoute[i])
+                System.out.print("*_");
+            System.out.print(m_bestRoute[i] + "_");
+        }
+        System.out.format( ": %.3f, %d, %.3f\n" , currentPickupPercLava , currentPickupDirChanges, currentAngleSum);      */
     }
 
 

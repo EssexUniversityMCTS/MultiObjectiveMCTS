@@ -74,8 +74,9 @@ public class ParetoMCTSPlayer implements Player {
                     }
                 }
                 System.out.println(")");        */
-
-                nextAction = m_root.bestActionIndex(m_targetWeights);
+                double[] targetWeights = m_heuristic.getTargetWeights();
+                //System.out.println(targetWeights[0] + "," + targetWeights[1] + "," + targetWeights[2]);
+                nextAction = m_root.bestActionIndex(targetWeights);
             }
 
         }

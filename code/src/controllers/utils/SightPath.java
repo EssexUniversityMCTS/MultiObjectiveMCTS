@@ -21,6 +21,7 @@ public class SightPath
     public Path p;
     public ArrayList<Integer> midPoints;
     public double angleSum;
+    public double angleSumPlus; //Counts also angle from last pickup.
     public Vector2d first;
     public Vector2d last;
 
@@ -40,7 +41,7 @@ public class SightPath
         //midVectors = new ArrayList<Vector2d>();
         midDots = new ArrayList<Double>();
         int numPoints = a_p.m_points.size();
-        angleSum = 0;
+        angleSum = angleSumPlus = 0;
 
         //Lava positions in this path
         m_numLavaPositions = 0;
