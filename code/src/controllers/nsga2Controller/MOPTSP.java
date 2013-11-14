@@ -6,6 +6,9 @@ import org.moeaframework.core.Solution;
 import org.moeaframework.core.variable.EncodingUtils;
 import org.moeaframework.problem.AbstractProblem;
 
+import java.util.LinkedList;
+import java.util.TreeMap;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Diego
@@ -19,14 +22,27 @@ public class MOPTSP extends AbstractProblem
 
     public static final int numObjectives = 3;
     public static final int numVariables = NSGAIIParameters.ROLLOUT_DEPTH;
+    public static TreeMap<Integer, LinkedList<controllers.utils.Solution>> valueRoute;
 
     public static Game m_currentState;
     public static ParetoArchive m_pa;
     public static HeuristicMO m_heuristic;
 
+
     public MOPTSP()
     {
         super(numVariables,numObjectives);
+    }
+
+    public static void reset()
+    {
+        m_pa = new ParetoArchive();
+
+        valueRoute = new TreeMap<Integer, LinkedList<controllers.utils.Solution>>();
+        for(int i = 0; i < NSGAIIController.NUM_ACTIONS; ++i)
+        {
+            valueRoute.put(i,new LinkedList<controllers.utils.Solution>());
+        }
     }
 
     public void evaluate(Solution solution) {
@@ -34,6 +50,7 @@ public class MOPTSP extends AbstractProblem
         int moves[] = EncodingUtils.getInt(solution);
         Game stateCopy = m_currentState.getCopy();
         int effectiveMoves = 0;
+        int startingMove = moves[0];
 
         while(!stateCopy.isEnded() && effectiveMoves < moves.length)
         {
@@ -43,6 +60,10 @@ public class MOPTSP extends AbstractProblem
         }
 
         double objectives[] = m_heuristic.value(stateCopy);
+
+        controllers.utils.Solution paSol = new controllers.utils.Solution(objectives);
+        m_pa.add(paSol);
+        valueRoute.get(startingMove).add(paSol);
 
         //MOEA MINIMIZES BY DEFAULT: We have to negate the objectives to get it right!
         double negObjectives[] = new double[]{-objectives[0], -objectives[1], -objectives[2]};

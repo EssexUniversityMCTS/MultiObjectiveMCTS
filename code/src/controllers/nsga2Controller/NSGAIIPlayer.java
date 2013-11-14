@@ -1,5 +1,6 @@
 package controllers.nsga2Controller;
 
+import controllers.utils.OrderedSolutionList;
 import controllers.utils.ParetoArchive;
 import controllers.utils.Utils;
 import framework.core.Game;
@@ -8,6 +9,8 @@ import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
 import org.moeaframework.core.variable.EncodingUtils;
 
+import java.util.LinkedList;
+import java.util.NavigableSet;
 import java.util.Random;
 
 /**
@@ -44,7 +47,7 @@ public class NSGAIIPlayer
     {
         long now = System.currentTimeMillis();
         int numEvalsMacro = m_nEvals ;
-        MOPTSP.m_pa = new ParetoArchive();
+        MOPTSP.reset();
         MOPTSP.m_currentState = a_gameState;
         MOPTSP.m_heuristic = m_heuristic;
 
@@ -56,14 +59,74 @@ public class NSGAIIPlayer
                 .run();
 
         //Choose one of the solutions found, to determine which move to make.
-        Solution chosen = maxSolutionDist(result, a_gameState);
 
+        /*Solution chosen = maxSolutionDist(result, a_gameState);
         int moves[] = EncodingUtils.getInt(chosen);
-        int action = moves[0];
+        int action = moves[0];       */
+
+        int action = maxSolution(NSGAIIParameters.targetWeights);
+
 
         long spent = System.currentTimeMillis() - now;
-        System.out.println("Spent: " + spent);
+        //System.out.println("Spent: " + spent);
         return action;
+    }
+
+    public int maxSolution(double[] weights)
+    {
+        int selected = -1;
+        double[][] bounds =  m_heuristic.getValueBounds();
+
+        double bestValue = -Double.MAX_VALUE;
+        OrderedSolutionList myPA = MOPTSP.m_pa.m_members;
+        int numMembers =  myPA.size();
+
+        for(int i = 0; i < numMembers; ++i)
+        {
+            double[] thisRes = myPA.get(i).m_data;
+            double val = 0.0;
+            for(int t = 0; t < weights.length; ++t)
+            {
+                double v =  Utils.normalise(thisRes[t], bounds[t][0], bounds[t][1]);
+                val += v*weights[t];
+            }
+
+            if(val > bestValue) {
+                bestValue = val;
+                selected = i;
+            }
+        }
+
+        if(selected == -1)
+        {
+            //System.out.println(" ********************* SELECTED -1, myPA.size(): " + myPA.size() + " ***************");
+            return -1;
+        }
+
+        double selectedTarget[] = myPA.get(selected).m_data;
+        NavigableSet<Integer> navSet = MOPTSP.valueRoute.navigableKeySet();
+        for(Integer key : navSet)
+        {
+            LinkedList<controllers.utils.Solution> resFromThisChild = MOPTSP.valueRoute.get(key);
+
+            for(int i =0; i < resFromThisChild.size(); ++i)
+            {
+                double[] sol = resFromThisChild.get(i).m_data;
+                //System.out.println("PA point " + key + ":" + i + ": " + sol[0] + ", " + sol[1] + ", nVis: " + children[key].nVisits);
+
+                if(sol.length == 3 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1] && sol[2] == selectedTarget[2])
+                //if(sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
+                {
+                    //System.out.println("SELECTED-3: " + children[key].nVisits + "," + sol[0] + "," + sol[1] + ": " + key);
+                    return key;
+                }else if(sol.length == 2 && sol[0] == selectedTarget[0] && sol[1] == selectedTarget[1])
+                {
+                    //System.out.println("SELECTED-2: " + children[key].nVisits + "," + sol[0] + "," + sol[1] + ": " + key);
+                    return key;
+                }
+            }
+        }
+        return selected;
     }
 
     //Selects a single solution, to make a move, according to the weights provided.
