@@ -291,7 +291,7 @@ public class ExecSync extends Exec
      */
     public static void main(String[] args)
     {
-        m_mapNames = new String[]{"maps/ptsp_map01.map"}; //Set here the name of the map to play in.
+        m_mapNames = new String[]{"maps/ptsp_map56.map"}; //Set here the name of the map to play in.
        // m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
        //         "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
        //         "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
@@ -300,8 +300,8 @@ public class ExecSync extends Exec
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
         m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
 //        m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
-        m_controllerName = "controllers.singleMCTS.SingleMCTSController";
-        m_controllerName = "controllers.nsga2Controller.NSGAIIController";
+   //     m_controllerName = "controllers.singleMCTS.SingleMCTSController";
+   //     m_controllerName = "controllers.nsga2Controller.NSGAIIController";
 
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";
@@ -319,13 +319,13 @@ public class ExecSync extends Exec
         /////// 2. Executes one game.
         //ParetoMCTSController.EXPLORATION_VIEW_ON = true;
         //ParetoMCTSController.PARETO_VIEW_ON = true;
-        int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
-        runGame(m_visibility, delay);
+    //    int delay = 5;  //1: quickest; PTSPConstants.DELAY: human play speed, PTSPConstants.ACTION_TIME_MS: max. controller delay
+    //    runGame(m_visibility, delay);
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
         //m_writeOutput = true;
-        //int numTrials=10;
-        //runGames(numTrials);
+        int numTrials=10;
+        runGames(numTrials);
 
     }
 

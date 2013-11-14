@@ -26,25 +26,13 @@ public class ParetoMCTSParameters
 
     /*/
 
-
-
     /** WEIGHTS **/
 
-    public static double[] targetWeights= //new double[]{0.33,0.33,0.33};
+    public static double[] targetWeights=
+                            new double[]{0.33,0.33,0.33};
+    //                        new double[]{0.1,0.3,0.6};
+    //                        new double[]{0.1,0.6,0.3};
 
-                                //new double[]{0.6,0.3,0.1};
-                                //new double[]{0.3,0.6,0.1};
-                                new double[]{0.1,0.3,0.6};
-                                //new double[]{0.3,0.1,0.6};
-                                //new double[]{0.1,0.3,0.6};
-                                //new double[]{0.1,0.6,0.3};
-
-                                 //   new double[]{0.0,0.5,0.5};
-                                // new double[]{0.5,0.0,0.5};
-                                //new double[]{0.5,0.5,0.0};
-                                //new double[]{1.0, 0.0, 0.0};
-                                //new double[]{0.0, 1.0, 0.0};
-                                //new double[]{0.0, 0.0, 1.0};
 
                             //new double[]{0.25, 0.75};
                             //new double[]{0.5, 0.5, 0.5};

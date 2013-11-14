@@ -201,8 +201,10 @@ public double ALPHA = 0.9;
             damagePower = damagePoints*SingleMCTSController.DAMAGE_POWER_MULT_SLOW +
                     distancePoints*(1.0-SingleMCTSController.DAMAGE_POWER_MULT_SLOW);
 
-        double allInOne = //distancePoints*0.6 + fuelPower*0.3 + damagePower*0.1;
+        double allInOne =
+                //distancePoints*0.6 + fuelPower*0.3 + damagePower*0.1;
                 distancePoints*0.1 + fuelPower*0.3 + damagePower*0.6;
+                //distancePoints*0.3 + fuelPower*0.3 + damagePower*0.3;
 
         //allInOne = Math.pow(allInOne,3);
         return allInOne;
