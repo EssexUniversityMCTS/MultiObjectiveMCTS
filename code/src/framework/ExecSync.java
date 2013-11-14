@@ -301,7 +301,7 @@ public class ExecSync extends Exec
         m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
 //        m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
    //     m_controllerName = "controllers.singleMCTS.SingleMCTSController";
-   //     m_controllerName = "controllers.nsga2Controller.NSGAIIController";
+        m_controllerName = "controllers.nsga2Controller.NSGAIIController";
 
         //m_controllerName = "controllers.lineofsight.LineOfSight";
         //m_controllerName = "controllers.random.RandomController";

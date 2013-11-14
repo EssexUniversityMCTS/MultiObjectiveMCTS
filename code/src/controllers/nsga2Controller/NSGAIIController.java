@@ -85,7 +85,7 @@ public class NSGAIIController extends Controller
         m_tspGraph.getCost(bestRoute, m_graph, a_game);
 
         m_heuristic = new HeuristicPTSP(a_game, bestRoute);
-        m_player = new NSGAIIPlayer(m_heuristic, m_rnd, 200 ,"NSGAII");
+        m_player = new NSGAIIPlayer(m_heuristic, m_rnd, 500 ,"NSGAII"); //400 ~ 40ms
 
         m_currentMacroAction = 10;
         m_lastMacroAction = 0;
