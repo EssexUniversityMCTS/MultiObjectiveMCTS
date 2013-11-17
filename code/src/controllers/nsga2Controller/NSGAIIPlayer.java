@@ -24,7 +24,7 @@ public class NSGAIIPlayer
 {
 
     int m_nEvals = 100; // number of evaluations per move
-    int m_populationSize = 20;//20;
+    int m_populationSize = 50;//20;
     Random m_rnd;
     HeuristicMO m_heuristic;
     String m_algorithmName;

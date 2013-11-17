@@ -92,12 +92,29 @@ public class ParetoMCTSController extends Controller {
         int[] dirChangesSegment = new int[bestRoute.length];
         double angleSumSegment[] = new double[bestRoute.length];
 
+        double maxPercLava = -1;
+        ArrayList<Integer> maxPerLavaIdx = new ArrayList<Integer>();
         for(int i = 0; i < dirChangesSegment.length; ++i)
         {
             percLavaSegment[i] = m_tspGraph.m_sps[i].m_percLava;
             dirChangesSegment[i] = m_tspGraph.m_sps[i].midDistances.size(); //Note: dir change includes one due to waypoint change
             angleSumSegment[i] = m_tspGraph.m_sps[i].angleSumPlus;
             //System.out.format("Segment %d perc. lava: %.3f, num dir. changes: %d, angle sum: %.3f, angle sum plus: %.3f\n",  i, percLavaSegment[i], dirChangesSegment[i],  m_tspGraph.m_sps[i].angleSum, angleSumSegment[i]);
+
+            if( percLavaSegment[i] > maxPercLava )
+            {
+                maxPercLava =  percLavaSegment[i];
+                maxPerLavaIdx.clear();
+                maxPerLavaIdx.add(i);
+            }else if( percLavaSegment[i] == maxPercLava )
+            {
+                maxPerLavaIdx.add(i);
+            }
+        }
+
+        for(Integer i : maxPerLavaIdx)
+        {
+            percLavaSegment[i] = 1000.0f;
         }
 
         m_heuristic = new HeuristicPTSP(a_game, bestRoute, percLavaSegment, dirChangesSegment, angleSumSegment);
