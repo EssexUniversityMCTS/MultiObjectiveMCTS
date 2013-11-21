@@ -1,5 +1,6 @@
 package controllers.ParetoMCTS;
 
+import controllers.utils.StatSummary;
 import framework.core.*;
 import framework.graph.Graph;
 import framework.utils.JEasyFrame;
@@ -87,15 +88,19 @@ public class ParetoMCTSController extends Controller {
         m_tspGraph = new TSPBranchBound(a_game, m_graph);
         int []bestRoute = m_tspGraph.getPreRouteArray(a_game.getMap().getFilename());
 
-        m_tspGraph.getCost(bestRoute, m_graph, a_game);
+        double totalCost = m_tspGraph.getCost(bestRoute, m_graph, a_game);
         double[] percLavaSegment = new double[bestRoute.length];
         int[] dirChangesSegment = new int[bestRoute.length];
         double angleSumSegment[] = new double[bestRoute.length];
+        double distances[] = new double[bestRoute.length];
+        StatSummary ss = new StatSummary();
 
         double maxPercLava = -1;
         ArrayList<Integer> maxPerLavaIdx = new ArrayList<Integer>();
         for(int i = 0; i < dirChangesSegment.length; ++i)
         {
+            distances[i] = m_tspGraph.m_sps[i].p.m_cost / totalCost;
+            ss.add(distances[i]);
             percLavaSegment[i] = m_tspGraph.m_sps[i].m_percLava;
             dirChangesSegment[i] = m_tspGraph.m_sps[i].midDistances.size(); //Note: dir change includes one due to waypoint change
             angleSumSegment[i] = m_tspGraph.m_sps[i].angleSumPlus;
@@ -112,12 +117,14 @@ public class ParetoMCTSController extends Controller {
             }
         }
 
+        double meanDistance = ss.mean();
+
         for(Integer i : maxPerLavaIdx)
         {
             percLavaSegment[i] = 1000.0f;
         }
 
-        m_heuristic = new HeuristicPTSP(a_game, bestRoute, percLavaSegment, dirChangesSegment, angleSumSegment);
+        m_heuristic = new HeuristicPTSP(a_game, bestRoute, percLavaSegment, dirChangesSegment, angleSumSegment, distances, meanDistance);
         m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(ParetoMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new ParetoEGreedyTreePolicy(), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new SimpleHVTreePolicy(K), m_rnd, targetWeights);

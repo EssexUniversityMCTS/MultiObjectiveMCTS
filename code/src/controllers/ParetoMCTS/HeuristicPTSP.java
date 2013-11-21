@@ -48,16 +48,23 @@ public class HeuristicPTSP implements HeuristicMO
     public double percLavaSegment[];
     public int dirChangesSegment[];
     public double angleSumSegment[];
+    public double distances[];
     public double currentPickupPercLava;
     public int currentPickupDirChanges;
+    public double currentDistance;
+    public double meanDistance;
     public double currentAngleSum;
 
-    public HeuristicPTSP(Game a_game, int []bestRoute, double percLavaSegment[], int dirChangesSegment[], double angleSumSegment[])
+    public HeuristicPTSP(Game a_game, int []bestRoute, double percLavaSegment[], int dirChangesSegment[],
+                         double angleSumSegment[], double distances[], double meanDistance)
     {
         this.percLavaSegment = percLavaSegment;
         this.dirChangesSegment = dirChangesSegment;
         this.angleSumSegment = angleSumSegment;
         this.targetWeights = ParetoMCTSParameters.targetWeights;
+        this.distances = distances;
+        this.meanDistance = meanDistance;
+
         m_numTargets = targetWeights.length;
         MACRO_ACTION_LENGTH = ParetoMCTSParameters.MACRO_ACTION_LENGTH;
         ROLLOUT_DEPTH = ParetoMCTSParameters.ROLLOUT_DEPTH;
@@ -68,6 +75,7 @@ public class HeuristicPTSP implements HeuristicMO
         currentPickupPercLava = percLavaSegment[0];
         currentPickupDirChanges = dirChangesSegment[0];
         currentAngleSum = angleSumSegment[0];
+        currentDistance = distances[0];
 
         initBounds();
 
@@ -247,12 +255,16 @@ public class HeuristicPTSP implements HeuristicMO
         if(!VARIABLE_WEIGHTS)
             return ParetoMCTSParameters.targetWeights;
 
+        if(currentDistance > meanDistance)
+            return new double[]{0.6,0.3,0.1};
+        else
+            return new double[]{0.33,0.33,0.33};
 
-        if(currentPickupPercLava > 900)
+        /*if(currentPickupPercLava > 900)
         {
             return new double[]{0.1,0.3,0.6};
         }
-        return new double[]{0.3,0.3,0.3};
+        return new double[]{0.3,0.3,0.3}; */
 
 
         /*if(currentPickupPercLava > 0.5)
@@ -345,6 +357,7 @@ public class HeuristicPTSP implements HeuristicMO
                                 currentPickupPercLava = percLavaSegment[i];
                                 currentPickupDirChanges = dirChangesSegment[i];
                                 currentAngleSum = angleSumSegment[i];
+                                currentDistance = distances[i];
                             }
 
                             //The first pLength elements not visited are selected.
@@ -362,6 +375,7 @@ public class HeuristicPTSP implements HeuristicMO
                                 currentPickupPercLava = percLavaSegment[i];
                                 currentPickupDirChanges = dirChangesSegment[i];
                                 currentAngleSum = angleSumSegment[i];
+                                currentDistance = distances[i];
                             }
 
                             //The first pLength elements not visited are selected.
