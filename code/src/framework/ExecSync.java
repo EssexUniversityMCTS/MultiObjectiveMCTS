@@ -285,6 +285,66 @@ public class ExecSync extends Exec
         }        */
     }
 
+    /**
+     * For running multiple games without visuals, in several maps (m_mapNames).
+     *
+     * @param trials The number of trials to be executed
+     */
+    public static void runGamesStats(int trials)
+    {
+        boolean moreMaps = true;
+
+        for(int m = 0; moreMaps && m < m_mapNames.length; ++m)
+        {
+            String mapName = m_mapNames[m];
+            int numGamesPlayed = 0;
+
+            int ntrials = trials;
+
+            //For each trial...
+            for(int i=0;i<ntrials;i++)
+            {
+                // ... create a new game.
+                if(!prepareGame())
+                    continue;
+
+                numGamesPlayed++; //another game
+
+                //PLay the game until the end.
+                while(!m_game.isEnded())
+                {
+                    //When the result is expected:
+                    long due = System.currentTimeMillis()+PTSPConstants.ACTION_TIME_MS;
+
+                    //Advance the game.
+                    int actionToExecute = m_controller.getAction(m_game.getCopy(), due);
+
+                    //Exceeded time
+                    long exceeded = System.currentTimeMillis() - due;
+
+                    m_game.tick(actionToExecute);
+                }
+
+                if(m_game.getWaypointsVisited() != 10)
+                    ntrials++;
+                else
+                {
+                    int consumedFuel = PTSPConstants.INITIAL_FUEL - m_game.getShip().getRemainingFuel();
+                    System.out.println(mapName + " " + m_game.getWaypointsVisited() + " " + m_game.getTotalTime()
+                            + " " + consumedFuel + " " + m_game.getShip().getDamage());
+                }
+
+                //And save the route, if requested:
+                if(m_writeOutput)
+                    m_game.saveRoute();
+            }
+
+            moreMaps = m_game.advanceMap();
+
+        }
+
+    }
+
 
     /**
      * The main method. Several options are listed - simply remove comments to use the option you want.
@@ -326,8 +386,15 @@ public class ExecSync extends Exec
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
         //m_writeOutput = true;
-        int numTrials=10;
-        runGames(numTrials);
+        //int numTrials=10;
+        //runGames(numTrials);
+
+
+        ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
+        //m_writeOutput = true;
+        m_verbose = false; //hides additional output. runGamesStats prints anyway.
+        int numTrials=30;
+        runGamesStats(numTrials);
 
     }
 

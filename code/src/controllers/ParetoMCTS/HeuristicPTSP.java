@@ -21,7 +21,7 @@ public class HeuristicPTSP implements HeuristicMO
     public double FUEL_OPTIMUM_PROPORTION = 0.0;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
-    public boolean VARIABLE_WEIGHTS = true;
+    public boolean VARIABLE_WEIGHTS = false;
 
     /** STATE VARIABLES **/
     public double[] targetWeights;

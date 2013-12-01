@@ -16,8 +16,8 @@ public class NSGAIIParameters
     public static boolean EXPLORATION_VIEW_ON;
 
     public static double[] targetWeights=
-            //new double[]{0.33,0.33,0.33};
+            new double[]{0.33,0.33,0.33};
             //new double[]{0.6,0.3,0.1};
             //new double[]{0.3,0.6,0.1};
-            new double[]{0.1,0.3,0.6};
+           // new double[]{0.1,0.3,0.6};
 }
