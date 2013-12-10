@@ -1,0 +1,193 @@
+package framework;
+
+import controllers.ParetoMCTS.ParetoMCTSController;
+import controllers.keycontroller.KeyController;
+import controllers.utils.StatSummary;
+import controllers.utils.Utils;
+import framework.core.Exec;
+import framework.core.PTSPConstants;
+import framework.core.PTSPView;
+import framework.utils.JEasyFrame;
+
+import java.util.Random;
+
+
+/**
+ * This class may be used to execute the game in timed or un-timed modes, with or without
+ * visuals. Competitors should implement his controller in a subpackage of 'controllers'.
+ * The skeleton classes are already provided. The package
+ * structure should not be changed (although you may create sub-packages in these packages).
+ */
+@SuppressWarnings("unused")
+public class EvoExec extends Exec
+{
+    public static double[][] genes;
+    public static int nGenes; //number of different genes.
+    public static int genomeLength;
+    public static Random rnd;
+
+    public static double[][] currentWeights;
+
+
+    public static double[] evaluate(int trials)
+    {
+        double totalResult[] = new double[3];
+        int ntrials = trials;
+
+        //For each trial...
+        for(int i=0;i<ntrials;i++)
+        {
+            // ... create a new game.
+            if(!prepareGame())
+                continue;
+
+            //PLay the game until the end.
+            while(!m_game.isEnded())
+            {
+                //When the result is expected:
+                long due = System.currentTimeMillis()+PTSPConstants.ACTION_TIME_MS;
+
+                //Advance the game.
+                int actionToExecute = m_controller.getAction(m_game.getCopy(), due);
+
+                //Exceeded time
+                long exceeded = System.currentTimeMillis() - due;
+
+                m_game.tick(actionToExecute);
+            }
+
+            if(m_game.getWaypointsVisited() != 10)
+                ntrials++;
+            else
+            {
+                int consumedFuel = PTSPConstants.INITIAL_FUEL - m_game.getShip().getRemainingFuel();
+                totalResult[0] += m_game.getTotalTime();
+                totalResult[1] += consumedFuel;
+                totalResult[2] += m_game.getShip().getDamage();
+            }
+
+            //And save the route, if requested:
+            if(m_writeOutput)
+                m_game.saveRoute();
+        }
+
+        totalResult[0] /= trials;
+        totalResult[1] /= trials;
+        totalResult[2] /= trials;
+
+        return totalResult;
+    }
+
+    public static double[][] createNewRandomIndividual()
+    {
+        double [][] ind = new double[genomeLength][3];
+        for(int i = 0; i<genomeLength; ++i)
+        {
+            int idx = rnd.nextInt(nGenes);
+            double targets[] = new double[3];
+            for(int j = 0; j < targets.length; ++j)
+            {
+                targets[j] = genes[idx][j];
+            }
+            ind[i] = targets;
+        }
+
+        return ind;
+    }
+
+
+    public static void evaluateMap(int trials, int evaluations)
+    {
+        double bestResult[] = new double[]{Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
+        double bestWeights[][] = new double[genomeLength][3];
+
+        for(int ev = 0; ev < evaluations; ++ev)
+        {
+            double[][] individual = createNewRandomIndividual();
+            currentWeights = individual;
+            double[] res = evaluate(trials);
+
+            int dominance = Utils.dominates(res, bestResult);
+            if(dominance == 1) //bestResult dominates res... but we are MINIMIZING!
+            {
+                for(int i = 0; i<genomeLength; ++i)
+                {
+                    for(int j = 0; j < bestResult.length; ++j)
+                    {
+                        bestWeights[i][j] = individual[i][j];
+                    }
+                }
+
+                System.arraycopy(res, 0, bestResult, 0, res.length);
+            }
+        }
+    }
+
+    public static void runGamesStats(int trials, int evaluations)
+    {
+        boolean moreMaps = true;
+
+        for(int m = 0; moreMaps && m < m_mapNames.length; ++m)
+        {
+            //Run this map.
+            evaluateMap(trials, evaluations);
+
+            //Needed for advance maps.
+            moreMaps = m_game.advanceMap();
+        }
+
+    }
+
+
+    /**
+     * The main method. Several options are listed - simply remove comments to use the option you want.
+     *
+     * @param args the command line arguments. Not needed in this class.
+     */
+    public static void main(String[] args)
+    {
+        m_mapNames = new String[]{"maps/ptsp_map61.map"}; //Set here the name of the map to play in.
+        //m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
+        //        "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
+        //        "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
+
+        m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
+        m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
+        m_controllerName = "controllers.ParetoMCTS.ParetoMCTSController"; //Set here the controller name.
+//        m_controllerName = "controllers.mctsdriver.MctsDriverController"; //Set here the controller name.
+        //m_controllerName = "controllers.singleMCTS.SingleMCTSController";
+        //m_controllerName = "controllers.nsga2Controller.NSGAIIController";
+
+        m_writeOutput = false; //Indicate if the actions must be saved to a file after the end of the game (the file name will be the current date and time)..
+        m_verbose = true;
+
+        nGenes = 12;
+        int i = 0;
+
+        genes = new double[nGenes][3];
+
+        genes[i++] = new double[]{0,0,1};
+        genes[i++] = new double[]{.1,.3,.6};
+        genes[i++] = new double[]{.3,.1,.6};
+        genes[i++] = new double[]{0,.5,.5};
+        genes[i++] = new double[]{0,1,0};
+        genes[i++] = new double[]{.1,.6,.3};
+        genes[i++] = new double[]{.3,.6,.1};
+        genes[i++] = new double[]{.5,0,.5};
+        genes[i++] = new double[]{.5,.5,0};
+        genes[i++] = new double[]{1,0,0};
+        genes[i++] = new double[]{.6,.1,.3};
+        genes[i++] = new double[]{.6,.3,.1};
+
+        genomeLength = 14;
+        rnd = new Random();
+
+
+        //m_writeOutput = true;
+        m_verbose = false; //hides additional output. runGamesStats prints anyway.
+        int numTrials=5;  int numEvaluations = 100;
+        runGamesStats(numTrials, numEvaluations);
+
+    }
+
+}

@@ -1,16 +1,20 @@
 package controllers.ParetoMCTS;
 
+import framework.EvoExec;
 import framework.core.*;
 import framework.graph.Node;
 import framework.graph.Path;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.NavigableSet;
+import java.util.TreeMap;
 
 /**
  * Created by Diego Perez, University of Essex.
  * Date: 29/07/13
  */
-public class HeuristicPTSP implements HeuristicMO
+public class HeuristicEvoPTSP implements HeuristicMO
 {
     /** TUNABLE PARAMETERS **/
     public double ALPHA = 0.9;
@@ -21,10 +25,10 @@ public class HeuristicPTSP implements HeuristicMO
     public double FUEL_OPTIMUM_PROPORTION = 0.0;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
-    public boolean VARIABLE_WEIGHTS = false;
+    public boolean VARIABLE_WEIGHTS = true;
 
     /** STATE VARIABLES **/
-    public double[] targetWeights;
+    public double[][] targetWeights;
     public TreeMap<Integer, Node> m_nodeLookup;
     public int[] m_bestRoute;
     public int[] m_nextPickups;
@@ -44,37 +48,17 @@ public class HeuristicPTSP implements HeuristicMO
     public double m_currentShipSpeed;
     public int nlastCyclesThrusting;
 
-    public double percLavaSegment[];
-    public int dirChangesSegment[];
-    public double angleSumSegment[];
-    public double distances[];
-    public double currentPickupPercLava;
-    public int currentPickupDirChanges;
-    public double currentDistance;
-    public double meanDistance;
-    public double currentAngleSum;
+    public int currentSegment;
 
-    public HeuristicPTSP(Game a_game, int []bestRoute, double percLavaSegment[], int dirChangesSegment[],
-                         double angleSumSegment[], double distances[], double meanDistance)
+    public HeuristicEvoPTSP(Game a_game, int[] bestRoute)
     {
-        this.percLavaSegment = percLavaSegment;
-        this.dirChangesSegment = dirChangesSegment;
-        this.angleSumSegment = angleSumSegment;
-        this.targetWeights = ParetoMCTSParameters.targetWeights;
-        this.distances = distances;
-        this.meanDistance = meanDistance;
-
+        this.targetWeights = EvoExec.currentWeights;
         m_numTargets = targetWeights.length;
         MACRO_ACTION_LENGTH = ParetoMCTSParameters.MACRO_ACTION_LENGTH;
         ROLLOUT_DEPTH = ParetoMCTSParameters.ROLLOUT_DEPTH;
         m_nodeLookup = new TreeMap<Integer, Node>();
         m_bestRoute = bestRoute;
-
-        //default
-        currentPickupPercLava = percLavaSegment[0];
-        currentPickupDirChanges = dirChangesSegment[0];
-        currentAngleSum = angleSumSegment[0];
-        currentDistance = distances[0];
+        currentSegment = 0;
 
         initBounds();
 
@@ -127,8 +111,8 @@ public class HeuristicPTSP implements HeuristicMO
         {
             //In this case, the game as ended for sure: IT ENDS DURING THE
             //MACRO-ACTION BEING EXECUTED NOW.
-            double superReward[] = new double[targetWeights.length];
-            for(int i = 0; i < targetWeights.length; ++i)
+            double superReward[] = new double[targetWeights[0].length];
+            for(int i = 0; i < targetWeights[0].length; ++i)
                 superReward[i]=5;  //just whatever.
 
             return superReward;
@@ -138,8 +122,8 @@ public class HeuristicPTSP implements HeuristicMO
 
         if((!matching) || (a_gameState.isEnded() && a_gameState.getWaypointsLeft()>0))
         {
-            double superPunishment[] = new double[targetWeights.length];
-            for(int i = 0; i < targetWeights.length; ++i)
+            double superPunishment[] = new double[targetWeights[0].length];
+            for(int i = 0; i < targetWeights[0].length; ++i)
                 superPunishment[i] = -2;
             //System.out.println("SUPER PUNISHMENT! "+matching+" "+a_gameState.getTotalTime());
             return superPunishment; // Game finished - game over.
@@ -254,27 +238,8 @@ public class HeuristicPTSP implements HeuristicMO
         if(!VARIABLE_WEIGHTS)
             return ParetoMCTSParameters.targetWeights;
 
-        if(currentDistance > meanDistance)
-            return new double[]{0.6,0.3,0.1};
-        else
-            return new double[]{0.33,0.33,0.33};
-
-        /*if(currentPickupPercLava > 900)
-        {
-            return new double[]{0.1,0.3,0.6};
-        }
-        return new double[]{0.3,0.3,0.3}; */
-
-
-        /*if(currentPickupPercLava > 0.5)
-            return new double[]{0.1,0.3,0.6};
-        if(currentAngleSum > 1.5)
-            return new double[]{0.1,0.6,0.3};
-        if(currentPickupPercLava > 0.25 || currentAngleSum > 0.5)
-        if(currentPickupPercLava > 0.25 || currentAngleSum > 0.5)
-            return new double[]{0.2,0.4,0.4};
-
-        return new double[]{0.3,0.3,0.3};         */
+        //TODO: SET TARGET WEIGHT
+        return targetWeights[currentSegment];
     }
 
     public void setPlayoutInfo(PlayoutInfo a_pi)
@@ -353,10 +318,7 @@ public class HeuristicPTSP implements HeuristicMO
                         {
                             if(j == 0)
                             {
-                                currentPickupPercLava = percLavaSegment[i];
-                                currentPickupDirChanges = dirChangesSegment[i];
-                                currentAngleSum = angleSumSegment[i];
-                                currentDistance = distances[i];
+                                currentSegment = i;
                             }
 
                             //The first pLength elements not visited are selected.
@@ -371,10 +333,7 @@ public class HeuristicPTSP implements HeuristicMO
                         {
                             if(j == 0)
                             {
-                                currentPickupPercLava = percLavaSegment[i];
-                                currentPickupDirChanges = dirChangesSegment[i];
-                                currentAngleSum = angleSumSegment[i];
-                                currentDistance = distances[i];
+                                currentSegment = i;
                             }
 
                             //The first pLength elements not visited are selected.
