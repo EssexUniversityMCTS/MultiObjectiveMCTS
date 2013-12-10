@@ -57,13 +57,20 @@ public class EvoExec extends Exec
             }
 
             if(m_game.getWaypointsVisited() != 10)
+            {
                 ntrials++;
-            else
+                System.out.println("Not succeeded.");
+                printGenome(currentWeights);
+
+                return new double[]{Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
+
+            }else
             {
                 int consumedFuel = PTSPConstants.INITIAL_FUEL - m_game.getShip().getRemainingFuel();
                 totalResult[0] += m_game.getTotalTime();
                 totalResult[1] += consumedFuel;
                 totalResult[2] += m_game.getShip().getDamage();
+                System.out.format("\tSingle Game: %.3f, %.3f, %.3f\n", m_game.getTotalTime(),consumedFuel,m_game.getShip().getDamage());
             }
 
             //And save the route, if requested:
@@ -95,6 +102,20 @@ public class EvoExec extends Exec
         return ind;
     }
 
+    public static void printGenome(double [][]genome)
+    {
+        System.out.print("{");
+        for(int i = 0; i<genomeLength; ++i)
+        {
+            System.out.print("{");
+            for(int j = 0; j < genome[0].length; ++j)
+            {
+                System.out.format("%.3f,", genome[i][j]);
+            }
+            System.out.print("},");
+        }
+    }
+
 
     public static void evaluateMap(int trials, int evaluations)
     {
@@ -120,7 +141,16 @@ public class EvoExec extends Exec
 
                 System.arraycopy(res, 0, bestResult, 0, res.length);
             }
+
+            System.out.format("Last: %.3f, %.3f, %.3f; Best: %.3f, %.3f, %.3f\n",
+                    res[0],res[1],res[2],bestResult[0],bestResult[1],bestResult[2]);
         }
+
+        System.out.println("------------");
+        System.out.format("Final best: %.3f, %.3f, %.3f\n", bestResult[0], bestResult[1], bestResult[2]);
+        printGenome(bestWeights);
+        System.out.println("}");
+
     }
 
     public static void runGamesStats(int trials, int evaluations)
@@ -161,21 +191,22 @@ public class EvoExec extends Exec
         m_writeOutput = false; //Indicate if the actions must be saved to a file after the end of the game (the file name will be the current date and time)..
         m_verbose = true;
 
-        nGenes = 12;
+        nGenes = 7;
         int i = 0;
 
         genes = new double[nGenes][3];
 
-        genes[i++] = new double[]{0,0,1};
+        genes[i++] = new double[]{.3,.3,.3};
+        //genes[i++] = new double[]{0,0,1};
         genes[i++] = new double[]{.1,.3,.6};
         genes[i++] = new double[]{.3,.1,.6};
-        genes[i++] = new double[]{0,.5,.5};
-        genes[i++] = new double[]{0,1,0};
+        //genes[i++] = new double[]{0,.5,.5};
+        //genes[i++] = new double[]{0,1,0};
         genes[i++] = new double[]{.1,.6,.3};
         genes[i++] = new double[]{.3,.6,.1};
-        genes[i++] = new double[]{.5,0,.5};
-        genes[i++] = new double[]{.5,.5,0};
-        genes[i++] = new double[]{1,0,0};
+        //genes[i++] = new double[]{.5,0,.5};
+        //genes[i++] = new double[]{.5,.5,0};
+        //genes[i++] = new double[]{1,0,0};
         genes[i++] = new double[]{.6,.1,.3};
         genes[i++] = new double[]{.6,.3,.1};
 
