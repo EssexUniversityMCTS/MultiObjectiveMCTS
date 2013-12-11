@@ -1,13 +1,11 @@
 package framework;
 
-import controllers.ParetoMCTS.ParetoMCTSController;
-import controllers.keycontroller.KeyController;
-import controllers.utils.StatSummary;
 import controllers.utils.Utils;
 import framework.core.Exec;
 import framework.core.PTSPConstants;
-import framework.core.PTSPView;
-import framework.utils.JEasyFrame;
+import org.moeaframework.Executor;
+import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.Solution;
 
 import java.util.Random;
 
@@ -70,7 +68,7 @@ public class EvoExec extends Exec
                 totalResult[0] += m_game.getTotalTime();
                 totalResult[1] += consumedFuel;
                 totalResult[2] += m_game.getShip().getDamage();
-                System.out.format("\tSingle Game: %.3f, %.3f, %.3f\n", m_game.getTotalTime(),consumedFuel,m_game.getShip().getDamage());
+                System.err.format("Single Game: %d, %d, %d\n", m_game.getTotalTime(),consumedFuel,m_game.getShip().getDamage());
             }
 
             //And save the route, if requested:
@@ -81,6 +79,7 @@ public class EvoExec extends Exec
         totalResult[0] /= trials;
         totalResult[1] /= trials;
         totalResult[2] /= trials;
+        System.err.format("\tIndividual Fitness: %.3f, %.3f, %.3f\n", totalResult[0],totalResult[1],totalResult[2]);
 
         return totalResult;
     }
@@ -117,7 +116,7 @@ public class EvoExec extends Exec
     }
 
 
-    public static void evaluateMap(int trials, int evaluations)
+    public static void evaluateMapRS(int trials, int evaluations)
     {
         double bestResult[] = new double[]{Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE};
         double bestWeights[][] = new double[genomeLength][3];
@@ -153,6 +152,28 @@ public class EvoExec extends Exec
 
     }
 
+    public static void evaluateMapNSGAII(int trials, int evaluations)
+    {
+        currentWeights = new double[genomeLength][3];
+        for(int i = 0; i < genomeLength; ++i)
+            currentWeights[i] = new double[3];
+
+        MOPTSPWeight.trials = trials;
+        NondominatedPopulation result = new Executor()
+                .withProblemClass(MOPTSPWeight.class)
+                .withAlgorithm("NSGAII")
+                .withMaxEvaluations(evaluations)
+                .withProperty("populationSize", 10)
+                .run();
+
+        int i = 0;
+        for (Solution solution : result) {
+            double solutionValue[] = solution.getObjectives();
+            System.out.format("Solution %d: %.3f, %.3f, %.3f\n", i++, solutionValue[0], solutionValue[1], solutionValue[2]);
+        }
+
+    }
+
     public static void runGamesStats(int trials, int evaluations)
     {
         boolean moreMaps = true;
@@ -160,7 +181,8 @@ public class EvoExec extends Exec
         for(int m = 0; moreMaps && m < m_mapNames.length; ++m)
         {
             //Run this map.
-            evaluateMap(trials, evaluations);
+            //evaluateMapRS(trials, evaluations);
+            evaluateMapNSGAII(trials, evaluations);
 
             //Needed for advance maps.
             moreMaps = m_game.advanceMap();
