@@ -174,6 +174,30 @@ public class EvoExec extends Exec
 
     }
 
+    public static void evaluateMapStochHillCliim(int trials, int iterations, int numValues, int popSize)
+    {                                     currentWeights = new double[genomeLength][3];
+        for(int i = 0; i < genomeLength; ++i)
+            currentWeights[i] = new double[3];
+
+        Population pop = new Population(popSize, genomeLength, numValues);
+        pop.initPopulationRndBiased();
+
+        for(int it = 0; it < iterations; ++it)
+        {
+            pop.evaluate(trials);
+            pop.advance();
+
+            double bestResult[] = pop.bestResult;
+            int bestIndividual[] = pop.population[pop.indexBest];
+
+            System.out.format("%d %.3f, %.3f, %.3f ", it, bestResult[0],bestResult[1],bestResult[2]);
+            for(int j = 0; j < bestIndividual.length; ++j)
+                System.out.print(bestIndividual[j]);
+            System.out.println();
+        }
+
+    }
+
     public static void runGamesStats(int trials, int evaluations)
     {
         boolean moreMaps = true;
@@ -182,7 +206,8 @@ public class EvoExec extends Exec
         {
             //Run this map.
             //evaluateMapRS(trials, evaluations);
-            evaluateMapNSGAII(trials, evaluations);
+            //evaluateMapNSGAII(trials, evaluations);
+            evaluateMapStochHillCliim(trials, evaluations, 3, 10);
 
             //Needed for advance maps.
             moreMaps = m_game.advanceMap();
@@ -221,10 +246,11 @@ public class EvoExec extends Exec
         genes[i++] = new double[]{.3,.3,.3};
         //genes[i++] = new double[]{0,0,1};
         genes[i++] = new double[]{.1,.3,.6};
+        genes[i++] = new double[]{.1,.6,.3};
+
         genes[i++] = new double[]{.3,.1,.6};
         //genes[i++] = new double[]{0,.5,.5};
         //genes[i++] = new double[]{0,1,0};
-        genes[i++] = new double[]{.1,.6,.3};
         genes[i++] = new double[]{.3,.6,.1};
         //genes[i++] = new double[]{.5,0,.5};
         //genes[i++] = new double[]{.5,.5,0};
@@ -238,7 +264,7 @@ public class EvoExec extends Exec
 
         //m_writeOutput = true;
         m_verbose = false; //hides additional output. runGamesStats prints anyway.
-        int numTrials=5;  int numEvaluations = 100;
+        int numTrials=10;  int numEvaluations = 100;
         runGamesStats(numTrials, numEvaluations);
 
     }
