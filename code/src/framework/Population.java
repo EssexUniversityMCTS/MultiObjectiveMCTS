@@ -121,24 +121,34 @@ public class Population
     {
         for(int i = 0; i < numIndividuals; ++i)
         {
-            int genes[] = population[i];
-            for(int k = 0; k < genes.length; ++k)
+            if(i != indexBest)
             {
-                for(int j = 0; j < 3; ++j)
+                int genes[] = population[i];
+                for(int k = 0; k < genes.length; ++k)
                 {
-                    EvoExec.currentWeights[k][j] = EvoExec.genes[genes[k]][j];
+                    for(int j = 0; j < 3; ++j)
+                    {
+                        EvoExec.currentWeights[k][j] = EvoExec.genes[genes[k]][j];
+                    }
                 }
-            }
 
-            double res[] = EvoExec.evaluate(trials, genes, i);
-            //double res[] = EvoExec.evaluateVisual();
-            //double res[] = new double[]{rnd.nextDouble(), rnd.nextDouble(), rnd.nextDouble()};
+                double res[] = EvoExec.evaluate(trials, genes, i);
+                //double res[] = EvoExec.evaluateVisual();
+                //double res[] = new double[]{rnd.nextDouble(), rnd.nextDouble(), rnd.nextDouble()};
 
-            int dominance = Utils.dominates(res, bestResult);
-            if(dominance == 1) //bestResult dominates res... but we are MINIMIZING!
-            {
-                System.arraycopy(res, 0, bestResult, 0, bestResult.length);
-                indexBest = i;
+                int dominance = Utils.dominates(res, bestResult);
+                if(dominance == 1) //bestResult dominates res... but we are MINIMIZING!
+                {
+                    System.arraycopy(res, 0, bestResult, 0, bestResult.length);
+                    indexBest = i;
+                }
+            }else{
+                System.err.print( EvoExec.generation + " " + indexBest + " ");
+                for(int idxBest = 0; idxBest < population[indexBest].length; ++idxBest)
+                {
+                    System.err.print(population[indexBest][idxBest]);
+                }
+                System.err.format(". Fitness: %.3f, %.3f, %.3f\n", bestResult[0],bestResult[1],bestResult[2]);
             }
         }
     }
