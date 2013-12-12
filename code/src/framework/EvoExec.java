@@ -132,9 +132,13 @@ public class EvoExec extends Exec
         totalResult[0] /= trials;
         totalResult[1] /= trials;
         totalResult[2] /= trials;
-        System.out.print(generation + " " + indIdx + " ");
+        System.err.print(generation + " " + indIdx + " ");
+        for(int i = 0; i < genes.length; ++i)
+        {
+            System.err.print(genes[i]);
+        }
 
-        System.err.format("Individual Fitness: %.3f, %.3f, %.3f\n", totalResult[0],totalResult[1],totalResult[2]);
+        System.err.format(". Fitness: %.3f, %.3f, %.3f\n", totalResult[0],totalResult[1],totalResult[2]);
         //printGenome(currentWeights);
 
         return totalResult;
