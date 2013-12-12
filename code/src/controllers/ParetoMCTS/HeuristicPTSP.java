@@ -1,5 +1,6 @@
 package controllers.ParetoMCTS;
 
+import framework.EvoExec;
 import framework.core.*;
 import framework.graph.Node;
 import framework.graph.Path;
@@ -21,7 +22,7 @@ public class HeuristicPTSP implements HeuristicMO
     public double FUEL_OPTIMUM_PROPORTION = 0.0;
     public static int MACRO_ACTION_LENGTH = 15;
     public static int ROLLOUT_DEPTH = 8;
-    public boolean VARIABLE_WEIGHTS = false;
+    public boolean VARIABLE_WEIGHTS = true;
 
     /** STATE VARIABLES **/
     public double[] targetWeights;
@@ -37,6 +38,7 @@ public class HeuristicPTSP implements HeuristicMO
     public int m_numTargets;
     public double maxDist = 0;
     public PlayoutPTSPInfo m_playoutInfo;
+    public int currentSegment;
 
     public double[][] m_bounds;
     public double[] segmentsCost;
@@ -75,6 +77,7 @@ public class HeuristicPTSP implements HeuristicMO
         currentPickupDirChanges = dirChangesSegment[0];
         currentAngleSum = angleSumSegment[0];
         currentDistance = distances[0];
+        currentSegment = 0;
 
         initBounds();
 
@@ -254,27 +257,11 @@ public class HeuristicPTSP implements HeuristicMO
         if(!VARIABLE_WEIGHTS)
             return ParetoMCTSParameters.targetWeights;
 
-        if(currentDistance > meanDistance)
-            return new double[]{0.6,0.3,0.1};
-        else
-            return new double[]{0.33,0.33,0.33};
+        //System.out.println( currentSegment  + " " + EvoExec.currentWeights[currentSegment][0]
+        // + " " + EvoExec.currentWeights[currentSegment][1] + " " +
+         //       EvoExec.currentWeights[currentSegment][2]);
 
-        /*if(currentPickupPercLava > 900)
-        {
-            return new double[]{0.1,0.3,0.6};
-        }
-        return new double[]{0.3,0.3,0.3}; */
-
-
-        /*if(currentPickupPercLava > 0.5)
-            return new double[]{0.1,0.3,0.6};
-        if(currentAngleSum > 1.5)
-            return new double[]{0.1,0.6,0.3};
-        if(currentPickupPercLava > 0.25 || currentAngleSum > 0.5)
-        if(currentPickupPercLava > 0.25 || currentAngleSum > 0.5)
-            return new double[]{0.2,0.4,0.4};
-
-        return new double[]{0.3,0.3,0.3};         */
+        return  EvoExec.currentWeights[currentSegment];
     }
 
     public void setPlayoutInfo(PlayoutInfo a_pi)
@@ -357,6 +344,7 @@ public class HeuristicPTSP implements HeuristicMO
                                 currentPickupDirChanges = dirChangesSegment[i];
                                 currentAngleSum = angleSumSegment[i];
                                 currentDistance = distances[i];
+                                currentSegment = i;
                             }
 
                             //The first pLength elements not visited are selected.
@@ -375,6 +363,7 @@ public class HeuristicPTSP implements HeuristicMO
                                 currentPickupDirChanges = dirChangesSegment[i];
                                 currentAngleSum = angleSumSegment[i];
                                 currentDistance = distances[i];
+                                currentSegment = i;
                             }
 
                             //The first pLength elements not visited are selected.

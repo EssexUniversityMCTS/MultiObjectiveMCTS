@@ -55,7 +55,7 @@ public class ParetoMCTSController extends Controller {
     /**
      * Heuristic to score mid-game states.
      */
-    public HeuristicEvoPTSP m_heuristic;
+    public HeuristicPTSP m_heuristic;
 
     /**
      * Current game state
@@ -124,8 +124,8 @@ public class ParetoMCTSController extends Controller {
             percLavaSegment[i] = 1000.0f;
         }
 
-        //m_heuristic = new HeuristicPTSP(a_game, bestRoute, percLavaSegment, dirChangesSegment, angleSumSegment, distances, meanDistance);
-        m_heuristic = new HeuristicEvoPTSP(a_game, bestRoute);
+        m_heuristic = new HeuristicPTSP(a_game, bestRoute, percLavaSegment, dirChangesSegment, angleSumSegment, distances, meanDistance);
+        //m_heuristic = new HeuristicEvoPTSP(a_game, bestRoute);
 
         m_player = new ParetoMCTSPlayer(new ParetoTreePolicy(ParetoMCTSParameters.K), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
         //m_player = new ParetoMCTSPlayer(new ParetoEGreedyTreePolicy(), m_heuristic, m_rnd, a_game, new PlayoutPTSPInfo());
