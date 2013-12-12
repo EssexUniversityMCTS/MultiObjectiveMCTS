@@ -130,7 +130,7 @@ public class Population
                 }
             }
 
-            double res[] = EvoExec.evaluate(trials);
+            double res[] = EvoExec.evaluate(trials, genes, i);
             //double res[] = EvoExec.evaluateVisual();
             //double res[] = new double[]{rnd.nextDouble(), rnd.nextDouble(), rnd.nextDouble()};
 

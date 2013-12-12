@@ -25,6 +25,7 @@ public class EvoExec extends Exec
     public static int nGenes; //number of different genes.
     public static int genomeLength;
     public static Random rnd;
+    public static int generation;
 
     public static double[][] currentWeights;
 
@@ -79,7 +80,7 @@ public class EvoExec extends Exec
         }
 
 
-    public static double[] evaluate(int trials)
+    public static double[] evaluate(int trials, int[] genes, int indIdx)
     {
         double totalResult[] = new double[3];
         int ntrials = trials;
@@ -131,7 +132,10 @@ public class EvoExec extends Exec
         totalResult[0] /= trials;
         totalResult[1] /= trials;
         totalResult[2] /= trials;
-        System.err.format("\tIndividual Fitness: %.3f, %.3f, %.3f\n", totalResult[0],totalResult[1],totalResult[2]);
+        System.out.print(generation + " " + indIdx + " ");
+
+        System.err.format("Individual Fitness: %.3f, %.3f, %.3f\n", totalResult[0],totalResult[1],totalResult[2]);
+        //printGenome(currentWeights);
 
         return totalResult;
     }
@@ -177,7 +181,7 @@ public class EvoExec extends Exec
         {
             double[][] individual = createNewRandomIndividual();
             currentWeights = individual;
-            double[] res = evaluate(trials);
+            double[] res = evaluate(trials, null, ev);
 
             int dominance = Utils.dominates(res, bestResult);
             if(dominance == 1) //bestResult dominates res... but we are MINIMIZING!
@@ -236,6 +240,7 @@ public class EvoExec extends Exec
 
         for(int it = 0; it < iterations; ++it)
         {
+            generation = it;
             pop.evaluate(trials);
             pop.advance();
 

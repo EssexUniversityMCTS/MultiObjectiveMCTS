@@ -37,7 +37,7 @@ public class MOPTSPWeight extends AbstractProblem
         }
 
         //System.out.println(genes[0]+","+genes[1]+","+genes[2]+","+genes[3]+","+genes[4]+","+genes[5]+",...");
-        double result[] = EvoExec.evaluate(trials);
+        double result[] = EvoExec.evaluate(trials, null, -1);
         //double result[] = new double[]{new Random().nextDouble(), new Random().nextDouble(), new Random().nextDouble()};
 
         solution.setObjectives(result);
