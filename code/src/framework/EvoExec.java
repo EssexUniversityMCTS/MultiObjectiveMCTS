@@ -3,6 +3,8 @@ package framework;
 import controllers.utils.Utils;
 import framework.core.Exec;
 import framework.core.PTSPConstants;
+import framework.core.PTSPView;
+import framework.utils.JEasyFrame;
 import org.moeaframework.Executor;
 import org.moeaframework.core.NondominatedPopulation;
 import org.moeaframework.core.Solution;
@@ -25,6 +27,56 @@ public class EvoExec extends Exec
     public static Random rnd;
 
     public static double[][] currentWeights;
+
+    public static double[] evaluateVisual()
+    {
+        int delay = 5;
+        //Get the game ready.
+        if(!prepareGame())
+            return null;
+
+        //Indicate what are we running
+        if(m_verbose) System.out.println("Running " + m_controllerName + " in map " + m_game.getMap().getFilename() + "...");
+
+        m_view = new PTSPView(m_game, m_game.getMapSize(), m_game.getMap(), m_game.getShip(), m_controller);
+        JEasyFrame frame = new JEasyFrame(m_view, "PTSP-Game: " + m_controllerName);
+
+
+        while(!m_game.isEnded())
+        {
+            //When the result is expected:
+            long then = System.currentTimeMillis();
+            long due = then + PTSPConstants.ACTION_TIME_MS;
+
+            //Advance the game.
+            int actionToExecute = m_controller.getAction(m_game.getCopy(), due);
+
+            //Exceeded time
+            long now = System.currentTimeMillis();
+            long spent = now - then;
+
+            m_game.tick(actionToExecute);
+
+            int remaining = (int) Math.max(0, delay - (now-then));//To adjust to the proper framerate.
+            //Wait until de next cycle.
+            waitStep(remaining);
+
+            //And paint everything.
+            m_view.repaint();
+            if(m_game.getTotalTime() == 1)
+                waitStep(m_warmUpTime);
+
+        }
+
+        if(m_verbose)
+        {
+            m_game.printResults();
+        }
+
+        return new double[]{m_game.getTotalTime(),
+                            PTSPConstants.INITIAL_FUEL - m_game.getShip().getRemainingFuel(),
+                            m_game.getShip().getDamage()};
+        }
 
 
     public static double[] evaluate(int trials)
@@ -243,7 +295,7 @@ public class EvoExec extends Exec
 
         genes = new double[nGenes][3];
 
-        genes[i++] = new double[]{.3,.3,.3};
+        genes[i++] = new double[]{.33,.33,.33};
         //genes[i++] = new double[]{0,0,1};
         genes[i++] = new double[]{.1,.3,.6};
         genes[i++] = new double[]{.1,.6,.3};

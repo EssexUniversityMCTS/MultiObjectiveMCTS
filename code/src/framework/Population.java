@@ -131,6 +131,7 @@ public class Population
             }
 
             double res[] = EvoExec.evaluate(trials);
+            //double res[] = EvoExec.evaluateVisual();
             //double res[] = new double[]{rnd.nextDouble(), rnd.nextDouble(), rnd.nextDouble()};
 
             int dominance = Utils.dominates(res, bestResult);

@@ -239,6 +239,7 @@ public class HeuristicEvoPTSP implements HeuristicMO
             return ParetoMCTSParameters.targetWeights;
 
         //TODO: SET TARGET WEIGHT
+        //System.out.println(targetWeights[currentSegment][0] + " " + targetWeights[currentSegment][1] + " " + targetWeights[currentSegment][2]);
         return targetWeights[currentSegment];
     }
 
