@@ -284,7 +284,21 @@ public class EvoExec extends Exec
      */
     public static void main(String[] args)
     {
-        m_mapNames = new String[]{"maps/ptsp_map61.map"}; //Set here the name of the map to play in.
+        String[] allMaps = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
+                        "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
+                        "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
+
+        if(args.length > 0)
+        {
+            int mapIdx = Integer.parseInt(args[0]);
+            m_mapNames = new String[]{allMaps[mapIdx]};
+        }else
+        {
+            m_mapNames = new String[]{"maps/ptsp_map01.map"}; //Set here the name of the map to play in.
+        }
+
+        System.err.println("Running in map " + m_mapNames[0] + "...");
+
         //m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
         //        "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
         //        "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
