@@ -388,7 +388,7 @@
 \hyphenation{op-tical net-works semi-conduc-tor ordering algorithms}
 
 
-\usepackage{graphicx,times,amsmath, fontenc, todonotes, url, array, multirow}
+\usepackage{subfigure,graphicx,url,times,multirow,amsmath,amssymb,algorithm,xspace,epsfig,todonotes,array,caption,color}
 \usepackage{algorithm, mathtools}
 \usepackage[noend]{algpseudocode}
 \usepackage[bookmarks=false]{hyperref}
@@ -542,7 +542,7 @@ The balance between exploration and exploitation is achieved by setting the valu
 
 If, during the \textit{tree selection} phase, a node has less children than the available number of actions from a given position, a new node is added as a child of the current one (\textit{expansion} phase) and the \textit{simulation} step starts. At this point, MCTS executes a Monte Carlo simulation (or roll-out; \textit{default policy}) from the expanded node. This is performed by choosing random (either uniformly random, or biased) actions until the game end or a pre-defined depth is reached, where the state of the game is evaluated. 
 
-Finally, during the \textit{back-propagation} step, the statistics $N(s)$, $N(s,a)$ and $Q(s,a)$ are updated for each node visited, using the reward obtained in the evaluation of the state. These steps are executed in a loop until a termination criteria is met (such as number of iterations). 
+Finally, during the \textit{back-propagation} step, the statistics $N(s)$, $N(s,a)$ and $Q(s,a)$ are updated for each node visited, using the reward obtained in the evaluation of the state. These steps are executed in a loop until a termination criteria is met (such as number of iterations).
 
 
 MCTS has been employed extensively in real-time games in the literature. A clear example of this is the popular real-time game \textit{Ms. PacMan}. The objective of this game is to control Ms. PacMan to clear the maze by eating all pills, without being captured by the ghosts. An important feature of this game is that it is \textit{open-ended}, as an end game situation is, most of the time, far ahead in the future and can not be devised by the algorithm during its iterations. The consequence of this is that MCTS, in its vanilla form, it is not able to know if a given ply will lead to a win or a loss game end state. Robles et al~\cite{Robles2009} solved this problem by including hand-coded heuristics that guided MCTS simulations towards more promising portions of the search space. Other authors also included domain knowledge to bias the search in MCTS, such as in~\cite{Samothrakis, Ikehata2010}.
@@ -554,8 +554,84 @@ It is worthwhile mentioning that in most cases found in the literature, MCTS tec
 
 \section{Multi-Objective Optimization} \label{sec:moo}
 
+A multi-objective optimization problem (MOOP) represents a scenario where two or more objective functions are to be optimized (either maximized or minimized). The general form of a MOOP is formally described as a maximization function $F_m(x)$, that transforms points in the decision space ($X$) to points in the solution space ($F$). The elements of the decision space are vectors of $n$ variables of the form $x = (x_1, x_2, \dots, x_n)$, while elements in the solution space are vectors with a dimension $m$: $F_m(x) = (f_1(x), f_2(x), \dots, f_m(x))$. Therefore, each solution provides $m$ different scores (or rewards, or fitness) that are meant to be optimized. Without loss of generality, it is assumed from now on that all objectives must be maximized.
+
+It is said that a solution $F_m(x)$ \textit{dominates} another solution $F_m(y)$ if:
+
+\begin{enumerate}
+\item $F_m(x)$ is not worse than $F_m(y)$ in all objectives for all $i = 1, 2, \dots, m$.
+\item At least one objective of $F_m(x)$ is better than its analogous counterpart in $F_m(y)$.
+\end{enumerate}
 
 
+When this two conditions apply, it is said that $F_m(x) \preceq F_m(y)$ ($F_m(x)$ dominates $F_m(y)$, and $F_m(x)$ is non-dominated by $F_m(y)$). The \textit{dominance} condition provides a partial ordering between points in the solution space: if $F_m(x) \preceq F_m(y)$, then $F_m(x)$ is considered to be better than $F_m(y)$.
+
+However, there are some cases where it cannot be said that $F_m(x) \preceq F_m(y)$ or $F_m(y) \preceq F_m(x)$. This situation occurs when one of the objectives is better in $F_m(x)$ but a different objective is better in $F_m(y)$ (for instance, when $F_1(x) < F_1(y)$ but $F_2(x) > F_2(y)$). In this case, it is said that these solutions are non-dominated with respect to each other. Solutions that are not dominated by each other are grouped in a \textit{non-dominated set}. Given a non-dominated set $P$, it is said that $P$ is the \textit{optimal Pareto front} if there is no other solution in the solution space that dominates any member of $P$. The relation between decision and objective space, dominance and Pareto fronts is depicted in Figure~\ref{fig:moop}.
+
+\begin{figure} [!t]
+	\begin{center}
+	\includegraphics[scale=0.235]{img/moopDec.png}
+	\caption{Decision and Solution spaces in a MOOP with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form the Pareto-optimal front.}
+	\label{fig:moop}
+	\end{center}
+\end{figure}
+
+As many Pareto front can be formed by several points in the solution space, it is important to devise a mechanism to assess the quality of a given front. A possibility is to use the Hypervolume Indicator (HV): given a Pareto front $P$, $HV(P)$ is defined as the volume of the objective space dominated by $P$. More formally, $HV(P) = \mu (x \in \mathbb{R}^{d} : \exists r \in P \hspace{0.25cm} s.t \hspace{0.25cm} r \preceq x)$, where $\mu$ is the de Lebesgue measure on $\mathbb{R}^{d}$. If the objectives are to be maximized, the higher the $HV(P)$, the better the front calculated. Figure~\ref{fig:hv} shows an example of $HV(P)$ where the objective dimension space is $2$.
+
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{img/hv}
+\end{center}
+\caption{$HV(P)$ of a given pareto front $P$.}
+\label{fig:hv}
+\end{figure}
+
+For more extensive descriptions, definitions, properties and multi-objective optimization in general, the reader can consult the work by K. Deb~\cite{Deb2001}.
+
+Many different algorithms have been proposed to tackle multi-objective optimization problems in the literature. One of the most widely known and used methods is the weighted-sum approach. The procedure consists of giving a weight to each one of the objective and produce a single result as the linear combination of objectives and weights. By varying the weights provided, it is possible to converge to different solutions of the optimal Pareto front, if this is convex. However, K. Deb~\cite{Deb2001} explains how linear scalarization approaches fail in those scenarios where the optimal Pareto front is non-convex.
+
+A popular choice for multi-objective optimization problems are evolutionary multi-objective optimization (EMOA) algorithms~\cite{Coello1999, Zhou2011}. One of the most well known algorithms in the literature is the Non-dominated Sorting Evolutionary Algorithm 2 (NSGA-2), which pseudocode is shown in Algorithm~\ref{alg:nsga2}. As in any evolutionary algorithm, NSGA-2 evolves a set of individuals or solutions to the problem, with the difference that here they are ranked according to dominance criteria and crowding distance (distances between members of the pareto fronts). A full description of the algorithm can be found in~\cite{Deb2000}.
+
+\begin{algorithm}[!t]
+\begin{algorithmic}[1]
+\Function{NSGA-2}{}
+	\State $P = NewRandomPopulation$
+	\While{Termination criteria not met}
+		\State $R = P \cup Q$ 
+		\State $F = \Call{fastNonDominatedSort}{R}$
+		\While{$|P| < N$}
+			\State $\Call{crowdingDistanceAssignment}{F_i}$	
+			\State $P = P \cup F_i$
+		\EndWhile
+		\State $\Call{sort}{P}$
+		\State $P = P[0:N]$
+		\State $Q = breed(P)$	
+	\EndWhile
+\EndFunction
+\end{algorithmic}
+\caption{NSGA-2 Algorithm.}
+\label{alg:nsga2}
+\end{algorithm}
+
+The three main pillars of the NSGA-2 algorithm are:
+
+\begin{itemize}
+\item A \textit{fast non-dominated sorting} algorithm, that ranks the individuals of the population and groups them in Pareto fronts.
+\item A \textit{crowding distance}, assigned to each one of the individuals, that measures how close it is to its neighbours. The selection genetic operator chooses individuals based on the ranks of the individuals and their crowding distance.
+\item \textit{Elitism}, implemented so the algorithm automatically promotes the best $N$ individuals to the next generation.
+\end{itemize}
+
+A more recent approach, developed by Q. Zhang, is the Multi-Objective Evolutionary Algorithm based on Decomposition (MOEA/D)~\cite{Zhang2007}, that decomposes the problem into several single optimization sub-problems and an evolutionary algorithm optimizes them all simultaneously. Information is shared between neighbouring sub-problems in order to guide evolution. The authors show that MOEA/D performs similarly than, and sometimes even outperforms, NSGA-II in the scenarios tested.
+
+Reinforcement Learning (RL) algorithms have also tackled Multi-objective optimization in some scenarios. RL~\cite{Sutton1998} is a broad field in Machine Learning that studies real-time planning and control situations where  an agent has to find out the actions (or sequences of actions) that should be applied in order to maximize the reward from the environment. 
+
+An RL problem can be defined as a tuple ($S$, $A$, $T$, $R$, $\pi$). $S$ is the set of possible states in the problem (or game), and $s_0$ is the initial state. $A$ is the set of available actions the agent can make at any given time, and the transition model $T(s_i, a_i, s_{i+1})$ determines the probability of reaching the state $s_{i+1}$ when action $a_i$ is applied in state $s_i$. The reward function $R(s_i)$ provides a single value (\textit{reward}) that the agent must optimize, representing the desirability of the state $s_i$ reached. Finally, a decision policy $\pi(s_i) = a_i$ determines which actions $a_i$ must be chosen from each state $s_i \in S$. One of the most important challenges in RL, as shown in Section~\ref{sec:mcts}, is the trade-off between exploration and exploitation. The decision policy can choose between following actions that provided good rewards in the past and exploring new parts of the search space by selecting new actions. 
+
+Multi-objective Reinforcement Learning (MORL)~\cite{Vamplew2010} changes this definition by using instead a vector $R = {r_0, r_1, \dots, r_n}$ as rewards of the problem. Thus, MORL problems differ from RL in having more than one objective objectives ($n$) that must be maximized. If the objectives are independent or they do not oppose each other, scalarization technique approaches, as described above, could be suitable to tackle the problem. Essentially, this would mean to use a conventional RL algorithm on a single objective obtained by a weighted-sum of the multiple rewards. However, this is not always the case, as it is usual that the objectives are in conflict and the policy ($\pi$) must balance among them.
+
+According to how $\pi$ approaches this problem, Vamplew et al.~\cite{Vamplew2010} proposed the following distinction for MORL: \textit{single-policy} algorithms are those that provide a preference order in the objectives available (given by the user or by the nature of the problem). An example of this type of algorithm can be found at~\cite{Gabor1998}, where the authors introduce an order of preference in the objectives treated and constraint the value of the rewards desired. Scalarization approaches would also fit in this category, as the work performed by S. Natarajan et al.~\cite{Natarajan2005}.
+
+The second type of algorithms, \textit{multiple-policy}, target to approximate the optimal Pareto front of the problem. An example of this type of algorithm is the one given by L. Barrett~\cite{Barrett2008}, who propose the Convex Hull Iteration Algorithm. This algorithm provides the optimal policy for any linear preference function, by learning all policies that define the convex hull of the Pareto front.
 
 \section{Multi-Objective Monte Carlo Tree Search} \label{sec:momcts}
 
