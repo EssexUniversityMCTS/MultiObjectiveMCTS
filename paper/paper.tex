@@ -516,7 +516,46 @@ Here it goes, the introduction.
 
 \section{Monte Carlo Tree Search} \label{sec:mcts}
 
+Monte Carlo Tree Search (MCTS) is a tree search algorithm that was originally applied to board games, concretely to the two-players game of Go. This game is played in a square grid board, with a size of $19 \times 19$ in the original game, and $9 \times 9$ in its reduced version. The game is played in turns, and the objective is to surround the opponent's stones by placing stones in any available position in the board. Due to the very large branching factor of Go, this game is considered the drosophila of Game AI, and MCTS players have reached professional level play in the reduced board size version~\cite{Lee2009}. After its success in Go, MCTS has been used extensively by many researchers in this and different domains. An extensive survey of MCTS methods, variations and applications, has been written by Browne et al.~\cite{Browne2012}. 
+
+MCTS is considered to be an \textit{anytime} algorithm, as it is able to provide a a valid next move to choose at any moment in time. This is true independently from how many iterations the algorithm was able to make (although, in general, more iterations usually produce better results). This differs from other algorithms (such A*) that normally provide the next ply only after they have finished. This makes MCTS a suitable candidate for real-time domains, where the decision time budget is limited, affecting the number of iterations that can be performed.
+
+MCTS is an algorithm that builds a tree in memory. Each node in the tree maintains statistics that indicate how often a move is played from a given state ($N(s,a)$), how many times each move is played from there ($N(s)$) and the average reward ($Q(s,a)$) obtained after applying move $a$ in state $s$. The tree is built iteratively by simulating actions in the game, making move choices based on the statistics store in the nodes. 
+
+Each iteration of MCTS can be divided into several steps~\cite{Gelly2006}: \textit{Tree selection}, \textit{Expansion}, \textit{Monte Carlo simulation} and \textit{Back-propagation} (all summarized in Figure~\ref{fig:mcts}). When the algorithm starts, the tree is formed only by the root node, which holds the current state of the game. During the \textit{selection} step, the tree is navigated from the root until a maximum depth or the end of the game has been reached. 
+
+\begin{figure} [!t]
+	\begin{center}
+	\includegraphics[scale=0.4,natwidth=708,natheight=484]{img/mcts.png}
+	\caption{MCTS algorithm steps.}
+	\label{fig:mcts}
+	\end{center}
+\end{figure}
+
+In every one of this action decisions, MCTS balances between exploitation and exploration. In other words, this chooses between taking an action that leads to states with the best outcome found so far, and performing a move to go to less explored game states, respectively. In order to achieve this, MCTS uses Upper Confidence Bound (UCB1, see Equation~\ref{eq:ucb1}) as a \textit{Tree Policy}. 
+
+\begin{equation}	\label{eq:ucb1}
+a^* = \argmax_{a \in A(s)} \left\{Q(s,a) + C \sqrt{\frac{ \ln N(s) }{ N(s,a) }}\right\}
+\end{equation}
+
+The balance between exploration and exploitation is achieved by setting the value of $C$. Higher values of $C$ weight more the second term of the UCB1 Equation~\ref{eq:ucb1}, giving preference to those actions that have been explored less, at the expense of taking actions with the highest average reward $Q(s,a)$. A commonly used value is $\sqrt{2}$, as it balances both facets of the search when the rewards are normalized between $0$ and $1$. It is worth noting that MCTS, when combined with UCB1 reaches asymptotically logarithmic regret~\cite{coquelin2007bandit}. 
+
+If, during the \textit{tree selection} phase, a node has less children than the available number of actions from a given position, a new node is added as a child of the current one (\textit{expansion} phase) and the \textit{simulation} step starts. At this point, MCTS executes a Monte Carlo simulation (or roll-out; \textit{default policy}) from the expanded node. This is performed by choosing random (either uniformly random, or biased) actions until the game end or a pre-defined depth is reached, where the state of the game is evaluated. 
+
+Finally, during the \textit{back-propagation} step, the statistics $N(s)$, $N(s,a)$ and $Q(s,a)$ are updated for each node visited, using the reward obtained in the evaluation of the state. These steps are executed in a loop until a termination criteria is met (such as number of iterations). 
+
+
+MCTS has been employed extensively in real-time games in the literature. A clear example of this is the popular real-time game \textit{Ms. PacMan}. The objective of this game is to control Ms. PacMan to clear the maze by eating all pills, without being captured by the ghosts. An important feature of this game is that it is \textit{open-ended}, as an end game situation is, most of the time, far ahead in the future and can not be devised by the algorithm during its iterations. The consequence of this is that MCTS, in its vanilla form, it is not able to know if a given ply will lead to a win or a loss game end state. Robles et al~\cite{Robles2009} solved this problem by including hand-coded heuristics that guided MCTS simulations towards more promising portions of the search space. Other authors also included domain knowledge to bias the search in MCTS, such as in~\cite{Samothrakis, Ikehata2010}.
+
+MCTS has also been applied to single-player games, like SameGame~\cite{Matsumoto2010}, where the player's goal is to destroy contiguous tiles of the same colour, distributed in a rectangular grid. Another use of MCTS is in the popular puzzle Morpion Solitaire~\cite{Edelkamp2010}, a connection game where the goal is to link nodes of a graph with straight lines that must contain at least five vertices. Finally, the PTSP has also been addressed with MCTS, both in the single-objective~\cite{Perez2013, Powley2012} and the multi-objective versions~\cite{Powley2013}. These papers describe the entries that won both editions of the PTSP Competition.
+
+It is worthwhile mentioning that in most cases found in the literature, MCTS techniques have been used with some kind of heuristic that guides the Monte Carlo simulations or the tree selection policy. In the algorithm proposed in this paper, simulations are purely random, as the objective is to compare the search abilities of the different algorithms. The intention is therefore to keep the heuristics to a minimum, and the existing pieces of domain knowledge are shared by all the algorithms presented (as in the case of the score function for MO-PTSP, described later).
+
+
 \section{Multi-Objective Optimization} \label{sec:moo}
+
+
+
 
 \section{Multi-Objective Monte Carlo Tree Search} \label{sec:momcts}
 
