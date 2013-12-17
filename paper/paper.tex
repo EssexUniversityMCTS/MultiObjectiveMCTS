@@ -635,6 +635,75 @@ The second type of algorithms, \textit{multiple-policy}, target to approximate t
 
 \section{Multi-Objective Monte Carlo Tree Search} \label{sec:momcts}
 
+Adapting MCTS into Multi-Objective Monte Carlo Tree Search (MO-MCTS) requires the obvious modification of dealing with multiple rewards instead of just one. As these are collected at the end of a Monte Carlo simulation, the reward value $r$ now becomes a vector $R = {r_0, r_1, \dots, r_n}$, where $n$ is the number of objectives to optimize. Derived from this change, the average value $Q(s,a)$ becomes a vector that stores the average reward of each objective. Note that the other statistics ($N(s,a)$ and $N(s)$) do not need to change, as this are just node and action counters. The important question to answer next is how to adapt the vector $Q(s,a)$ to use it in the UCB1 formula (Equation~\ref{eq:ucb1}). 
+
+An initial attempt on Multi-Objective MCTS was addressed by W. Wang and Michele Sebag~\cite{Weijia2012, Weijia2013}. In their work, the authors employ a mechanism, based on the HV calculation, to replace the UCB1 equation. The algorithm keeps a Pareto archive (P) with the best solutions found in game end states. Every node in the tree defines $\overline{r}_{sa}$ as a vector of UCB1 values, in which each $\overline{r}_{sa, i}$ is the result of calculating UCB1 for each particular objective $i$.
+
+The next step is to define the value for each pair of state and action, $W(s,a)$, as in Equation~\ref{eq:wang}. $\overline{r}^p_{sa}$ is the projection of $\overline{r}_{sa}$ into the piecewise linear surface defined by the Pareto archive $P$ (see Figure~\ref{fig:wangHV}. Then, $HV(P \cup \overline{r}_{sa})$ is declared as the HV of $P$ plus the point $\overline{r}_{sa}$. If $\overline{r}_{sa}$ is dominated by P, the distance between $\overline{r}_{sa}$ and $\overline{r}^p_{sa}$ is subtracted from the HV calculation. The tree policy selects actions based on a maximization of the value of $W(s,a)$.
+
+\begin{equation} \label{eq:wang}
+	W(s,a) = \left\{
+\begin{array}{l l}      
+    HV(P \cup \overline{r}_{sa}) - dist(\overline{r}^p_{sa}, \overline{r}_{sa} )\hspace{0.5cm} Otherwise \\
+    HV(P \cup \overline{r}_{sa}) \hspace{0.5cm} if \hspace{0.25cm} \overline{r}_{sa} \preceq P\\
+\end{array}\right.
+\end{equation}
+
+
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[width=0.65\columnwidth]{img/wangHV}
+\end{center}
+\caption{$r^p_x$ is the projection of the $r_x$ value on the piecewise linear surface (discontinuous line). The shadowed surface represents $HV(P)$. From~\cite{Weijia2012}.}
+\label{fig:wangHV}
+\end{figure}
+ 
+The proposed algorithm was employed successfully in two domains: the DST and the Grid Scheduling problem, matching state of the art results in both domains, at the expense of a high computational cost.
+
+As mentioned before, the objective of this paper is to propose an MO-MCTS algorithm that is suitable for real-time domains. Although the work discussed here is influenced by Wang's approach, some modifications need to be done in order to overcome the high computational cost involved by their approach.
+
+In the algorithm proposed in this paper, the vector $\overline{r}$ of rewards that was obtained at the end of an Monte Carlo simulation is back-propagated through the nodes visited in the last iteration until the root is reached. In the vanilla algorithm, each node would use this vector $\overline{r}$ to update its own accumulated reward vector $\overline{R}$. Instead of doing this, each node in the MO-MCTS algorithm keeps a local Pareto front ($P$), updated at each iteration with the reward vector $\overline{r}$ obtained at the end of the simulation. Algorithm~\ref{alg:updPareto} describes how the node statistics are updated.
+
+\begin{algorithm}[!t]
+\begin{algorithmic}[1]
+\Function{Update}{$node, \overline{r}, dominated=false$}
+
+	\State $node.Visits = node.Visits + 1$
+	\State $node.\overline{R} = node.\overline{R} + \overline{r}$
+	\If{$!dominated$} 
+		\If{$node.P \preceq \overline{r}$}	
+			\State $dominated = true$
+		\Else
+			\State $node.P = node.P \cup \overline{r}$
+		\EndIf
+	\EndIf
+
+	\State $\Call{Update}{node.parent,\overline{r},dominated}$
+	
+\EndFunction
+\end{algorithmic}
+\caption{Pareto MO-MCTS node update.}
+\label{alg:updPareto}
+\end{algorithm}
+
+In this algorithm, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. In case $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front and there is no need to keep this propagation up the tree.
+
+Three observations can be made about the mechanism described here:
+
+\begin{itemize}
+\item Each node in the tree has an estimate of the quality of the solutions reachable from there, both as an average (as in the baseline MCTS) and as the best case scenario (by keeping the non-dominated front $P$).
+\item By construction, if a reward $\overline{r}$ is dominated by the local front of a node, it is a given that it will be dominated by the nodes above in the tree, so there is no need to update the fronts of the upper nodes, producing little cost in the efficiency of the algorithm.
+\item It is easy to infer, from the last point, that the Pareto front of a node cannot be worse than the front of its children (in other words, the front of a child will never dominate that of its parent). Therefore, the root of the tree contains the best non-dominated front ever found during the search.
+\end{itemize}
+
+This last detail is important for two main reasons. First of all, the algorithm allows the root to store information indicating which is the action to take in order to converge to any specific solution in the front discovered. This information can be used, when all iterations have been performed, to select the move to perform next. If weights for the different objectives are provided, this weights can be used to select the desired solution in the Pareto front of the root node, and hence select the action that leads to that point. Secondly, the root's Pareto front can be used to measure the global quality of the search using the hypervolume calculation.
+
+Finally, the information stored at each node regarding the local Pareto front can be used to substitute $Q(s,a)$ in the UCB1 equation. The quality of a given pair $(s,a)$ can be obtained by measuring the HV of the Pareto front stored in the node reached from state $s$ after applying action $a$. This can be defined as  $Q(s,a) = HV(P)/N(s)$, and the Upper Confidence Bound equation, referred to here as $MO-UCB$, is described as in Equation~\ref{eq:moucb}). 
+
+\begin{equation}	\label{eq:moucb}
+a^* = \argmax_{a \in A(s)} \left\{HV(P)/N(s) + C \sqrt{\frac{ \ln N(s) }{ N(s,a) }}\right\}
+\end{equation}
+
 \section{Benchmarks} \label{sec:bench}
 
 \section{Experimentation} \label{sec:exp}
