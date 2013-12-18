@@ -706,7 +706,101 @@ a^* = \argmax_{a \in A(s)} \left\{HV(P)/N(s) + C \sqrt{\frac{ \ln N(s) }{ N(s,a)
 
 \section{Benchmarks} \label{sec:bench}
 
+Two different are used in this research to analyze the performance of the algorithm proposed.
+
+\subsection{Deep Sea Treasure} \label{ssec:dst}
+
+The Deep Sea Treasure (DST) is a well known multi-objective problem introduced by Vamplew et al.~\cite{Vamplew2010}. In this single-player puzzle, the agent moves a submarine with the objective of finding a treasure located at the bottom of the ship. The world is divided into a grid of $10$ rows and $11$ columns, and the vessel starts at the top left board position. There are three types of cells: empty cells (or water), that the submarine can traverse; ground cells that, as the edges of the grid, cannot be traversed; and treasure cells, that provide different rewards and finish the game. Figure~\ref{fig:dstBase} (on the left) shows the environment of the DST.
+
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{img/dst}
+\end{center}
+\caption{Environment of the Deep Sea Treasure (from~\cite{Vamplew2010}): grey squares represent the treasure (with their different values) available in the map. The black cells are the sea floor and the white ones are the positions that the vessel can occupy freely. The game ends when the submarine picks one of the treasures.}
+\label{fig:dstBase}
+\end{figure}
+
+
+The ship can perform four different moves: \textit{up}, \textit{down}, \textit{right}  and \textit{left}. If the action applied takes the ship off the grid or into the sea floor, the vessel's position does not change.  There are two objectives in this game: the number of moves performed by the ship, that must be minimized, and the value of the treasure found, that should be maximized. As can be seen in Figure~\ref{fig:dstBase}, the most valuable treasures are at a greater distance from the initial position, making these objectives orthogonal.
+
+Additionally, the agent can only make up to $100$ moves. This allows the problem to be defined as the maximization of two rewards: $(M,T) = (100 - moves, treasureValue)$. Should the ship perform all moves without reaching a treasure, the result would be ($0$,$0$). At each step, the score of a location with no treasure is ($-1$, $0$).
+
+The optimal Pareto front of the DST is shown in Figure~\ref{fig:optDst}. There are $10$ non-dominated solutions in this front, one per each treasure in the board. The front is globally concave, with local concavities at the second $(83,74)$, fourth $(87,24)$ and sixth $(92,8)$ points from the left. The HV value of the optimal front is $10455$.
+
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[width=0.9\columnwidth]{img/optDst.png}
+\end{center}
+\caption{Optimal Pareto Front of the Deep Sea Treasure, with both objectives to be maximized. From~\cite{Weijia2012}.}
+\label{fig:optDst}
+\end{figure}
+
+Section~\ref{sec:moo} introduced the problems of linear scalarization approaches when facing non-convex optimal Pareto front. The concave shape of the DST's optimal front makes those approximations to converge to the non dominated solutions located at the edges of the Pareto front ($(-19,1)$,$(-1,124)$). Note that this happens independently from the weights chosen for the linear approximation: some solutions of the front just can't be reached with these approaches. Thus, successful approaches should be able to find all elements of the optimal Pareto front and converge to any of the non dominated solutions.
+
+\subsubsection{Transposition Tables in DST} \label{ssec:transTables}
+
+The DST is a problem specially suited for the use of Transposition Tables (TT)~\cite{Childs2008} within MCTS. TT is a technique used to optimize three search based algorithms when two or more states can be found at different locations in the tree. It consists of sharing information between these equivalent states in a centralized manner, in order to avoid managing these positions as completely different states. Figure~\ref{fig:dstTable} shows an example of this situation in the DST.
+
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[width=0.9\columnwidth]{img/dstTransTables}
+\end{center}
+\caption{Example of two different sequences of actions (R: Right, D: Down) that lie in the same position in the map, but different node in the tree.}
+\label{fig:dstTable}
+\end{figure}
+
+In this example, the submarine starts in the initial position ($P1$, root of the tree) and makes a sequence of moves that places it in $P2$. From this location, if the vessel wishes to move to $P3$, two optimal trajectories would be route \textit{a} and \textit{b}. In a tree that does not use TT, there would be two different nodes to represent $P3$, although the location and number of moves performed up to this point are the same (thus, the states are equivalent). It is worthwhile to highlight that the coordinates of the vessel are not enough to identify two equivalent states, but also the number of moves is needed: imagine a third route from $P2$ to $P3$ with the moves: \textit{Up}, \textit{Right}, \textit{Right}, \textit{Down}, \textit{Down}. As the submarine performs $5$ moves, the states are not the same, and the node where the ship is in $P3$ now would be two levels deeper in the tree.
+
+TT tables are implemented in the MCTS algorithms tested in this benchmark by using hash tables that stores a \textit{representative} node for each pair $(position, moves)$ found.  The key of the hash map needs then to be obtained from three values: position coordinates $x$ and $y$ of the ship in the board, and number of moves, indicated by the depth of the node in the tree. Hence, transpositions can only happen at the same depth within the tree, a feature that has been successfully tried before in the literature~\cite{Kozelek2009}.
+
+\subsection{Multi-Objective PTSP} \label{ssec:moptsp}
+
+The Multi-Objective Physical Travelling Salesman Problem (MO-PTSP) is a game employed in a competition held in the IEEE Conference on Computational Intelligence in Games (CIG) in 2013, a modification of the Physical Travelling Salesman Problem (PTSP), previously introduced by Perez et al.~\cite{PerezCEC2012}. The MO-PTSP is a real-time game where the agent navigates a ship and must visit $10$ waypoints scattered around the maze. 
+
+This needs to be done while optimizing three different objectives:  1) \textbf{Time}: the player must collect all waypoints scattered around the maze in as few time steps as possible; 2) \textbf{Fuel}: the fuel consumption by the end of the game must be minimized; and 3) \textbf{Damage}: the ship should end the game with as little damage as possible.
+
+In the game, the agent must provide an action every $40$ milliseconds. The available actions are combinations of two different inputs: \textit{throttle} (that could be \textit{on} or \textit{off}) and \textit{steering} (that could be \textit{straight}, \textit{left} or \textit{right}). This allows for $6$ different actions that modify the ship's position, velocity and orientation. These vectors are kept from one step to the next, keeping the inertia of the ship, and making the navigation task not trivial. 
+
+The ship starts with $5000$ units of fuel, and one unit is spent every time an action supplied has the throttle input \textit{on}. There are, however, two ways of collecting fuel: each waypoint visited grants the ship with $50$ more units of fuel. Also, fuel canisters are scattered around the maze and their collection provides with $250$ more units.
+
+Regarding the third objective, the ship can suffer damage in two different ways: by colliding with obstacles and driving through lava. In the former case, the ship can collide with normal obstacles (that subtract $10$ units of damage) and specially damaging obstacles ($30$ units). In the latter, lava lakes are abundant in the MO-PTSP levels and, in contrast with normal surfaces, they deal one unit of damage for each time step the ship spends over this type of surface. All this subtractions are deduced from an initial counter of $5000$ points of damage.
+
+Figure~\ref{fig:sampleMap} shows an example of an MO-PTSP map, as drawn by the framework. Waypoints yet not visited are painted as blue circles, while those already collected are depicted as empty circles. The green ellipses represent fuel canisters, normal surfaces are drawn in brown and lava lakes are printed as red-dotted yellow surfaces. Normal obstacles black, damaging obstacles are drawn in red. Blue obstacles are elastic walls that produce no damage to the ship. The vessel is drawn as a blue polygon and its trajectory is traced with a black line.
+
+\begin{figure} [!t]
+	\begin{center}
+	\includegraphics[width=0.7\columnwidth]{img/moptspmap}
+	\caption{Sample MO-PTSP map.}
+	\label{fig:sampleMap}
+	\end{center}
+\end{figure}
+
+\subsubsection{Macro-actions for MO-PTSP} \label{sssec:macro}
+
+All algorithms tested in the MO-PTSP in this research employ macro-actions. Macro-actions is a concept that can be used for coarsening the action space by applying the action chosen by the control algorithm in several consecutive cycles, instead of just in the next one. 
+
+Previous research in PTSP~\cite{Perez2013, Perez2012} suggests that using macro-actions for real-time navigation domains increases the performance of the algorithms, and it has been used in the previous PTSP competitions by the winner and other entries.
+
+A macro-action of length $L$ is defined as a repetition of a given action during $L$ consecutive time steps. The main advantage of macro-actions is that the control algorithms can see further in the future, and then reduce the implication of open-endedness of real-time games (see Section~\ref{sec:mcts}). As this reduces the search space significantly, better algorithm performance is allowed. A consequence of using macro-actions is also that the algorithm can employ $L$ consecutive steps to plan the next move (the next macro-action) to make. Therefore, instead of spending $40$ milliseconds, as in MO-PTSP, to define the next action, the algorithm can employ $40 \times L$ milliseconds for this task, and hence perform a more extensive search. 
+
+In MO-PTSP, the macro-action size is $L = 15$, a value that has shown its proficiency before in PTSP. For more information about macro-actions and their application to real-time navigation problems such as the PTSP, the reader is referred to~\cite{Perez2013}.
+
+\subsubsection{Heuristics for MO-PTSP} \label{sssec:heur}
+
+\todo[inline]{Explain heuristics used here to evaluate the states.}
+
 \section{Experimentation} \label{sec:exp}
+
+The experiments performed in this research compare three different algorithms in the two benchmarks presented in Section~\ref{sec:bench}: a single objective MCTS (referred to here as \textit{MCTS}), the Multi-Objective MCTS (\textit{MO-MCTS}) and a rolling horizon version of the NSGA-II algorithm described in Section~\ref{sec:moo} (\textit{NSGA-II}). This NSGA-II version evolves a population where the individuals are sequences of actions (macro-actions in the MO-PTSP case), obtaining the fitness from the state of the game after applying such sequence. 
+
+All algorithms have a limited number of evaluations before providing an action to perform. In order for these games to be real-time, the time budget allowed is close to $40$ milliseconds. With the objective of avoiding congestion peaks at the machine where the experiments are run, an average of the number of evaluations doable in $40$ ms. is calculated and employed in the tests. This leaded to $4500$ evaluations in the DST and $500$ evaluations for MO-PTSP, in the same server where the PTSP and MO-PTSP competitions were run\footnote{Intel Core i5, 230GHz, 4GB of RAM}.
+
+\subsection{Results in DST} \label{ssec:resDST}
+
+\subsection{Results in MO-PTSP} \label{ssec:resMOPTSP}
+
+\subsection{A step further in MO-PTSP: dynamically varying weights} \label{ssec:resVarW}
+
 
 \section{Conclusions and Future Work} \label{sec:conc}
 

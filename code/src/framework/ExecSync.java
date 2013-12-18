@@ -353,10 +353,10 @@ public class ExecSync extends Exec
      */
     public static void main(String[] args)
     {
-        //m_mapNames = new String[]{"maps/ptsp_map19.map"}; //Set here the name of the map to play in.
-        m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
-                "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
-                "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
+        m_mapNames = new String[]{"maps/ptsp_map02.map"}; //Set here the name of the map to play in.
+        //m_mapNames = new String[]{"maps/ptsp_map01.map","maps/ptsp_map02.map","maps/ptsp_map08.map",
+        //        "maps/ptsp_map19.map","maps/ptsp_map24.map","maps/ptsp_map35.map","maps/ptsp_map40.map",
+        //        "maps/ptsp_map45.map","maps/ptsp_map56.map","maps/ptsp_map61.map"}; //In an array, to play in mutiple maps with runGames().
 
         m_controllerName = "controllers.greedy.GreedyController"; //Set here the controller name.
         m_controllerName = "controllers.MacroRandomSearch.MacroRSController"; //Set here the controller name.
@@ -375,8 +375,8 @@ public class ExecSync extends Exec
 
 
         /////// 1. To play the game with the key controller.
-        //int delay = PTSPConstants.DELAY;  //PTSPConstants.DELAY: best human play speed
-        //playGame(delay);
+        int delay = PTSPConstants.DELAY;  //PTSPConstants.DELAY: best human play speed
+        playGame(delay);
 
         /////// 2. Executes one game.
         //ParetoMCTSController.EXPLORATION_VIEW_ON = true;
@@ -392,10 +392,11 @@ public class ExecSync extends Exec
 
         ////// 3. Executes N games (numMaps x numTrials), graphics disabled.
         //m_writeOutput = true;
-        m_verbose = false; //hides additional output. runGamesStats prints anyway.
-        int numTrials=30;
-        runGamesStats(numTrials);
+        //m_verbose = false; //hides additional output. runGamesStats prints anyway.
+        //int numTrials=30;
+        //runGamesStats(numTrials);
 
     }
 
 }
+
