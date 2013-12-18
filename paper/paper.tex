@@ -388,7 +388,7 @@
 \hyphenation{op-tical net-works semi-conduc-tor ordering algorithms}
 
 
-\usepackage{subfigure,graphicx,url,times,multirow,amsmath,amssymb,algorithm,xspace,epsfig,todonotes,array,caption,color}
+\usepackage{bm,subfigure,graphicx,url,times,multirow,amsmath,amssymb,algorithm,xspace,epsfig,todonotes,array,caption,color}
 \usepackage{algorithm, mathtools}
 \usepackage[noend]{algpseudocode}
 \usepackage[bookmarks=false]{hyperref}
@@ -753,9 +753,21 @@ In this example, the submarine starts in the initial position ($P1$, root of the
 
 TT tables are implemented in the MCTS algorithms tested in this benchmark by using hash tables that stores a \textit{representative} node for each pair $(position, moves)$ found.  The key of the hash map needs then to be obtained from three values: position coordinates $x$ and $y$ of the ship in the board, and number of moves, indicated by the depth of the node in the tree. Hence, transpositions can only happen at the same depth within the tree, a feature that has been successfully tried before in the literature~\cite{Kozelek2009}.
 
+\subsubsection{Heuristics for DST} \label{sssec:heurDST}
+
+As DST has two different objectives, number of moves and value of the treasure, the quality of a state can be assessed by two rewards, $r_m$ and $r_v$, for each objective respectively. $r_m$ is adjusted to be maximized using the maximum number of moves in the game, while $r_v$ is just the value in the cell with the treasure. Equation~\ref{eq:dst} summarizes these rewards:
+
+\begin{equation}	\label{eq:dst}
+\begin{split}
+r_m = 100 - moves \\
+r_v = treasureValue
+\end{split}
+\end{equation}
+
+
 \subsection{Multi-Objective PTSP} \label{ssec:moptsp}
 
-The Multi-Objective Physical Travelling Salesman Problem (MO-PTSP) is a game employed in a competition held in the IEEE Conference on Computational Intelligence in Games (CIG) in 2013, a modification of the Physical Travelling Salesman Problem (PTSP), previously introduced by Perez et al.~\cite{PerezCEC2012}. The MO-PTSP is a real-time game where the agent navigates a ship and must visit $10$ waypoints scattered around the maze. 
+The Multi-Objective Physical Travelling Salesman Problem (MO-PTSP) is a game employed in a competition held in the IEEE Conference on Computational Intelligence in Games (CIG) in 2013, a modification of the Physical Travelling Salesman Problem (PTSP), previously introduced by Perez et al.~\cite{PerezCEC2012}. The MO-PTSP is a real-time game where the agent navigates a ship and must visit $10$ waypoints scattered around the maze. All waypoints must be visited to consider a game as complete, and a game ticks timer is reset every time a waypoint is collected, finishing the game prematurely (and unsuccessfully) if it reaches $800$ game steps before visiting another waypoint.
 
 This needs to be done while optimizing three different objectives:  1) \textbf{Time}: the player must collect all waypoints scattered around the maze in as few time steps as possible; 2) \textbf{Fuel}: the fuel consumption by the end of the game must be minimized; and 3) \textbf{Damage}: the ship should end the game with as little damage as possible.
 
@@ -785,19 +797,94 @@ A macro-action of length $L$ is defined as a repetition of a given action during
 
 In MO-PTSP, the macro-action size is $L = 15$, a value that has shown its proficiency before in PTSP. For more information about macro-actions and their application to real-time navigation problems such as the PTSP, the reader is referred to~\cite{Perez2013}.
 
-\subsubsection{Heuristics for MO-PTSP} \label{sssec:heur}
+\subsubsection{Heuristics for MO-PTSP} \label{sssec:heurMOPTSP}
 
-\todo[inline]{Explain heuristics used here to evaluate the states.}
+In order to evaluate a game state in MO-PTSP, three different measures or rewards are taken, $r_t, r_f, r_d$, one for each one of the objectives time, fuel and damage, respectively. All these rewards are defined so they have to be maximized. The first reward uses a measure of distance for the time objective, as indicated in Equation~\ref{eq:dist}: 
+
+\begin{equation}	\label{eq:dist}
+r_t = 1 - d/D
+\end{equation}
+
+The MO-PTSP framework includes a path-finding library that allows controllers to query the shortest distance of a route of waypoints. $d$ indicates the distance from the current position until the last waypoint, following the desired route, and $D$ is the distance of the whole route from the starting position. Minimizing the distance to the last waypoint will lead to the end of the game.
+
+Equation~\ref{eq:fuel} shows how the value of the fuel objective, $r_f$, is obtained:
+
+%f_p = fuelPoints
+%f_c = fuelConsumed
+%f_0 = initialFuel
+
+\begin{equation}	\label{eq:fuel}
+r_f = (1 - (f_c/f_0)) \times \alpha + r_t \times (1 - \alpha)
+\end{equation}
+
+$f_c$ is the fuel consumed so far, and $f_0$ is the initial fuel at the start of the game. $\alpha$ is a value that balances between the fuel component and the time objective from Equation~\ref{eq:dist}. Note that, as waypoints needs to keep being visited, it is necessary to include a distance measure for this reward. Otherwise, an approach that prioritizes this objective would not minimize distance to waypoints at all (the ship could just stand still: no fuel consumed is optimal), and therefore could not complete the game. The value of $\alpha$ has been determined empirically, in order to provide a good balance between these two components, and it is set to $0.66$.
+
+Finally, Equation~\ref{eq:dam} gives the method to calculate the damage objective, $r_d$:
+
+%d_p = damagePoints
+%d_s = damageSuffered
+%d_m = maximumDamage
+%s = shipSpeed
+
+\begin{equation}	\label{eq:dam}
+r_d = 
+\begin{cases}
+	(1 - (d_s/d_m)) \times \beta_{1} + r_t \times (1 - \beta_{1}), & s > \gamma\\
+	(1 - (d_s/d_m)) \times \beta_{2} + r_t \times (1 - \beta_{2}), & s \leq \gamma
+\end{cases}
+\end{equation}
+
+$d_s$ is the damage suffered so far in the game, and $d_m$ is the maximum damage the ship can take. In this case, three different variables are used to regulate the bahaviour of this objective: $\gamma$, $\beta_{1}$ and $\beta_{2}$. Both $\beta_{1}$ and $\beta_{2}$ have the same role as $\alpha$ in Equation~ref{eq:fuel}: they balance between the time objective and the damage measure. The difference is that $\beta_{1}$ is used in high speeds, while $\beta_{2}$ is employed with low velocities. This is distinguished by the parameter $\gamma$, that can be seen as a threshold value for the ship's speed ($s$). This differentiation is made in order to avoid low speeds in lava lakes, as this increase the damage suffered importantly. The values for these variables have been determined also empirically, and they are set to $\gamma = 0.8$, $\beta_{1} = 0.75$ and $\beta_{2} = 0.25$.
 
 \section{Experimentation} \label{sec:exp}
 
-The experiments performed in this research compare three different algorithms in the two benchmarks presented in Section~\ref{sec:bench}: a single objective MCTS (referred to here as \textit{MCTS}), the Multi-Objective MCTS (\textit{MO-MCTS}) and a rolling horizon version of the NSGA-II algorithm described in Section~\ref{sec:moo} (\textit{NSGA-II}). This NSGA-II version evolves a population where the individuals are sequences of actions (macro-actions in the MO-PTSP case), obtaining the fitness from the state of the game after applying such sequence. 
+The experiments performed in this research compare three different algorithms in the two benchmarks presented in Section~\ref{sec:bench}: a single objective MCTS (referred to here simply as \textit{MCTS}), the Multi-Objective MCTS (\textit{MO-MCTS}) and a rolling horizon version of the NSGA-II algorithm described in Section~\ref{sec:moo} (\textit{NSGA-II}). This NSGA-II version evolves a population where the individuals are sequences of actions (macro-actions in the MO-PTSP case), obtaining the fitness from the state of the game after applying such sequence. 
 
 All algorithms have a limited number of evaluations before providing an action to perform. In order for these games to be real-time, the time budget allowed is close to $40$ milliseconds. With the objective of avoiding congestion peaks at the machine where the experiments are run, an average of the number of evaluations doable in $40$ ms. is calculated and employed in the tests. This leaded to $4500$ evaluations in the DST and $500$ evaluations for MO-PTSP, in the same server where the PTSP and MO-PTSP competitions were run\footnote{Intel Core i5, 230GHz, 4GB of RAM}.
 
 \subsection{Results in DST} \label{ssec:resDST}
 
+Figure~\ref{fig:extCase}
+
+\begin{figure*}[!t]
+	\centering
+	\includegraphics[width=2.1\columnwidth]{img/dstAll}
+	\caption{Results DST}
+	\label{fig:extCase}
+\end{figure*}
+
+
 \subsection{Results in MO-PTSP} \label{ssec:resMOPTSP}
+
+Table~\ref{tab:resMOPTSP}
+
+\begin{table*}[!t]
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+  & \textbf{$W: (w_t, w_f, w_d)$} & \textbf{MO-MCTS} \bm{$(D, \O, d)$} &  \textbf{MCTS} \bm{$(D, \O, d)$} & \textbf{NSGA-II} \bm{$(D, \O, d)$} & \textbf{PurofMovio} \bm{$(D, \O, d)$} \\ 
+\hline
+ \multirow{3}{*}{\textbf{MO-MCTS}} & $W_0: (0.33,0.33,0.33)$ & \multirow{3}{*}{$-$} & $(8,2,0)$ & $(8,2,0)$ & $(0,5,5)$\\
+ & $W_1: (0.1,0.3,0.6)$ & & $(10,0,0)$ & $(4,6,0)$ & $(0,6,4)$\\
+ & $W_2: (0.1,0.6,0.3)$ & & $(8,2,0)$ & $(7,3,0)$ & $(0,5,5)$\\
+\hline
+ \multirow{3}{*}{\textbf{MCTS}} & $W_0: (0.33,0.33,0.33)$& $(0,8,2)$ & \multirow{3}{*}{$-$} & $(0,2,8)$ & $(0,2,8)$\\
+ & $W_1: (0.1,0.3,0.6)$ & $(0,0,10)$ & & $(4,2,4)$ & $(0,3,7)$\\
+ & $W_2: (0.1,0.6,0.3)$ & $(0,2,8)$ & & $(0,1,9)$ & $(0,6,4)$\\
+\hline
+ \multirow{3}{*}{\textbf{NSGA-II}} & $W_0: (0.33,0.33,0.33)$& $(0,2,8)$ & $(8,2,0)$ & \multirow{3}{*}{$-$} & $(0,4,6)$\\
+ & $W_1: (0.1,0.3,0.6)$ & $(0,6,4)$ & $(4,2,4)$ & & $(0,4,6)$\\
+ & $W_2: (0.1,0.6,0.3)$ & $(0,3,7)$ & $(9,1,0)$ & & $(0,5,5)$\\
+\hline
+ \multirow{3}{*}{\textbf{PurofMovio}} & $W_0: (0.33,0.33,0.33)$& $(5,5,0)$ & $(8,2,0)$ & $(6,4,0)$ & \multirow{3}{*}{$-$}\\
+ & $W_1: (0.1,0.6,0.3)$ & $(4,6,0)$ & $(7,3,0)$ & $(6,4,0)$ & \\
+ & $W_2: (0.1,0.3,0.6)$ & $(5,5,0)$ & $(6,4,0)$ & $(5,5,0)$ & \\
+\hline
+\end{tabular}
+\caption{Results MO-PTSP }
+\label{tab:resMOPTSP}
+\end{center}
+\end{table*}
 
 \subsection{A step further in MO-PTSP: dynamically varying weights} \label{ssec:resVarW}
 
