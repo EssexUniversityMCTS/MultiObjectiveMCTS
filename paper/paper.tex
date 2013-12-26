@@ -512,7 +512,20 @@ Abstract...
 
 \section{Introduction} \label{sec:intro}
 
-Here it goes, the introduction.
+Multi-objective optimization has been a field of study of manufacturing, engineering~\cite{Marler2004} and finance~\cite{Coello2006}, while having little impact in games research. This paper shows that multi-objective optimization has much to offer in developing game strategies that allow for a fine-grain control of alternative policies. The application of such approaches to this field can provide interesting results, especially in games that are long or complex enough where long-term planning is not trivial and achieving a good level of play requires balancing strategies.
+
+From a simple point of view, many competitive games can be seen as a scenario where two or more opponents have the single objective of winning. Achieving victory is usually complex in interesting games, and successful approaches normally provide a state value by combining features of the game state as a weighted sum. An example is a chess heuristic that assigns different weights to each piece according to their value.
+
+Multi-objective approaches can be applied in these scenarios, where several factors must be taken into account to achieve the victory. The algorithms can balance between different objectives, in order to provide a wide range of strategies well suited to the different stages of the game being played, or to face the existing opponents. Application of such approaches could be real-time strategy games, where long term planning must be carried out in order to balance aspects such as attack units, defensive structures and resource gathering. 
+
+This paper proposes a multi-objective real-time algorithm version of Monte Carlo Tree Search (MCTS), a popular reinforcement learning approach within the last decade. The proposed algorithm is tested in two different games: a real-time version of the Deep Sea Treasure (DST; a classical multi-objective problem), and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). The algorithm is also compared to two other approaches: a single-objective MCTS (that uses a weighted sum of features to value the state) and a rolling horizon Non-dominated Sorting Evolutionary Algorithm II (NSGA-II). This paper extends and formalizes our previous work described in~\cite{Perez2013a}.
+
+Two main goals can be identified in this paper: first, the proposed algorithm must be applicable to real-time domains (those where the next move to make must be decided within a small time budget) and it should obtain better or at least the same performance than the other state of the art algorithms. It is important to highlight that all three algorithms tested employ the same heuristic functions to evaluate the features of a given game state. Thus, the focus of this research is set on how the algorithm explores the search space, instead of providing the best possible solution to each given problem. 
+
+Secondly, the algorithm must be able to provide solutions across the multi-objective spectrum: by parametrizing the algorithm, it must be possible to prioritize one objective over the others and therefore converge to solutions according to these preferences. 
+
+The paper is structured as follows. First, Sections~\ref{sec:mcts} and~\ref{sec:moo} provide the necessary background for MCTS and multi-objective optimization, respectively. The algorithm proposed in this research is described in detail in Section~\ref{sec:momcts}. Then, Section~\ref{sec:bench} defines the games used to test the algorithms, with the results discussed in Section~\ref{sec:exp}. Finally, some conclusions and possible extensions of this work are drawn in Section~\ref{sec:conc}.
+
 
 \section{Monte Carlo Tree Search} \label{sec:mcts}
 
@@ -884,7 +897,7 @@ Finally, in the comparison between NSGA-II and MO-MCTS, the latter algorithm obt
 
 The same three algorithms have been tested in the MO-PTSP domain. The framework~\footnote{www.ptsp-game.net} comes with $10$ maps, used in this research to run the algorithms in. In this case, the optimal Pareto front is not known in advance, and normally it will be different from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
 
-The idea is as follows. First of all, three different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$ and $W_3 = (0.1,0.6,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage). $W_1$ treats all objectives with the same weight, while $W_2$ and $W_3$ give more relevance to damage and fuel, respectively (note that Equations~\ref{eq:fuel} and~\ref{eq:dam} also give weight to the time objective, so having a vector with $w_t=0.6$ is not that relevant). All $W_1$, $W_2$ and $W_3$ provide then a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses this weights to select an action based on a weighted sum, which has shown in preliminary experiments better performance than the Euclidean distance mechanism.
+The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage). $W_1$ treats all objectives with the same weight, while the other three give more relevance to different objectives. These vectors provide then a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses this weights to select an action based on a weighted sum, which has shown in preliminary experiments better performance than the Euclidean distance mechanism.
 
 The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
 
@@ -899,52 +912,52 @@ The first point to check is if the different weight vectors affect the solutions
  \multirow{3}{*}{\textbf{Map 1}} & $(0.33,0.33,0.33)$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
  & $(0.1,0.3,0.6)$ & $1657 \pm 8$ & $130 \pm 2$ & \bm{$773 \pm 11$}\\
  & $(0.1,0.6,0.3)$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$\\
-% & $(0.6,0.1,0.3)$ & $1627 \pm 7$ & $138 \pm 3$ & $812 \pm 14$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1649 \pm 8$} & $132 \pm 2$ & $833 \pm 13$\\
 \hline
  \multirow{3}{*}{\textbf{Map 2}} & $(0.33,0.33,0.33)$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$\\
  & $(0.1,0.3,0.6)$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$}\\
  & $(0.1,0.6,0.3)$ & $1416 \pm 8$ & \bm{$219 \pm 4$} & $360 \pm 3$\\
-% & $(0.6,0.1,0.3)$ & $1389 \pm 7$ & $241 \pm 5$ & $355 \pm 2$\\
+ & $(0.6,0.1,0.3)$ & $1396 \pm 8$ & $245 \pm 5$ & $361 \pm 2$\\
 \hline
  \multirow{3}{*}{\textbf{Map 3}} & $(0.33,0.33,0.33)$ & $1373 \pm 6$ & $221 \pm 3$& $301 \pm 7$\\
  & $(0.1,0.3,0.6)$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$}\\
  & $(0.1,0.6,0.3)$ & $1385 \pm 6$ & \bm{$203 \pm 4$} & $291 \pm 7$\\
-% & $(0.6,0.1,0.3)$ & $1383 \pm 6$ & $245 \pm 5$ & $300 \pm 7$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1363 \pm 4$} & $229 \pm 4$ & $285 \pm 7$\\
 \hline
  \multirow{3}{*}{\textbf{Map 4}} & $(0.33,0.33,0.33)$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$\\
  & $(0.1,0.3,0.6)$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$}\\
  & $(0.1,0.6,0.3)$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$\\
-% & $(0.6,0.1,0.3)$ & $1398 \pm 7$ & $325 \pm 5$ & $587 \pm 6$\\
+ & $(0.6,0.1,0.3)$ & $1388 \pm 6$ & $309 \pm 4$ & $559 \pm 5$\\
 \hline
  \multirow{3}{*}{\textbf{Map 5}} & $(0.33,0.33,0.33)$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$\\
  & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$}\\
  & $(0.1,0.6,0.3)$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$\\
-% & $(0.6,0.1,0.3)$ & $1410 \pm 6$ & $480 \pm 5$ & $546 \pm 4$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1399 \pm 9$} & $469 \pm 4$ & $547 \pm 3$\\
 \hline
  \multirow{3}{*}{\textbf{Map 6}} & $(0.33,0.33,0.33)$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$\\
  & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$}\\
  & $(0.1,0.6,0.3)$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$\\
-% & $(0.6,0.1,0.3)$ & $1563 \pm 7$ & $560 \pm 5$ & $285 \pm 4$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1571 \pm 7$} & $559 \pm 5$ & $294 \pm 4$\\
 \hline
  \multirow{3}{*}{\textbf{Map 7}} & $(0.33,0.33,0.33)$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$\\
  & $(0.1,0.3,0.6)$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$}\\
  & $(0.1,0.6,0.3)$ & $1489 \pm 12$ & \bm{$549 \pm 3$} & $264 \pm 6$\\
-% & $(0.6,0.1,0.3)$ & $1409 \pm 7$ & $617 \pm 5$ & $259 \pm 5$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1407 \pm 8$} & $618 \pm 5$ & $270 \pm 6$\\
 \hline
  \multirow{3}{*}{\textbf{Map 8}} & $(0.33,0.33,0.33)$ & $1761 \pm 9$ & $254 \pm 5$& $382 \pm 3$\\
  & $(0.1,0.3,0.6)$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$}\\
  & $(0.1,0.6,0.3)$ & $1826 \pm 10$ & \bm{$230 \pm 3$} & $392 \pm 7$\\
-% & $(0.6,0.1,0.3)$ & $1750 \pm 9$ & $304 \pm 7$ & $375 \pm 4$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1732 \pm 9$} & $311 \pm 8$ & $379 \pm 6$\\
 \hline
  \multirow{3}{*}{\textbf{Map 9}} & $(0.33,0.33,0.33)$ & $2501 \pm 14$ & $926 \pm 6$& $574 \pm 9$\\
  & $(0.1,0.3,0.6)$ & $2503 \pm 10$ & $921 \pm 10$ & \bm{$524 \pm 8$}\\
  & $(0.1,0.6,0.3)$ & $2641 \pm 14$ & \bm{$833 \pm 5$} & $574 \pm 14$\\
-% & $(0.6,0.1,0.3)$ & $2442 \pm 12$ & $958 \pm 7$ & $559 \pm 8$\\
+ & $(0.6,0.1,0.3)$ & \bm{$2470 \pm 9$} & $956 \pm 5$ & $573 \pm 8$\\
 \hline
  \multirow{3}{*}{\textbf{Map 10}} & $(0.33,0.33,0.33)$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$\\
  & $(0.1,0.3,0.6)$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$\\
  & $(0.1,0.6,0.3)$ & $1542 \pm 10$ & \bm{$554 \pm 4$} & $229 \pm 5$\\
-% & $(0.6,0.1,0.3)$ & $1394 \pm 10$ & $667 \pm 6$ & $202 \pm 2$\\
+ & $(0.6,0.1,0.3)$ & \bm{$1378 \pm 5$} & $663 \pm 6$ & $202 \pm 4$\\
 \hline
 \end{tabular}
 \caption{MO-MCTS results in MO-PTSP with different weight vectors. Significantly better results per map are in bold.}
@@ -952,7 +965,7 @@ The first point to check is if the different weight vectors affect the solutions
 \end{center}
 \end{table}
 
-The few exceptions where this does not happen can actually been explained looking at the map: in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the fewest fuel consumption). The second exception happens in map 10 with the damage objective: but precisely map 10 is a map with no obstacles to damage the ship (thus only lava lakes deals damage). This also results in this map being the one with lowest damage overall.
+Some exceptions can actually be explained analyzing the map: in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the fewest fuel consumption). Also, in map 10, there is no difference in the damage objective: but precisely map 10 is a map with no obstacles to damage the ship (thus only lava lakes deals damage). This also results in this map being the one with lowest damage overall. It can also be seen that, in those maps were time has priority, the results in this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
 
 These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of experiments is run for NSGA-II and MCTS in the $10$ maps of the benchmark.
 
@@ -969,18 +982,22 @@ Extending this comparison to all maps, each pair of algorithms ends with a tripl
  \multirow{3}{*}{\textbf{MO-MCTS}} & $W_1: (0.33,0.33,0.33)$ & \multirow{3}{*}{$-$} & $(8,2,0)$ & $(8,2,0)$ & $(0,5,5)$\\
  & $W_2: (0.1,0.3,0.6)$ & & $(10,0,0)$ & $(4,6,0)$ & $(0,6,4)$\\
  & $W_3: (0.1,0.6,0.3)$ & & $(8,2,0)$ & $(7,3,0)$ & $(0,5,5)$\\
+ & $W_4: (0.6,0.1,0.3)$ & & $(10,0,0)$ & $(3,7,0)$ & $(0,3,7)$\\
 \hline
  \multirow{3}{*}{\textbf{MCTS}} & $W_1: (0.33,0.33,0.33)$& $(0,8,2)$ & \multirow{3}{*}{$-$} & $(0,2,8)$ & $(0,2,8)$\\
  & $W_2: (0.1,0.3,0.6)$ & $(0,0,10)$ & & $(4,2,4)$ & $(0,3,7)$\\
  & $W_3: (0.1,0.6,0.3)$ & $(0,2,8)$ & & $(0,1,9)$ & $(0,6,4)$\\
+ & $W_4: (0.6,0.1,0.3)$ & $(0,0,10)$ &  & $(3,3,4)$ & $(0,1,9)$\\
 \hline
  \multirow{3}{*}{\textbf{NSGA-II}} & $W_1: (0.33,0.33,0.33)$& $(0,2,8)$ & $(8,2,0)$ & \multirow{3}{*}{$-$} & $(0,4,6)$\\
  & $W_2: (0.1,0.3,0.6)$ & $(0,6,4)$ & $(4,2,4)$ & & $(0,4,6)$\\
  & $W_3: (0.1,0.6,0.3)$ & $(0,3,7)$ & $(9,1,0)$ & & $(0,5,5)$\\
+ & $W_4: (0.6,0.1,0.3)$ & $(0,7,3)$ & $(4,3,3)$ &  & $(0,4,6)$\\
 \hline
  \multirow{3}{*}{\textbf{PurofMovio}} & $W_1: (0.33,0.33,0.33)$& $(5,5,0)$ & $(8,2,0)$ & $(6,4,0)$ & \multirow{3}{*}{$-$}\\
  & $W_2: (0.1,0.6,0.3)$ & $(4,6,0)$ & $(7,3,0)$ & $(6,4,0)$ & \\
  & $W_3: (0.1,0.3,0.6)$ & $(5,5,0)$ & $(6,4,0)$ & $(5,5,0)$ & \\
+ & $W_4: (0.6,0.1,0.3)$ & $(7,3,0)$ & $(9,1,0)$ & $(6,4,0)$ & \\
 \hline
 \end{tabular}
 \caption{Results in MO-PTSP: Each cell indicates the triplet $(D, \O, d)$, where $D$ is the number of maps where the row algorithm dominates the column one, $\O$ is the amount of maps where no dominance can be established, and $d$ states the number of maps where the row algorithm is dominated by the column one. All algorithms followed the same route (order of waypoints and fuel canisters) in every map tested.}
@@ -988,7 +1005,7 @@ Extending this comparison to all maps, each pair of algorithms ends with a tripl
 \end{center}
 \end{table*}
 
-One of the first things to notice is that MO-MCTS dominates MCTS and NSGA-II in most of the maps, and it is never dominated by these. Particularly, the dominance of MO-MCTS over MCTS is outstanding, even dominating in all $10$ maps for one of the weight vectors. MO-MCTS also dominates NSGA-II in more maps than in those where there is no dominance, and it is as well never dominated by NSGA-II in any map. 
+One of the first things to notice is that MO-MCTS dominates MCTS and NSGA-II in most of the maps, and it is never dominated by these. Particularly, the dominance of MO-MCTS over MCTS is outstanding, even dominating in all $10$ maps for two of the weight vectors. MO-MCTS also dominates NSGA-II in more maps than in those where there is no dominance, and it is as well never dominated by NSGA-II in any map. 
 
 It is also interesting to see that NSGA-II dominates also the weighted sum version of MCTS, although for the vector $W_2$ there is a technical draw, as they dominate each other in $4$ different maps each and there is no dominance in the other $2$.
 
@@ -996,7 +1013,7 @@ Additionally, Table~\ref{tab:resMOPTSP} contains a fourth entry, \texttt{PurofMo
 
 However, it is very important to highlight that \texttt{PurofMovio} is not using the same heuristics as the ones presented in this research. Hence, nothing can be concluded from making pairwise comparisons directly with the winning entry of the competition. It is likely that \texttt{PurofMovio}'s heuristics are more efficient that the ones presented here, but the goal of this paper is not to develop the best heuristics for the MO-PTSP, but to provide an insight of how a multi-objective version of MCTS compares to other algorithms using the same heuristics.
 
-Anyway, the inclusion of \texttt{PurofMovio} in this comparison is not pointless. It is possible to asses the quality of the $3$ algorithms tested here by comparing their performance relatively, against a high quality entry. Attending to this criteria, it can be seen how MO-MCTS is the algorithm that is dominated less often by him, producing similar results in approximately $5$ out of the $10$ maps. MCTS and NSGA-II are dominated more often than MO-MCTS, being dominated in approximately $6$ and $7$ maps, respectively. This comparative result shows again that MO-MCTS is achieving the best results among the algorithms compared.
+Anyway, the inclusion of \texttt{PurofMovio} in this comparison is not pointless: it is possible to asses the quality of the three algorithms tested here by comparing their performance relatively, against this high quality entry. Attending to this criteria, it can be seen how MO-MCTS is the algorithm that is dominated less often by him, producing similar results on an average of $4.75$ out of the $10$ maps, and being dominated in $5.25$ maps. MCTS and NSGA-II are dominated more often than MO-MCTS, being dominated on averages of $7.5$ and $5.75$ of the maps, respectively. This comparative result shows again that MO-MCTS is achieving the best results among the algorithms compared.
 
 \subsection{A step further in MO-PTSP: segments and weights} \label{ssec:resVarW}
 
@@ -1014,52 +1031,118 @@ The question is then how to assign these weight vectors. Three different ways ca
 
 This section details the efforts made in order to test the third variant, by using a stochastic hill climbing algorithm on each one of the maps. The goal is to check if by varying the weight vectors between segments, better solutions can be achieved. 
 
-A solution is identified by a string of integers, where each integer refers to one of the weight vectors utilized in the previous sections. The solution is evaluated playing a particular map $10$ times, and its fitness is obtained by calculating the average of those runs. A population of $10$ individuals is kept, and the solutions of the initial population are created either randomly, or mutated from base individuals (where all segments have the same weight vector $W_1$, $W_2$, or $W_3$). 
+A solution is identified by a string of integers, where each integer refers to one of the weight vectors utilized in the previous sections. The solution is evaluated playing a particular map $10$ times, and its fitness is obtained by calculating the average of those runs. A population of $10$ individuals is kept, and the solutions of the initial population are created either randomly, or mutated from base individuals. These base individuals have all segments with the same weight vector $W_1$, $W_2$, or $W_3$ ($W_4$ is out of this experiment, as it shown not to be that influential). 
 
 The best solution (determined by dominance) is promoted to the next generation and it is mutated to generate other individuals. Also, a portion of individuals is generated randomly at every generation, until the end of the algorithm. Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.
+
+%\begin{table}[!t]
+%\begin{center}
+%%\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
+%\begin{tabular}{|p{0.8cm}|p{2.2cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|}
+%\hline
+%\textbf{Map}  & \textbf{Weight genome} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+%\hline
+%\end{tabular}
+%\caption{MO-PTSP Results with different weights: Each row corresponds to a run in the associated map. It gives results for two weights: the one below is the best after the run, while the one on the top is that from Table~\ref{tab:resMOPTSP} with the most similar genome. Each genome is a string of the form $xyz$, that represents $W_xW_yW_z$, where each value is a weight used in that particular segment.}
+%\label{tab:resVarW}
+%\end{center}
+%\end{table}
+
 
 \begin{table}[!t]
 \begin{center}
 %\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
-\begin{tabular}{|p{0.8cm}|p{2.2cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|}
+\begin{tabular}{|p{0.8cm}|p{1.95cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|m{0.1cm}|}
 \hline
-\textbf{Map}  & \textbf{Weight genome} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
+\textbf{Map}  & \textbf{Weight genome} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} & \textbf{D}\\ 
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 1}} & $11111111111111$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$ & $\preceq$ \\
+ & $22222222222222$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$ & $\preceq$ \\
+ & $33333333333333$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$ & $\preceq$ \\
+ & $21201101220001$ & $1619 \pm $ & $130 \pm $ & $744 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 2}} & $11111111111111$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$ & $\preceq$ \\
+ & $22222222222222$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$} & $\preceq$ \\
+ & $33333333333333$ & $1416 \pm 8$ & \bm{$219 \pm 4$} & $360 \pm 3$ & $\preceq$ \\
+ & $12020201212102$ & $1390 \pm $ & $210 \pm $ & $353 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 3}} & $11111111111111$ & $1373 \pm 6$ & $221 \pm 3$& $301 \pm 7$ & $\preceq$ \\
+ & $22222222222222$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$} & $\O$ \\
+ & $33333333333333$ & $1385 \pm 6$ & \bm{$203 \pm 4$} & $291 \pm 7$ & $\O$ \\
+ & $00001112001120$ & $1364 \pm $ & $223 \pm $ & $269 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 4}} & $11111111111111$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$ & $\O$ \\
+ & $22222222222222$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$} & $\O$ \\
+ & $33333333333333$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$ & $\preceq$ \\
+ & $22212221201211$ & $1408 \pm $ & $271 \pm $ & $584 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 5}} & $11111111111111$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$ & $\preceq$ \\
+ & $22222222222222$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$} & $\preceq$ \\
+ & $33333333333333$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$ & $\O$ \\
+ & $10200102000100$ & $1397 \pm $ & $448 \pm $ & $535 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 6}} & $11111111111111$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$ & $\preceq$ \\
+ & $22222222222222$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$} & $\preceq$ \\
+ & $33333333333333$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$ & $\O$ \\
+ & $20010201000000$ & $1570 \pm $ & $535 \pm $ & $266 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 7}} & $11111111111111$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$ & $\preceq$ \\
+ & $22222222222222$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$} & $\preceq$ \\
+ & $33333333333333$ & $1489 \pm 12$ & \bm{$549 \pm 3$} & $264 \pm 6$ & $\O$ \\
+ & $00221100210221$ & $1401 \pm $ & $563 \pm $ & $230 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 8}} & $11111111111111$ & $1761 \pm 9$ & $254 \pm 5$& $382 \pm 3$ & $\preceq$ \\
+ & $22222222222222$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$} & $\O$ \\
+ & $33333333333333$ & $1826 \pm 10$ & \bm{$230 \pm 3$} & $392 \pm 7$ & $\O$ \\
+ & $12110020202212$ & $1747 \pm $ & $247 \pm $ & $363 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 9}} & $11111111111111$ & $2501 \pm 14$ & $926 \pm 6$& $574 \pm 9$ & $\preceq$ \\
+ & $22222222222222$ & $2503 \pm 10$ & $921 \pm 10$ & \bm{$524 \pm 8$} & $\preceq$ \\
+ & $33333333333333$ & $2641 \pm 14$ & \bm{$833 \pm 5$} & $574 \pm 14$ & $\O$ \\
+ & $10021220222112$ & $2463 \pm $ & $891 \pm $ & $523 \pm $ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
+ \multirow{3}{*}{\textbf{Map 10}} & $11111111111111$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$ & $\O$ \\
+ & $22222222222222$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$ & $\O$ \\
+ & $33333333333333$ & $1542 \pm 10$ & \bm{$554 \pm 4$} & $229 \pm 5$ & $\O$ \\
+ & $00200000011100$ & $1418 \pm $ & $623 \pm $ & $197 \pm $ & \\
 \hline
 \end{tabular}
 \caption{MO-PTSP Results with different weights: Each row corresponds to a run in the associated map. It gives results for two weights: the one below is the best after the run, while the one on the top is that from Table~\ref{tab:resMOPTSP} with the most similar genome. Each genome is a string of the form $xyz$, that represents $W_xW_yW_z$, where each value is a weight used in that particular segment.}
 \label{tab:resVarW}
 \end{center}
 \end{table}
+
+
 
 \section{Conclusions and Future Work} \label{sec:conc}
 
