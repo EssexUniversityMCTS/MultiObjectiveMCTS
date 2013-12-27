@@ -476,7 +476,7 @@ Sanaz~Mostaghim (Department of Knowledge and Language Engineering, Otto-von-Guer
 \maketitle
 
 \begin{abstract}
-Multi-objective optimization has been traditionally a matter of study in domains like engineering or finance, with little impact on games research. However, action-decision based on a multi-objective evaluation may be beneficial to obtain a high quality level of play. This paper presents a Multi-objective Monte Carlo Tree Search algorithm for planning and control in real-time game domains, those where the time budget to decide the next move to make is significantly reduced. A comparison is made between the proposed algorithm, a single-objective version of Monte Carlo Tree Search and a rolling horizon implementation of Non-dominated Sorting Evolutionary Algorithm II. Two different benchmarks are employed, the Deep Sea Treasure and the Multi-Objective Physical Travelling Salesman Problem. Using the same heuristics on each game, the analysis is focused on how well the algorithms explore the search space. The results described in this paper show that the proposed approach provides better results than the other algorithms it is compared with. Additionally, it is also shown that the algorithm is able to converge to different solutions of the optimal, or the best found during the search, Pareto front.
+Multi-objective optimization has been traditionally a matter of study in domains like engineering or finance, with little impact on games research. However, action-decision based on a multi-objective evaluation may be beneficial to obtain a high quality level of play. This paper presents a Multi-objective Monte Carlo Tree Search algorithm for planning and control in real-time game domains, those where the time budget to decide the next move to make is significantly reduced. A comparison is made between the proposed algorithm, a single-objective version of Monte Carlo Tree Search and a rolling horizon implementation of Non-dominated Sorting Evolutionary Algorithm II. Two different benchmarks are employed, the Deep Sea Treasure and the Multi-Objective Physical Travelling Salesman Problem. Using the same heuristics on each game, the analysis is focused on how well the algorithms explore the search space. The results show that the proposed approach provides better results than the other algorithms it is compared with. Additionally, it is also shown that the algorithm is able to converge to different solutions of the optimal, or the best found during the search, Pareto front.
 \end{abstract}
 
 
@@ -512,15 +512,15 @@ Multi-objective optimization has been traditionally a matter of study in domains
 
 \section{Introduction} \label{sec:intro}
 
-Multi-objective optimization has been a field of study of manufacturing, engineering~\cite{Marler2004} and finance~\cite{Coello2006}, while having little impact in games research. This paper shows that multi-objective optimization has much to offer in developing game strategies that allow for a fine-grain control of alternative policies. The application of such approaches to this field can provide interesting results, especially in games that are long or complex enough where long-term planning is not trivial and achieving a good level of play requires balancing strategies.
+Multi-objective optimization has been a field of study of manufacturing, engineering~\cite{Marler2004} and finance~\cite{Coello2006}, while having little impact in games research. This paper shows that multi-objective optimization has much to offer in developing game strategies that allow for a fine-grain control of alternative policies. The application of such approaches to this field can provide interesting results, especially in games that are long or complex enough where long-term planning is not trivial, and achieving a good level of play requires balancing strategies.
 
 From a simple point of view, many competitive games can be seen as a scenario where two or more opponents have the single objective of winning. Achieving victory is usually complex in interesting games, and successful approaches normally provide a state value by combining features of the game state as a weighted sum. An example is a chess heuristic that assigns different weights to each piece according to their value.
 
 Multi-objective approaches can be applied in these scenarios, where several factors must be taken into account to achieve the victory. The algorithms can balance between different objectives, in order to provide a wide range of strategies well suited to the different stages of the game being played, or to face the existing opponents. Application of such approaches could be real-time strategy games, where long term planning must be carried out in order to balance aspects such as attack units, defensive structures and resource gathering. 
 
-This paper proposes a multi-objective real-time algorithm version of Monte Carlo Tree Search (MCTS), a popular reinforcement learning approach within the last decade. The proposed algorithm is tested in two different games: a real-time version of the Deep Sea Treasure (DST; a classical multi-objective problem), and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). The algorithm is also compared to two other approaches: a single-objective MCTS (that uses a weighted sum of features to value the state) and a rolling horizon Non-dominated Sorting Evolutionary Algorithm II (NSGA-II). This paper extends and formalizes our previous work described in~\cite{Perez2013a}.
+This paper proposes a multi-objective real-time algorithm version of Monte Carlo Tree Search (MCTS), a popular reinforcement learning approach within the last decade. The proposed algorithm is tested in two different games: a real-time version of the Deep Sea Treasure (DST; a classical multi-objective problem), and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). The algorithm is also compared with another two approaches: a single-objective MCTS (that uses a weighted sum of features to value the state) and a rolling horizon Non-dominated Sorting Evolutionary Algorithm II (NSGA-II). This paper extends and formalizes our previous work described in~\cite{Perez2013a}.
 
-Two main goals can be identified in this paper: first, the proposed algorithm must be applicable to real-time domains (those where the next move to make must be decided within a small time budget) and it should obtain better or at least the same performance than the other state of the art algorithms. It is important to highlight that all three algorithms tested employ the same heuristic functions to evaluate the features of a given game state. Thus, the focus of this research is set on how the algorithm explores the search space, instead of providing the best possible solution to each given problem. 
+Two main goals can be identified in this paper: first, the proposed algorithm must be applicable to real-time domains (those where the next move to make must be decided within a small time budget) and it should obtain better or at least the same performance than the other state-of-the-art algorithms. It is important to highlight that all three algorithms tested employ the same heuristic functions to evaluate the features of a given game state. Thus, the focus of this research is set on how the algorithm explores the search space, instead of providing the best possible solution to each given problem. 
 
 Secondly, the algorithm must be able to provide solutions across the multi-objective spectrum: by parametrizing the algorithm, it must be possible to prioritize one objective over the others and therefore converge to solutions according to these preferences. 
 
@@ -551,7 +551,7 @@ In every one of this action decisions, MCTS balances between exploitation and ex
 a^* = \argmax_{a \in A(s)} \left\{Q(s,a) + C \sqrt{\frac{ \ln N(s) }{ N(s,a) }}\right\}
 \end{equation}
 
-The balance between exploration and exploitation is achieved by setting the value of $C$. Higher values of $C$ weight more the second term of the UCB1 Equation~\ref{eq:ucb1}, giving preference to those actions that have been explored less, at the expense of taking actions with the highest average reward $Q(s,a)$. A commonly used value is $\sqrt{2}$, as it balances both facets of the search when the rewards are normalized between $0$ and $1$. It is worth noting that MCTS, when combined with UCB1 reaches asymptotically logarithmic regret~\cite{coquelin2007bandit}. 
+The balance between exploration and exploitation is achieved by setting the value of $C$. Higher values of $C$ weight more the second term of the UCB1 Equation~\ref{eq:ucb1}, giving preference to those actions that have been explored less, at the expense of taking actions with the highest average reward $Q(s,a)$. A commonly used value is $\sqrt{2}$, as it balances both facets of the search when the rewards are normalized between $0$ and $1$. It is worth noting that MCTS, when combined with UCB1, reaches asymptotically logarithmic regret~\cite{coquelin2007bandit}. 
 
 If, during the \textit{tree selection} phase, a node has less children than the available number of actions from a given position, a new node is added as a child of the current one (\textit{expansion} phase) and the \textit{simulation} step starts. At this point, MCTS executes a Monte Carlo simulation (or roll-out; \textit{default policy}) from the expanded node. This is performed by choosing random (either uniformly random, or biased) actions until the game end or a pre-defined depth is reached, where the state of the game is evaluated. 
 
@@ -567,9 +567,9 @@ It is worthwhile mentioning that in most cases found in the literature, MCTS tec
 
 \section{Multi-Objective Optimization} \label{sec:moo}
 
-A multi-objective optimization problem (MOOP) represents a scenario where two or more objective functions are to be optimized (either maximized or minimized). The general form of a MOOP is formally described as a maximization function $F_m(x)$, that transforms points in the decision space ($X$) to points in the solution space ($F$). The elements of the decision space are vectors of $n$ variables of the form $x = (x_1, x_2, \dots, x_n)$, while elements in the solution space are vectors with a dimension $m$: $F_m(x) = (f_1(x), f_2(x), \dots, f_m(x))$. Therefore, each solution provides $m$ different scores (or rewards, or fitness) that are meant to be optimized. Without loss of generality, it is assumed from now on that all objectives must be maximized.
+A multi-objective optimization problem (MOOP) represents a scenario where two or more objective functions are to be optimized (either maximized or minimized). The general form of a MOOP is formally described as a maximization function $F_m(x)$, that transforms points in the decision space ($X$) to points in the solution space ($F$). The elements of the decision space are vectors of $n$ variables of the form $x = (x_1, x_2, \dots, x_n)$, while elements in the solution space are vectors of dimension $m$: $F_m(x) = (f_1(x), f_2(x), \dots, f_m(x))$. Therefore, each solution provides $m$ different scores (or rewards, or fitness) that are meant to be optimized. Without loss of generality, it is assumed from now on that all objectives must be maximized.
 
-It is said that a solution $F_m(x)$ \textit{dominates} another solution $F_m(y)$ if:
+It is said that a solution $F_m(x)$ \textit{dominates} another solution $F_m(y)$ if and only if:
 
 \begin{enumerate}
 \item $F_m(x)$ is not worse than $F_m(y)$ in all objectives for all $i = 1, 2, \dots, m$.
@@ -579,17 +579,17 @@ It is said that a solution $F_m(x)$ \textit{dominates} another solution $F_m(y)$
 
 When this two conditions apply, it is said that $F_m(x) \preceq F_m(y)$ ($F_m(x)$ dominates $F_m(y)$, and $F_m(x)$ is non-dominated by $F_m(y)$). The \textit{dominance} condition provides a partial ordering between points in the solution space: if $F_m(x) \preceq F_m(y)$, then $F_m(x)$ is considered to be better than $F_m(y)$.
 
-However, there are some cases where it cannot be said that $F_m(x) \preceq F_m(y)$ or $F_m(y) \preceq F_m(x)$. This situation occurs when one of the objectives is better in $F_m(x)$ but a different objective is better in $F_m(y)$ (for instance, when $F_1(x) < F_1(y)$ but $F_2(x) > F_2(y)$). In this case, it is said that these solutions are non-dominated with respect to each other. Solutions that are not dominated by each other are grouped in a \textit{non-dominated set}. Given a non-dominated set $P$, it is said that $P$ is the \textit{optimal Pareto front} if there is no other solution in the solution space that dominates any member of $P$. The relation between decision and objective space, dominance and Pareto fronts is depicted in Figure~\ref{fig:moop}.
+However, there are some cases where it cannot be said that $F_m(x) \preceq F_m(y)$ or $F_m(y) \preceq F_m(x)$. This situation occurs when one of the objectives is better in $F_m(x)$ but a different objective is better in $F_m(y)$ (for instance, when $f_1(x) < f_1(y)$ but $f_2(x) > f_2(y)$). In this case, it is said that these solutions are non-dominated with respect to each other. Solutions that are not dominated by each other are grouped in a \textit{non-dominated set}. Given a non-dominated set $P$, it is said that $P$ is the \textit{optimal Pareto front} if there is no other solution in the solution space that dominates any member of $P$. The relation between decision and objective space, dominance and Pareto fronts is depicted in Figure~\ref{fig:moop}.
 
 \begin{figure} [!t]
 	\begin{center}
 	\includegraphics[scale=0.235]{img/moopDec.png}
-	\caption{Decision and Solution spaces in a MOOP with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form the Pareto-optimal front.}
+	\caption{Decision and solution spaces in a MOOP with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form the Pareto-optimal front.}
 	\label{fig:moop}
 	\end{center}
 \end{figure}
 
-As many Pareto front can be formed by several points in the solution space, it is important to devise a mechanism to assess the quality of a given front. A possibility is to use the Hypervolume Indicator (HV): given a Pareto front $P$, $HV(P)$ is defined as the volume of the objective space dominated by $P$. More formally, $HV(P) = \mu (x \in \mathbb{R}^{d} : \exists r \in P \hspace{0.25cm} s.t \hspace{0.25cm} r \preceq x)$, where $\mu$ is the de Lebesgue measure on $\mathbb{R}^{d}$. If the objectives are to be maximized, the higher the $HV(P)$, the better the front calculated. Figure~\ref{fig:hv} shows an example of $HV(P)$ where the objective dimension space is $2$.
+As many Pareto fronts can be formed by several points in the solution space, it is important to devise a mechanism to assess the quality of a given front. A possibility is to use the Hypervolume Indicator (HV): given a Pareto front $P$, $HV(P)$ is defined as the volume of the objective space dominated by $P$. More formally, $HV(P) = \mu (x \in \mathbb{R}^{d} : \exists r \in P \hspace{0.25cm} s.t \hspace{0.25cm} r \preceq x)$, where $\mu$ is the de Lebesgue measure on $\mathbb{R}^{d}$. If the objectives are to be maximized, the higher the $HV(P)$, the better the front calculated. Figure~\ref{fig:hv} shows an example of $HV(P)$ where the objective dimension space is $2$.
 
 \begin{figure}[!t]
 \begin{center}
@@ -601,7 +601,7 @@ As many Pareto front can be formed by several points in the solution space, it i
 
 For more extensive descriptions, definitions, properties and multi-objective optimization in general, the reader can consult the work by K. Deb~\cite{Deb2001}.
 
-Many different algorithms have been proposed to tackle multi-objective optimization problems in the literature. One of the most widely known and used methods is the weighted-sum approach. The procedure consists of giving a weight to each one of the objective and produce a single result as the linear combination of objectives and weights. By varying the weights provided, it is possible to converge to different solutions of the optimal Pareto front, if this is convex. However, K. Deb~\cite{Deb2001} explains how linear scalarization approaches fail in those scenarios where the optimal Pareto front is non-convex.
+Many different algorithms have been proposed to tackle multi-objective optimization problems in the literature. One of the most popular methods used is the weighted-sum approach. The procedure consists of giving a weight to each one of the objectives and produce a single result as the linear combination of objectives and weights. By varying the weights provided, it is possible to converge to different solutions of the optimal Pareto front, if this is convex. However, K. Deb~\cite{Deb2001} explains how linear scalarization approaches fail in those scenarios where the optimal Pareto front is non-convex.
 
 A popular choice for multi-objective optimization problems are evolutionary multi-objective optimization (EMOA) algorithms~\cite{Coello1999, Zhou2011}. One of the most well known algorithms in the literature is the Non-dominated Sorting Evolutionary Algorithm 2 (NSGA-2), which pseudocode is shown in Algorithm~\ref{alg:nsga2}. As in any evolutionary algorithm, NSGA-2 evolves a set of individuals or solutions to the problem, with the difference that here they are ranked according to dominance criteria and crowding distance (distances between members of the pareto fronts). A full description of the algorithm can be found in~\cite{Deb2000}.
 
@@ -640,11 +640,11 @@ Reinforcement Learning (RL) algorithms have also tackled Multi-objective optimiz
 
 An RL problem can be defined as a tuple ($S$, $A$, $T$, $R$, $\pi$). $S$ is the set of possible states in the problem (or game), and $s_0$ is the initial state. $A$ is the set of available actions the agent can make at any given time, and the transition model $T(s_i, a_i, s_{i+1})$ determines the probability of reaching the state $s_{i+1}$ when action $a_i$ is applied in state $s_i$. The reward function $R(s_i)$ provides a single value (\textit{reward}) that the agent must optimize, representing the desirability of the state $s_i$ reached. Finally, a decision policy $\pi(s_i) = a_i$ determines which actions $a_i$ must be chosen from each state $s_i \in S$. One of the most important challenges in RL, as shown in Section~\ref{sec:mcts}, is the trade-off between exploration and exploitation. The decision policy can choose between following actions that provided good rewards in the past and exploring new parts of the search space by selecting new actions. 
 
-Multi-objective Reinforcement Learning (MORL)~\cite{Vamplew2010} changes this definition by using instead a vector $R = {r_0, r_1, \dots, r_n}$ as rewards of the problem. Thus, MORL problems differ from RL in having more than one objective objectives ($n$) that must be maximized. If the objectives are independent or they do not oppose each other, scalarization technique approaches, as described above, could be suitable to tackle the problem. Essentially, this would mean to use a conventional RL algorithm on a single objective obtained by a weighted-sum of the multiple rewards. However, this is not always the case, as it is usual that the objectives are in conflict and the policy ($\pi$) must balance among them.
+Multi-objective Reinforcement Learning (MORL)~\cite{Vamplew2010} changes this definition by using instead a vector $R = {r_0, r_1, \dots, r_n}$ as rewards of the problem. Thus, MORL problems differ from RL in having more than one objective ($n$) that must be maximized. If the objectives are independent or they do not oppose each other, scalarization technique approaches, as described above, could be suitable to tackle the problem. Essentially, this would mean to use a conventional RL algorithm on a single objective where the global reward is obtained from a weighted-sum of the multiple rewards. However, this is not always the case, as it is usual that the objectives are in conflict and the policy ($\pi$) must balance among them.
 
 According to how $\pi$ approaches this problem, Vamplew et al.~\cite{Vamplew2010} proposed the following distinction for MORL: \textit{single-policy} algorithms are those that provide a preference order in the objectives available (given by the user or by the nature of the problem). An example of this type of algorithm can be found at~\cite{Gabor1998}, where the authors introduce an order of preference in the objectives treated and constraint the value of the rewards desired. Scalarization approaches would also fit in this category, as the work performed by S. Natarajan et al.~\cite{Natarajan2005}.
 
-The second type of algorithms, \textit{multiple-policy}, target to approximate the optimal Pareto front of the problem. An example of this type of algorithm is the one given by L. Barrett~\cite{Barrett2008}, who propose the Convex Hull Iteration Algorithm. This algorithm provides the optimal policy for any linear preference function, by learning all policies that define the convex hull of the Pareto front.
+The second type of algorithms, \textit{multiple-policy}, target to approximate the optimal Pareto front of the problem. The algorithm proposed in this paper would fit in this category. An example of this type of algorithm is the one given by L. Barrett~\cite{Barrett2008}, who propose the Convex Hull Iteration Algorithm. This algorithm provides the optimal policy for any linear preference function, by learning all policies that define the convex hull of the Pareto front.
 
 \section{Multi-Objective Monte Carlo Tree Search} \label{sec:momcts}
 
@@ -652,7 +652,7 @@ Adapting MCTS into Multi-Objective Monte Carlo Tree Search (MO-MCTS) requires th
 
 An initial attempt on Multi-Objective MCTS was addressed by W. Wang and Michele Sebag~\cite{Weijia2012, Weijia2013}. In their work, the authors employ a mechanism, based on the HV calculation, to replace the UCB1 equation. The algorithm keeps a Pareto archive (P) with the best solutions found in game end states. Every node in the tree defines $\overline{r}_{sa}$ as a vector of UCB1 values, in which each $\overline{r}_{sa, i}$ is the result of calculating UCB1 for each particular objective $i$.
 
-The next step is to define the value for each pair of state and action, $W(s,a)$, as in Equation~\ref{eq:wang}. $\overline{r}^p_{sa}$ is the projection of $\overline{r}_{sa}$ into the piecewise linear surface defined by the Pareto archive $P$ (see Figure~\ref{fig:wangHV}. Then, $HV(P \cup \overline{r}_{sa})$ is declared as the HV of $P$ plus the point $\overline{r}_{sa}$. If $\overline{r}_{sa}$ is dominated by P, the distance between $\overline{r}_{sa}$ and $\overline{r}^p_{sa}$ is subtracted from the HV calculation. The tree policy selects actions based on a maximization of the value of $W(s,a)$.
+The next step is to define the value for each pair of state and action, $W(s,a)$, as in Equation~\ref{eq:wang}. $\overline{r}^p_{sa}$ is the projection of $\overline{r}_{sa}$ into the piecewise linear surface defined by the Pareto archive $P$ (see Figure~\ref{fig:wangHV}). Then, $HV(P \cup \overline{r}_{sa})$ is declared as the HV of $P$ plus the point $\overline{r}_{sa}$. If $\overline{r}_{sa}$ is dominated by P, the distance between $\overline{r}_{sa}$ and $\overline{r}^p_{sa}$ is subtracted from the HV calculation. The tree policy selects actions based on a maximization of the value of $W(s,a)$.
 
 \begin{equation} \label{eq:wang}
 	W(s,a) = \left\{
@@ -671,11 +671,11 @@ The next step is to define the value for each pair of state and action, $W(s,a)$
 \label{fig:wangHV}
 \end{figure}
  
-The proposed algorithm was employed successfully in two domains: the DST and the Grid Scheduling problem, matching state of the art results in both domains, at the expense of a high computational cost.
+The proposed algorithm was employed successfully in two domains: the DST and the Grid Scheduling problem, matching state-of-the-art results in both domains, at the expense of a high computational cost.
 
 As mentioned before, the objective of this paper is to propose an MO-MCTS algorithm that is suitable for real-time domains. Although the work discussed here is influenced by Wang's approach, some modifications need to be done in order to overcome the high computational cost involved by their approach.
 
-In the algorithm proposed in this paper, the vector $\overline{r}$ of rewards that was obtained at the end of an Monte Carlo simulation is back-propagated through the nodes visited in the last iteration until the root is reached. In the vanilla algorithm, each node would use this vector $\overline{r}$ to update its own accumulated reward vector $\overline{R}$. Instead of doing this, each node in the MO-MCTS algorithm keeps a local Pareto front ($P$), updated at each iteration with the reward vector $\overline{r}$ obtained at the end of the simulation. Algorithm~\ref{alg:updPareto} describes how the node statistics are updated.
+In the algorithm proposed in this paper, the vector $\overline{r}$ of rewards that was obtained at the end of an Monte Carlo simulation is back-propagated through the nodes visited in the last iteration until the root is reached. In the vanilla algorithm, each node would use this vector $\overline{r}$ to update its own accumulated reward vector $\overline{R}$. In the algorithm proposed here, each node in the MO-MCTS algorithm also keeps a local Pareto front ($P$), updated at each iteration with the reward vector $\overline{r}$ obtained at the end of the simulation. Algorithm~\ref{alg:updPareto} describes how the node statistics are updated in MO-MCTS.
 
 \begin{algorithm}[!t]
 \begin{algorithmic}[1]
@@ -699,13 +699,11 @@ In the algorithm proposed in this paper, the vector $\overline{r}$ of rewards th
 \label{alg:updPareto}
 \end{algorithm}
 
-In this algorithm, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. In case $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front and there is no need to keep this propagation up the tree.
-
-Three observations can be made about the mechanism described here:
+Here, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. In case $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front does not change and there is no need to keep this propagation up the tree. Three observations can be made about the mechanism described here:
 
 \begin{itemize}
 \item Each node in the tree has an estimate of the quality of the solutions reachable from there, both as an average (as in the baseline MCTS) and as the best case scenario (by keeping the non-dominated front $P$).
-\item By construction, if a reward $\overline{r}$ is dominated by the local front of a node, it is a given that it will be dominated by the nodes above in the tree, so there is no need to update the fronts of the upper nodes, producing little cost in the efficiency of the algorithm.
+\item By construction, if a reward $\overline{r}$ is dominated by the local front of a node, it is a given that it will be dominated by the nodes above in the tree, so there is no need to update the fronts of the upper nodes, producing little impact on the computational cost of the algorithm.
 \item It is easy to infer, from the last point, that the Pareto front of a node cannot be worse than the front of its children (in other words, the front of a child will never dominate that of its parent). Therefore, the root of the tree contains the best non-dominated front ever found during the search.
 \end{itemize}
 
@@ -717,15 +715,15 @@ Finally, the information stored at each node regarding the local Pareto front ca
 a^* = \argmax_{a \in A(s)} \left\{HV(P)/N(s) + C \sqrt{\frac{ \ln N(s) }{ N(s,a) }}\right\}
 \end{equation}
 
-This algorithm, same as NSGA-II due to their multi-objective nature, provide a non-dominated front as a solution. However, in planning and control scenarios like the games analyzed in this research, an action must be provided to perform a move in the next step. The question that arises is how to choose the move to make with the information available.
+This algorithm, same as in NSGA-II due to their multi-objective nature, provide a non-dominated front as a solution. However, in planning and control scenarios like the games analyzed in this research, an action must be provided to perform a move in the next step. The question that arises is how to choose the move to make with the information available.
 
-As shown before, it is straightforward to obtain which actions lead to what points in the front given as a solution: first gene in an NSGA-II individual, a root's child in MO-MCTS. Hence, by identifying the point in the Pareto front that the algorithm should converge to, 
+As shown before, it is straightforward to obtain which actions lead to what points in the front given as a solution: first gene in the best NSGA-II individual, a root's child in MO-MCTS. Hence, by identifying the point in the Pareto front that the algorithm should converge to, 
 it is possible to execute the action that leads to that point.
 
-In order to select the point in the Pareto front, a weight vector $W (\forall w_i \in W, w_i \in [0,1])$ can be provided with the number of objectives as its dimension. Two different mechanisms are proposed, for reasons that will be explained in the experiments section (\ref{sec:exp}):
+In order to select a point in the Pareto front, a weight vector $W$ can be defined, with a dimension $n$ equal to the number of objectives ($W = (w_1, w_2, \dots, w_n); \sum_{i}^{n} w_i = 1$). Two different mechanisms are proposed, for reasons that will be explained in the experiments section (\ref{sec:exp}):
 
 \begin{itemize}
-\item Weighted Sum: the action chosen is the one that maximizes the weighted sum of the solution vector multiplied by $W$, for each point in the front.
+\item Weighted Sum: the action chosen is the one that maximizes the weighted sum of the reward vector multiplied by $W$, for each point in the front.
 \item Euclidean distance: the euclidean distance from each point in the Pareto front (normalized in $[0,1]$) to the vector $W$ is calculated. The action to choose would be the one that leads to the point in the Pareto front with the smaller distance to $W$. 
 \end{itemize}
 
@@ -733,11 +731,11 @@ Note that, in the vanilla MCTS, there is no Pareto front obtained as a solution.
 
 \section{Benchmarks} \label{sec:bench}
 
-Two different are used in this research to analyze the performance of the algorithm proposed.
+Two different games are used in this research to analyze the performance of the algorithm proposed.
 
 \subsection{Deep Sea Treasure} \label{ssec:dst}
 
-The Deep Sea Treasure (DST) is a well known multi-objective problem introduced by Vamplew et al.~\cite{Vamplew2010}. In this single-player puzzle, the agent moves a submarine with the objective of finding a treasure located at the bottom of the ship. The world is divided into a grid of $10$ rows and $11$ columns, and the vessel starts at the top left board position. There are three types of cells: empty cells (or water), that the submarine can traverse; ground cells that, as the edges of the grid, cannot be traversed; and treasure cells, that provide different rewards and finish the game. Figure~\ref{fig:dstBase} (on the left) shows the environment of the DST.
+The Deep Sea Treasure (DST) is a popular multi-objective problem introduced by Vamplew et al.~\cite{Vamplew2010}. In this single-player puzzle, the agent moves a submarine with the objective of finding a treasure located at the bottom of the ship. The world is divided into a grid of $10$ rows and $11$ columns, and the vessel starts at the top left board position. There are three types of cells: empty cells (or water), that the submarine can traverse; ground cells that, as the edges of the grid, cannot be traversed; and treasure cells, that provide different rewards and finish the game. Figure~\ref{fig:dstBase} shows the DST environment.
 
 \begin{figure}[!t]
 \begin{center}
@@ -748,7 +746,7 @@ The Deep Sea Treasure (DST) is a well known multi-objective problem introduced b
 \end{figure}
 
 
-The ship can perform four different moves: \textit{up}, \textit{down}, \textit{right}  and \textit{left}. If the action applied takes the ship off the grid or into the sea floor, the vessel's position does not change.  There are two objectives in this game: the number of moves performed by the ship, that must be minimized, and the value of the treasure found, that should be maximized. As can be seen in Figure~\ref{fig:dstBase}, the most valuable treasures are at a greater distance from the initial position, making these objectives orthogonal.
+The ship can perform four different moves: \textit{up}, \textit{down}, \textit{right}  and \textit{left}. If the action applied takes the ship off the grid or into the sea floor, the vessel's position does not change.  There are two objectives in this game: the number of moves performed by the ship, that must be minimized, and the value of the treasure found, that should be maximized. As can be seen in Figure~\ref{fig:dstBase}, the most valuable treasures are at a greater distance from the initial position, so the objectives are in conflict.
 
 Additionally, the agent can only make up to $100$ moves. This allows the problem to be defined as the maximization of two rewards: $(M,T) = (100 - moves, treasureValue)$. Should the ship perform all moves without reaching a treasure, the result would be ($0$,$0$). At each step, the score of a location with no treasure is ($-1$, $0$).
 
@@ -762,7 +760,7 @@ The optimal Pareto front of the DST is shown in Figure~\ref{fig:optDst}. There a
 \label{fig:optDst}
 \end{figure}
 
-Section~\ref{sec:moo} introduced the problems of linear scalarization approaches when facing non-convex optimal Pareto front. The concave shape of the DST's optimal front makes those approximations to converge to the non dominated solutions located at the edges of the Pareto front ($(-19,1)$,$(-1,124)$). Note that this happens independently from the weights chosen for the linear approximation: some solutions of the front just can't be reached with these approaches. Thus, successful approaches should be able to find all elements of the optimal Pareto front and converge to any of the non dominated solutions.
+Section~\ref{sec:moo} introduced the problems of linear scalarization approaches when facing non-convex optimal Pareto fronts. The concave shape of the DST's optimal front makes those approximations to converge to the non dominated solutions located at the edges of the Pareto front: $(81,124)$ and $(99,1)$. Note that this happens independently from the weights chosen for the linear approximation: some solutions of the front just can't be reached with these approaches. Thus, successful approaches should be able to find all elements of the optimal Pareto front and converge to any of the non dominated solutions.
 
 \subsubsection{Transposition Tables in DST} \label{ssec:transTables}
 
@@ -776,7 +774,7 @@ The DST is a problem specially suited for the use of Transposition Tables (TT)~\
 \label{fig:dstTable}
 \end{figure}
 
-In this example, the submarine starts in the initial position ($P1$, root of the tree) and makes a sequence of moves that places it in $P2$. From this location, if the vessel wishes to move to $P3$, two optimal trajectories would be route \textit{a} and \textit{b}. In a tree that does not use TT, there would be two different nodes to represent $P3$, although the location and number of moves performed up to this point are the same (thus, the states are equivalent). It is worthwhile to highlight that the coordinates of the vessel are not enough to identify two equivalent states, but also the number of moves is needed: imagine a third route from $P2$ to $P3$ with the moves: \textit{Up}, \textit{Right}, \textit{Right}, \textit{Down}, \textit{Down}. As the submarine performs $5$ moves, the states are not the same, and the node where the ship is in $P3$ now would be two levels deeper in the tree.
+In this example, the submarine starts in the initial position ($P1$, root of the tree) and makes a sequence of moves that places it in $P2$. From this location, two optimal trajectories to move to $P3$ would be route \textit{a} and \textit{b}. In a tree that does not use TT, there would be two different nodes to represent $P3$, although the location and number of moves performed up to this point are the same (thus, the states are equivalent). It is worthwhile to highlight that the coordinates of the vessel are not enough to identify two equivalent states, but also the number of moves is needed: imagine a third route from $P2$ to $P3$ with the moves: \textit{Up}, \textit{Right}, \textit{Right}, \textit{Down}, \textit{Down}. As the submarine performs $5$ moves, the states are not the same, and the node where the ship is in $P3$ now would be two levels deeper in the tree.
 
 TT tables are implemented in the MCTS algorithms tested in this benchmark by using hash tables that stores a \textit{representative} node for each pair $(position, moves)$ found.  The key of the hash map needs then to be obtained from three values: position coordinates $x$ and $y$ of the ship in the board, and number of moves, indicated by the depth of the node in the tree. Hence, transpositions can only happen at the same depth within the tree, a feature that has been successfully tried before in the literature~\cite{Kozelek2009}.
 
@@ -794,7 +792,7 @@ r_v = treasureValue
 
 \subsection{Multi-Objective PTSP} \label{ssec:moptsp}
 
-The Multi-Objective Physical Travelling Salesman Problem (MO-PTSP) is a game employed in a competition held in the IEEE Conference on Computational Intelligence in Games (CIG) in 2013, a modification of the Physical Travelling Salesman Problem (PTSP), previously introduced by Perez et al.~\cite{PerezCEC2012}. The MO-PTSP is a real-time game where the agent navigates a ship and must visit $10$ waypoints scattered around the maze. All waypoints must be visited to consider a game as complete, and a game ticks timer is reset every time a waypoint is collected, finishing the game prematurely (and unsuccessfully) if it reaches $800$ game steps before visiting another waypoint.
+The Multi-Objective Physical Travelling Salesman Problem (MO-PTSP) is a game employed in a competition held in the IEEE Conference on Computational Intelligence in Games (CIG) in 2013, a modification of the Physical Travelling Salesman Problem (PTSP), previously introduced by Perez et al.~\cite{PerezCEC2012}. The MO-PTSP is a real-time game where the agent navigates a ship and must visit $10$ waypoints scattered around the maze. All waypoints must be visited to consider a game as complete, and a game-tick counter is reset every time a waypoint is collected, finishing the game prematurely (and unsuccessfully) if it reaches $800$ game steps before visiting another waypoint.
 
 This needs to be done while optimizing three different objectives:  1) \textbf{Time}: the player must collect all waypoints scattered around the maze in as few time steps as possible; 2) \textbf{Fuel}: the fuel consumption by the end of the game must be minimized; and 3) \textbf{Damage}: the ship should end the game with as little damage as possible.
 
@@ -802,13 +800,13 @@ In the game, the agent must provide an action every $40$ milliseconds. The avail
 
 The ship starts with $5000$ units of fuel, and one unit is spent every time an action supplied has the throttle input \textit{on}. There are, however, two ways of collecting fuel: each waypoint visited grants the ship with $50$ more units of fuel. Also, fuel canisters are scattered around the maze and their collection provides with $250$ more units.
 
-Regarding the third objective, the ship can suffer damage in two different ways: by colliding with obstacles and driving through lava. In the former case, the ship can collide with normal obstacles (that subtract $10$ units of damage) and specially damaging obstacles ($30$ units). In the latter, lava lakes are abundant in the MO-PTSP levels and, in contrast with normal surfaces, they deal one unit of damage for each time step the ship spends over this type of surface. All this subtractions are deduced from an initial counter of $5000$ points of damage.
+Regarding the third objective, the ship can suffer damage in two different ways: by colliding with obstacles and driving through lava. In the former case, the ship can collide with normal obstacles (that subtract $10$ units of damage) and specially damaging obstacles ($30$ units). In the latter, lava lakes are abundant in MO-PTSP levels and, in contrast with normal surfaces, they deal one unit of damage for each time step the ship spends over this type of surface. All these subtractions are deduced from an initial counter of $5000$ points of damage.
 
-Figure~\ref{fig:sampleMap} shows an example of an MO-PTSP map, as drawn by the framework. Waypoints yet not visited are painted as blue circles, while those already collected are depicted as empty circles. The green ellipses represent fuel canisters, normal surfaces are drawn in brown and lava lakes are printed as red-dotted yellow surfaces. Normal obstacles black, damaging obstacles are drawn in red. Blue obstacles are elastic walls that produce no damage to the ship. The vessel is drawn as a blue polygon and its trajectory is traced with a black line.
+Figure~\ref{fig:sampleMap} shows an example of an MO-PTSP map, as drawn by the framework. Waypoints yet not visited are painted as blue circles, while those already collected are depicted as empty circles. The green ellipses represent fuel canisters, normal surfaces are drawn in brown and lava lakes are printed as red-dotted yellow surfaces. Normal obstacles are black and damaging obstacles are drawn in red. Blue obstacles are elastic walls that produce no damage to the ship. The vessel is drawn as a blue polygon and its trajectory is traced with a black line.
 
 \begin{figure} [!t]
 	\begin{center}
-	\includegraphics[width=0.7\columnwidth]{img/moptspmap}
+	\includegraphics[width=0.8\columnwidth]{img/moptspmap}
 	\caption{Sample MO-PTSP map.}
 	\label{fig:sampleMap}
 	\end{center}
@@ -820,13 +818,13 @@ All algorithms tested in the MO-PTSP in this research employ macro-actions. Macr
 
 Previous research in PTSP~\cite{Perez2013, Perez2012} suggests that using macro-actions for real-time navigation domains increases the performance of the algorithms, and it has been used in the previous PTSP competitions by the winner and other entries.
 
-A macro-action of length $L$ is defined as a repetition of a given action during $L$ consecutive time steps. The main advantage of macro-actions is that the control algorithms can see further in the future, and then reduce the implication of open-endedness of real-time games (see Section~\ref{sec:mcts}). As this reduces the search space significantly, better algorithm performance is allowed. A consequence of using macro-actions is also that the algorithm can employ $L$ consecutive steps to plan the next move (the next macro-action) to make. Therefore, instead of spending $40$ milliseconds, as in MO-PTSP, to define the next action, the algorithm can employ $40 \times L$ milliseconds for this task, and hence perform a more extensive search. 
+A macro-action of length $L$ is defined as a repetition of a given action during $L$ consecutive time steps. The main advantage of macro-actions is that the control algorithms can see further in the future, and then reduce the implication of open-endedness of real-time games (see Section~\ref{sec:mcts}). As this reduces the search space significantly, a better algorithm performance is allowed. A consequence of using macro-actions is also that the algorithm can employ $L$ consecutive steps to plan the next move (the next macro-action) to make. Therefore, instead of spending $40$ milliseconds, as in MO-PTSP, to define the next action, the algorithm can employ $40 \times L$ milliseconds for this task, and hence perform a more extensive search. 
 
 In MO-PTSP, the macro-action size is $L = 15$, a value that has shown its proficiency before in PTSP. For more information about macro-actions and their application to real-time navigation problems such as the PTSP, the reader is referred to~\cite{Perez2013}.
 
 \subsubsection{Heuristics for MO-PTSP} \label{sssec:heurMOPTSP}
 
-In order to evaluate a game state in MO-PTSP, three different measures or rewards are taken, $r_t, r_f, r_d$, one for each one of the objectives time, fuel and damage, respectively. All these rewards are defined so they have to be maximized. The first reward uses a measure of distance for the time objective, as indicated in Equation~\ref{eq:dist}: 
+In order to evaluate a game state in MO-PTSP, three different measures or rewards are taken, $r_t, r_f, r_d$, one for each one of the objectives: time, fuel and damage, respectively. All these rewards are defined so they have to be maximized. The first reward uses a measure of distance for the time objective, as indicated in Equation~\ref{eq:dist}: 
 
 \begin{equation}	\label{eq:dist}
 r_t = 1 - d/D
@@ -861,20 +859,20 @@ r_d =
 \end{cases}
 \end{equation}
 
-$d_s$ is the damage suffered so far in the game, and $d_m$ is the maximum damage the ship can take. In this case, three different variables are used to regulate the bahaviour of this objective: $\gamma$, $\beta_{1}$ and $\beta_{2}$. Both $\beta_{1}$ and $\beta_{2}$ have the same role as $\alpha$ in Equation~ref{eq:fuel}: they balance between the time objective and the damage measure. The difference is that $\beta_{1}$ is used in high speeds, while $\beta_{2}$ is employed with low velocities. This is distinguished by the parameter $\gamma$, that can be seen as a threshold value for the ship's speed ($s$). This differentiation is made in order to avoid low speeds in lava lakes, as this increase the damage suffered importantly. The values for these variables have been determined also empirically, and they are set to $\gamma = 0.8$, $\beta_{1} = 0.75$ and $\beta_{2} = 0.25$.
+$d_s$ is the damage suffered so far in the game, and $d_m$ is the maximum damage the ship can take. In this case, three different variables are used to regulate the behaviour of this objective: $\gamma$, $\beta_{1}$ and $\beta_{2}$. Both $\beta_{1}$ and $\beta_{2}$ have the same role as $\alpha$ in Equation~\ref{eq:fuel}: they balance between the time objective and the damage measure. The difference is that $\beta_{1}$ is used in high speeds, while $\beta_{2}$ is employed with low velocities. This is distinguished by the parameter $\gamma$, that can be seen as a threshold value for the ship's speed ($s$). This differentiation is made in order to avoid low speeds in lava lakes, as this increase the damage suffered importantly. The values for these variables have been determined also empirically, and they are set to $\gamma = 0.8$, $\beta_{1} = 0.75$ and $\beta_{2} = 0.25$.
+
+It is important to highlight again that these three rewards, $r_t$, $r_f$ and $r_d$, are the same for the three algorithms tested in the experiments. 
 
 \section{Experimentation} \label{sec:exp}
 
-The experiments performed in this research compare three different algorithms in the two benchmarks presented in Section~\ref{sec:bench}: a single objective MCTS (referred to here simply as \textit{MCTS}), the Multi-Objective MCTS (\textit{MO-MCTS}) and a rolling horizon version of the NSGA-II algorithm described in Section~\ref{sec:moo} (\textit{NSGA-II}). This NSGA-II version evolves a population where the individuals are sequences of actions (macro-actions in the MO-PTSP case), obtaining the fitness from the state of the game after applying such sequence. 
+The experiments performed in this research compare three different algorithms in the two benchmarks presented in Section~\ref{sec:bench}: a single objective MCTS (referred to here simply as \textit{MCTS}), the Multi-Objective MCTS (\textit{MO-MCTS}) and a rolling horizon version of the NSGA-II algorithm described in Section~\ref{sec:moo} (\textit{NSGA-II}). This NSGA-II version evolves a population where the individuals are sequences of actions (macro-actions in the MO-PTSP case), obtaining the fitness from the state of the game after applying such sequence. The populations sizes, determined empirically, were set to $20$ and $50$ individuals for DST and MO-PTSP respectively. The value of $C$ in Equation~\ref{eq:ucb1} and~\ref{eq:moucb} is set to $\sqrt{2}$.
 
-All algorithms have a limited number of evaluations before providing an action to perform. In order for these games to be real-time, the time budget allowed is close to $40$ milliseconds. With the objective of avoiding congestion peaks at the machine where the experiments are run, the average of number of evaluations doable in $40$ ms. is calculated and employed in the tests. This leaded to $4500$ evaluations in the DST, and $500$ evaluations for MO-PTSP, using the same server where the PTSP and MO-PTSP competitions were run\footnote{Intel Core i5, 230GHz, 4GB of RAM}.
-
-
+All algorithms have a limited number of evaluations before providing an action to perform. In order for these games to be real-time, the time budget allowed is close to $40$ milliseconds. With the objective of avoiding congestion peaks at the machine where the experiments are run, the average of number of evaluations doable in $40$ ms. is calculated and employed in the tests. This leaded to $4500$ evaluations in the DST, and $500$ evaluations for MO-PTSP, using the same server where the PTSP and MO-PTSP competitions were run\footnote{Intel Core i5, 230GHz, 4GB of RAM.}.
 
 
 \subsection{Results in DST} \label{ssec:resDST}
 
-As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the agents. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
+As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the players. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
 
 The weight vector for DST has two dimensions. This vector is here referred to as $W = (w_m, w_v)$, where $w_m$ weights moves and $w_v$ the treasure value, and $w_v = 1 - w_m$. $w_m$ takes values between $0$ and $1$, with a precision of $0.01$, and $100$ experiments have been run for each pair $(w_m, w_v)$. Hence, the game has been played a total of $10000$ times, for each algorithm.
 
@@ -888,16 +886,16 @@ The weight vector for DST has two dimensions. This vector is here referred to as
 
 Figure~\ref{fig:extCase} shows the results obtained after these experiments were performed. The first point to notice is that MCTS only converges (mostly) to the two optimal points located at the edges of the optimal Pareto front (\textit{OPT-1} and \textit{OPT-10}, see also Figure~\ref{fig:optDst}). This is an expected result, as K. Deb. suggested in~\cite{Deb2001} and was also discussed before in Section~\ref{sec:moo}: linear scalarization approaches only converge to the edges of the optimal Pareto front if its shape is non-convex.
 
-The results show clearly how approximating the optimal Pareto front allows for finding all possible solutions. Both NSGA-II and MO-MCTS approaches are able to converge to any solution in the front given the appropriate weight vector. It is important to highlight that these two algorithms employed the euclidean distance action selection (see Section~\ref{sec:momcts}). Experiments shown that weighted sum action selection provides similar results as in MCTS (this is, convergence to the edges of the front). The crucial distinction to make is that both algorithms NSGA-II and MO-MCTS allow for different action selection mechanisms, that are able to overcome this problem, by approximating a global Pareto front.
+The results show clearly how approximating the optimal Pareto front allows for finding all possible solutions. Both NSGA-II and MO-MCTS approaches are able to converge to any solution in the front given the appropriate weight vector. It is important to highlight that these two algorithms employed the euclidean distance action selection (see Section~\ref{sec:momcts}). Other experiments, not included in this paper, showed that weighted sum action selection provides similar results as in MCTS (this is, convergence to the edges of the front). The crucial distinction to make here is that both algorithms NSGA-II and MO-MCTS allow for better action selection mechanisms, that are able to overcome this problem, by approximating a global Pareto front.
 
-Finally, in the comparison between NSGA-II and MO-MCTS, the latter algorithm obtains higher percentages for each one of the points in the front. This result suggests that, with a limited number of iterations/evaluations, the proposed algorithm is able to explore the search space more efficiently than a state of the art algorithm such NSGA-II.
+Finally, in the comparison between NSGA-II and MO-MCTS, the latter algorithm obtains higher percentages for each one of the points in the front. This result suggests that, with a limited number of iterations/evaluations, the proposed algorithm is able to explore the search space more efficiently than a rolling horizon version of a state-of-the-art NSGA-II.
 
 
 \subsection{Results in MO-PTSP} \label{ssec:resMOPTSP}
 
-The same three algorithms have been tested in the MO-PTSP domain. The framework~\footnote{www.ptsp-game.net} comes with $10$ maps, used in this research to run the algorithms in. In this case, the optimal Pareto front is not known in advance, and normally it will be different from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
+The same three algorithms have been tested in the MO-PTSP domain. The experiments are performed in the $10$ maps available within the framework~\footnote{Available at \url{www.ptsp-game.net}}. In this case, the optimal Pareto front is not known in advance, and normally it will be different from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
 
-The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage). $W_1$ treats all objectives with the same weight, while the other three give more relevance to different objectives. These vectors provide then a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses this weights to select an action based on a weighted sum, which has shown in preliminary experiments better performance than the Euclidean distance mechanism.
+The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives with the same weight, while the other three give more relevance to different objectives. These vectors provide then a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses this weights to select an action based on a weighted sum, which has shown in preliminary experiments better performance than the Euclidean distance mechanism.
 
 The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
 
@@ -969,7 +967,7 @@ Some exceptions can actually be explained analyzing the map: in map 1, a fuel ca
 
 These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of experiments is run for NSGA-II and MCTS in the $10$ maps of the benchmark.
 
-In order to compare several algorithms between each other, the results are compared in pairs, in terms of dominance. The procedure is as follows: once all games on a single map have been run, the Mann–Whitney–Wilcoxon non-parametric test with $95\%$ confidence is calculated on the three objectives. If the measures on all objectives are assumed to be drawn from different distributions, their averages are compared for a dominance test. If one result dominates another, then the algorithm dominates the other in that particular map. 
+In order to compare several algorithms between each other, the results are compared in pairs, in terms of dominance. The procedure is as follows: once all games on a single map have been run, the Mann–Whitney–Wilcoxon non-parametric test with $95\%$ confidence is calculated on the three objectives. If the measures on all objectives are assumed to be drawn from different distributions, their averages are compared for a dominance test (if not, then no dominance relationship can be derived from the results). If one result dominates another, then the algorithm dominates the other in that particular map. 
 
 Extending this comparison to all maps, each pair of algorithms ends with a triplet $(D, \O, d)$, where $D$ is the number of maps where the first algorithm dominates the second, $\O$ is the amount of maps where no dominance can be established, and $d$ states the number of maps where the first is dominated by the second. Table~\ref{tab:resMOPTSP} summarizes these results for all algorithms tested.
 
@@ -1013,13 +1011,13 @@ Additionally, Table~\ref{tab:resMOPTSP} contains a fourth entry, \texttt{PurofMo
 
 However, it is very important to highlight that \texttt{PurofMovio} is not using the same heuristics as the ones presented in this research. Hence, nothing can be concluded from making pairwise comparisons directly with the winning entry of the competition. It is likely that \texttt{PurofMovio}'s heuristics are more efficient that the ones presented here, but the goal of this paper is not to develop the best heuristics for the MO-PTSP, but to provide an insight of how a multi-objective version of MCTS compares to other algorithms using the same heuristics.
 
-Anyway, the inclusion of \texttt{PurofMovio} in this comparison is not pointless: it is possible to asses the quality of the three algorithms tested here by comparing their performance relatively, against this high quality entry. Attending to this criteria, it can be seen how MO-MCTS is the algorithm that is dominated less often by him, producing similar results on an average of $4.75$ out of the $10$ maps, and being dominated in $5.25$ maps. MCTS and NSGA-II are dominated more often than MO-MCTS, being dominated on averages of $7.5$ and $5.75$ of the maps, respectively. This comparative result shows again that MO-MCTS is achieving the best results among the algorithms compared.
+Anyway, the inclusion of \texttt{PurofMovio} in this comparison is not pointless: it is possible to asses the quality of the three algorithms tested here by comparing their performance relatively, against this high quality entry. Attending to this criteria, it can be seen how MO-MCTS is the algorithm that is dominated less often by him, producing similar results on an average of $4.75$ out of the $10$ maps, and being dominated in $5.25$ maps. MCTS and NSGA-II are dominated more often than MO-MCTS, being dominated on averages of $7.5$ and $5.75$ of the maps, respectively. This comparative result shows again that MO-MCTS is achieving the best results among the three algorithms compared here.
 
 \subsection{A step further in MO-PTSP: segments and weights} \label{ssec:resVarW}
 
-There is another aspect that can still be improved in the MO-PTSP benchmark, but that it is also applicable to other domains. It is naive to think that an unique weight vector will be the ideal one for the whole game. Specifically in the MO-PTSP, there are regions of the map where there are more obstacles on lava lakes, hence most likely to damage the ship. Also, the route followed during the game affects the relative ideal speed between waypoints, or sometimes a fuel canister is going to be picked up, which affects how the fuel objective can be managed. In general, many real-time games go through different phases, with different objectives and priorities.
+There is another aspect that can still be improved in the MO-PTSP benchmark, but that it is also applicable to other domains. It is naive to think that an unique weight vector will be the ideal one for the whole game. Specifically in the MO-PTSP, there are regions of the map where there are more obstacles or lava lakes, hence the ship is most likely to suffer a higher damage. Also, the route followed during the game affects the relative ideal speed between waypoints, or sometimes a fuel canister is going to be picked up, which affects how the fuel objective can be managed. In general, many real-time games go through different phases, with different objectives and priorities.
 
-A way to provide different weights at different times in MO-PTSP is straightforward. Given the route of waypoints (or fuel canisters) that is being followed, one can divide it into \textit{segments}, where is segment starts and ends with a waypoint (or fuel canister). Then, each segment can be assigned a particular weight vector $W$. 
+A way to provide different weights at different times in MO-PTSP is straightforward. Given the route of waypoints (and fuel canisters) that is being followed, one can divide it into \textit{segments}, where is segment starts and ends with a waypoint (or fuel canister). Then, each segment can be assigned a particular weight vector $W$. 
 
 The question is then how to assign these weight vectors. Three different ways can be devised:
 
@@ -1029,13 +1027,13 @@ The question is then how to assign these weight vectors. Three different ways ca
 \item Learn, for each specific map, the combination of weight vectors that produces better results.
 \end{itemize}
 
-This section shows some initial results in order to test the third variant, by using a stochastic hill climbing algorithm on each one of the maps. The goal is to check if, by varying the weight vectors between segments, better solutions can be achieved. 
+This section shows some initial results in order to test the third variant, by using a stochastic hill climbing algorithm on each map. The goal is to check if, by varying the weight vectors between segments, better solutions can be achieved. 
 
-A solution is identified by a string of integers, where each integer refers to one of the weight vectors utilized in the previous sections ( $1 = W_1 = (0.33,0.33,0.33)$, $2 = W_2 = (0.1,0.3,0.6)$ and $3 = W_3 = (0.1,0.6,0.3)$. $W_4$ has been left out of this experiment, as it shown not to be that influential). The solution is evaluated playing a particular map $10$ times, and its fitness is obtained by calculating the average of those runs. A population of $10$ individuals is kept, and the solutions of the initial population are created either randomly, or mutated from base individuals. These base individuals have all segments with the same weight vector $W_1$, $W_2$, or $W_3$. 
+An individual is identified by a string of integers, where each integer refers to one of the weight vectors utilized in the previous sections ( $1 = W_1 = (0.33,0.33,0.33)$, $2 = W_2 = (0.1,0.3,0.6)$ and $3 = W_3 = (0.1,0.6,0.3)$. $W_4$ has been left out of this experiment, as it has shown to be the less influential weight vector). The solution is evaluated playing a particular map $10$ times, and its fitness is obtained by calculating the average of those runs. A population of $10$ individuals is kept, and the solutions of the initial population are created either randomly, or mutated from base individuals. These base individuals have all segments with the same weight vector $W_1$, $W_2$, or $W_3$. 
 
-The best solution, determined by dominance, is kept and promoted to the next generation, where it is mutated to generate other individuals of the population. Also, a portion of the individuals of the next population is created randomly at every generation, until the end of the algorithm, which is established at $50$ generations. 
+The best solution, determined by dominance, is kept and promoted to the next generation, where it is mutated to generate other individuals of the population. Also, a portion of the individuals of the next population is created uniformly at random at every generation, until the end of the algorithm, which is established at $50$ generations. 
 
-Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.  Each row corresponds to a run in the associated map, and it provides different results depending on the weights vector. The top three are the base individuals, taken from Table~\ref{tab:resMOPTSP} for comparison. The forth result on each row is the best one after the run. Each genome is a string of the form $xyz$, that represents $W_xW_yW_z$, where each value is a weight used in that particular segment. The last column indicates if the evolved genome dominates ($\preceq$) or not ($\O$) each one of the base genomes for that particular map.
+Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.  Each row corresponds to a run in the associated map, and it provides different results depending on the weights vector. The top three are the base individuals, taken from Table~\ref{tab:resMOPTSP} for comparison. The forth result on each row is the best one after the run. Each genome is a string of the form $abc \dots z$, that represents $W_aW_bW_c \dots W_z$, where each element is a weight vector used in that particular segment. The last column indicates if the evolved individual dominates ($\preceq$) or not ($\O$) each one of the base genomes for that particular map.
 
 \begin{table}[!t]
 \begin{center}
@@ -1049,48 +1047,48 @@ Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.  Ea
  & $32312212331112$ & $1619 \pm 12$ & $130 \pm 2$ & $744 \pm 15$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 2}} & $11111111111111$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$ & $\preceq$ \\
- & $22222222222222$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$} & $\preceq$ \\
- & $33333333333333$ & $1416 \pm 8$ & \bm{$219 \pm 4$} & $360 \pm 3$ & $\preceq$ \\
+ & $22222222222222$ & $1402 \pm 6$ & $236 \pm 5$ & $354 \pm 2$ & $\preceq$ \\
+ & $33333333333333$ & $1416 \pm 8$ & $219 \pm 4$ & $360 \pm 3$ & $\preceq$ \\
  & $23131312323213$ & $1390 \pm 10$ & $210 \pm 3$ & $353 \pm 3$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 3}} & $11111111111111$ & $1373 \pm 6$ & $221 \pm 3$& $301 \pm 7$ & $\preceq$ \\
- & $22222222222222$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$} & $\preceq$ \\
- & $33333333333333$ & $1385 \pm 6$ & \bm{$203 \pm 4$} & $291 \pm 7$ & $\O$ \\
+ & $22222222222222$ & $1378 \pm 5$ & $211 \pm 3$ & $268 \pm 5$ & $\preceq$ \\
+ & $33333333333333$ & $1385 \pm 6$ & $203 \pm 4$ & $291 \pm 7$ & $\O$ \\
  & $11122222112231$ & $1358 \pm 9$ & $219 \pm 7$ & $263 \pm 12$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 4}} & $11111111111111$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$ & $\preceq$ \\
- & $22222222222222$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$} & $\preceq$ \\
- & $33333333333333$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$ &  $\O$ \\
+ & $22222222222222$ & $1385 \pm 7$ & $304 \pm 4$ & $542 \pm 4$ & $\preceq$ \\
+ & $33333333333333$ & $1423 \pm 6$ & $273 \pm 4$ & $583 \pm 5$ &  $\O$ \\
  & $11121131212112$ & $1360 \pm 4$ & $282 \pm 5$ & $540 \pm 4$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 5}} & $11111111111111$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$ & $\preceq$ \\
- & $22222222222222$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$} & $\preceq$ \\
- & $33333333333333$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$ & $\O$ \\
+ & $22222222222222$ & $1431 \pm 9$ & $447 \pm 4$ &  $541 \pm 4$ & $\preceq$ \\
+ & $33333333333333$ & $1467 \pm 9$ & $411 \pm 5$ & $567 \pm 5$ & $\O$ \\
  & $21311213111211$ & $1397 \pm 11$ & $448 \pm 10$ & $535 \pm 5$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 6}} & $11111111111111$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$ & $\preceq$ \\
- & $22222222222222$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$} & $\preceq$ \\
- & $33333333333333$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$ & $\O$ \\
+ & $22222222222222$ & $1626 \pm 9$ & $540 \pm 6$ & $286 \pm 5$ & $\preceq$ \\
+ & $33333333333333$ & $1703 \pm 11$ & $499 \pm 4$ & $316 \pm 7$ & $\O$ \\
  & $31121312111111$ & $1570 \pm 16$ & $535 \pm 10$ & $266 \pm 6$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 7}} & $11111111111111$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$ & $\preceq$ \\
- & $22222222222222$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$} & $\preceq$ \\
- & $33333333333333$ & $1489 \pm 12$ & \bm{$549 \pm 3$} & $264 \pm 6$ & $\O$ \\
+ & $22222222222222$ & $1475 \pm 10$ & $602 \pm 5$ & $243 \pm 6$ & $\preceq$ \\
+ & $33333333333333$ & $1489 \pm 12$ & $549 \pm 3$ & $264 \pm 6$ & $\O$ \\
  & $11332211321332$ & $1401 \pm 12$ & $563 \pm 4$ & $230 \pm 12$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 8}} & $11111111111111$ & $1761 \pm 9$ & $254 \pm 5$& $382 \pm 3$ & $\preceq$ \\
- & $22222222222222$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$} & $\preceq$ \\
- & $33333333333333$ & $1826 \pm 10$ & \bm{$230 \pm 3$} & $392 \pm 7$ & $\O$ \\
+ & $22222222222222$ & $1804 \pm 10$ & $269 \pm 4$ & $357 \pm 4$ & $\preceq$ \\
+ & $33333333333333$ & $1826 \pm 10$ & $230 \pm 3$ & $392 \pm 7$ & $\O$ \\
  & $23221131313323$ & $1747 \pm 11$ & $247 \pm 9$ & $363 \pm 9$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 9}} & $11111111111111$ & $2501 \pm 14$ & $926 \pm 6$& $574 \pm 9$ & $\preceq$ \\
- & $22222222222222$ & $2503 \pm 10$ & $921 \pm 10$ & \bm{$524 \pm 8$} & $\preceq$ \\
- & $33333333333333$ & $2641 \pm 14$ & \bm{$833 \pm 5$} & $574 \pm 14$ & $\O$ \\
+ & $22222222222222$ & $2503 \pm 10$ & $921 \pm 10$ & $524 \pm 8$ & $\preceq$ \\
+ & $33333333333333$ & $2641 \pm 14$ & $833 \pm 5$ & $574 \pm 14$ & $\O$ \\
  & $21132331333223$ & $2463 \pm 19$ & $891 \pm 8$ & $523 \pm 9$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 10}} & $11111111111111$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$ & $\preceq$ \\
  & $22222222222222$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$ & $\preceq$ \\
- & $33333333333333$ & $1542 \pm 10$ & \bm{$554 \pm 4$} & $229 \pm 5$ & $\O$ \\
+ & $33333333333333$ & $1542 \pm 10$ & $554 \pm 4$ & $229 \pm 5$ & $\O$ \\
  & $11311111322231$ & $1418 \pm 9$ & $623 \pm 9$ & $197 \pm 2$ & \\
 \hline
 \end{tabular}
@@ -1099,22 +1097,22 @@ Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.  Ea
 \end{center}
 \end{table}
 
-These results suggest some interesting concepts. First of all, it is indeed possible to obtain better results by varying the weights of the objectives along the route: in $22$ out of the $30$ comparisons made, the evolved solution dominates the base individuals and, in the other $8$, both solutions in the comparison would be in the same Pareto front of solutions. 
+The results suggest some interesting ideas. First of all, it is indeed possible to obtain better results by varying the weights of the objectives along the route: in $22$ out of the $30$ comparisons made, the evolved solution dominates the base individuals and, in the other $8$, both solutions in the comparison would be in the same Pareto front of solutions. 
 
-If the focus is set on what particular weights are more successful, it is interesting to see that the best configurations found are better, in all maps, than the base individuals with all weights equal to $W_1$ ($w_t = 0.33, w_f = 0.33, w_d = 0.33$) and $W_2$ ($w_t = 0.1, w_f = 0.3, w_d = 0.6$). In other words, it was always possible to find a combination of weight vectors that performed better than approaches that gave the same weight to all objectives, and also the ones prioritizing low damage.
+If the focus is set on what particular weights are more successful, it is interesting to see that the best configurations found are better, in all maps, than the base individuals with all weights equal to $W_1$ ($w_t = 0.33, w_f = 0.33, w_d = 0.33$) and $W_2$ ($w_t = 0.1, w_f = 0.3, w_d = 0.6$). In other words, it was always possible to find a combination of weight vectors that performed better than approaches that gave the same weight to all objectives, and also than the ones prioritizing low damage.
 
 It is also worthwhile to mention that those cases where dominance over the base individual was not achieved, this base was the one that prioritized fuel. Actually, it can be seen that in these cases, the result in the fuel objective is the one that avoids the dominance to happen, obtaining a better value than the evolved solution in this particular objective.
 
 
 \section{Conclusions and Future Work} \label{sec:conc}
 
-This paper presents a multi-objective version of Monte Carlo Tree Search (MO-MCTS) for real-time games, scenarios where the time budget allowed for finding out the best possible action is significantly reduced. MO-MCTS is tested, in comparison with a single MCTS algorithm and a rolling horizon NSGA-II, in two different real-time games, the Deep Sea Treasure (DST) and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). This comparison is made by using the same heuristics that determine the value of a given state, so the focus is set on how the algorithms explore the search space on each problem.
+This paper presents a multi-objective version of Monte Carlo Tree Search (MO-MCTS) for real-time games, scenarios where the time budget allowed for finding out the best possible action to apply next is significantly reduced. MO-MCTS is tested, in comparison with a single-objective MCTS algorithm and a rolling horizon NSGA-II, in two different real-time games, the Deep Sea Treasure (DST) and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). This comparison is made by using the same heuristics that determine the value of a given state, so the focus is set on how the algorithms explore the search space on each problem.
 
-The results obtained in this study show the proficiency of the algorithm proposed, as it provides better solutions than the ones obtained by the other algorithms in comparison. Also, the MO-MCTS approach samples successfully across the different solutions in the Pareto front (optimal front in the DST, the best found in MO-PTSP), depending on the weights provided to each objective. Finally, some initial results are obtained on the idea of using distinct weight vectors for the objective in different situations on the game, showing that it is possible to improve the results by performing these variations.
+The results obtained in this study show the proficiency of the algorithm proposed, as it provides better solutions than the ones obtained by the other algorithms in comparison. Also, the MO-MCTS approach samples successfully across the different solutions in the Pareto front (optimal front in the DST, the best found in MO-PTSP), depending on the weights provided for each objective. Finally, some initial results are obtained applying the idea of using distinct weight vectors for the objectives in different situations within the game, showing that it is possible to improve the performance of the algorithms.
 
-The stochastic hill climbing algorithm used for creating strings of weight vectors for the MO-PTSP is relatively simple, although it was able to obtain very good results. However, it could be desirable to model behaviours that dynamically change the weight vectors according to measurements of the game state, instead of evolving a different solution for each particular map. A possible extension for this work is to analyze and discover features in the game state that allows to establish relationships between game situations and the weight vectors to use for each objective. This mechanism would be general enough to be applicable to many different maps without requiring specific learning in any particular level.
+The stochastic hill climbing algorithm used for creating strings of weight vectors for the MO-PTSP is relatively simple, although it was able to obtain very good results in few iterations. However, it could be desirable to model behaviours that dynamically change the weight vectors according to measurements of the game state, instead of evolving a different solution for each particular map. A possible extension for this work is to analyze and discover features in the game state that allows to establish relationships between game situations and the weight vectors to use for each objective. This mechanism would be general enough to be applicable to many different maps without requiring specific learning in any particular level.
 
-Finally, the results this paper allow to presume that multi-objective approaches can provide high quality level of play in real-time games, and not only in the ones used as benchmarks in this research. Games (and other domains) where the goal can be decomposed in several simultaneous tasks, especially when these tasks are in conflict with each other, can benefit from approaches like the one presented here.
+Finally, the results described in this paper allow to presume that multi-objective approaches can provide high quality level of play in real-time games, and not only in the ones used as benchmarks in this research. Games (and other domains) where the goal can be decomposed in several simultaneous tasks, especially when these tasks are in conflict with each other, can benefit from approaches like the one presented here.
 
 \section*{Acknowledgments}
 This work was supported by EPSRC grants EP/H048588/1, under the project entitled ``UCT for Games and Beyond''. The authors would also like to thank Edward Powley and Daniel Whitehouse for their work in the controller \texttt{PurofMovio} for the MO-PTSP.
