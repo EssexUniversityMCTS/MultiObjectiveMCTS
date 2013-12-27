@@ -476,7 +476,7 @@ Sanaz~Mostaghim (Department of Knowledge and Language Engineering, Otto-von-Guer
 \maketitle
 
 \begin{abstract}
-Abstract... 
+Multi-objective optimization has been traditionally a matter of study in domains like engineering or finance, with little impact on games research. However, action-decision based on a multi-objective evaluation may be beneficial to obtain a high quality level of play. This paper presents a Multi-objective Monte Carlo Tree Search algorithm for planning and control in real-time game domains, those where the time budget to decide the next move to make is significantly reduced. A comparison is made between the proposed algorithm, a single-objective version of Monte Carlo Tree Search and a rolling horizon implementation of Non-dominated Sorting Evolutionary Algorithm II. Two different benchmarks are employed, the Deep Sea Treasure and the Multi-Objective Physical Travelling Salesman Problem. Using the same heuristics on each game, the analysis is focused on how well the algorithms explore the search space. The results described in this paper show that the proposed approach provides better results than the other algorithms it is compared with. Additionally, it is also shown that the algorithm is able to converge to different solutions of the optimal, or the best found during the search, Pareto front.
 \end{abstract}
 
 
@@ -1029,59 +1029,16 @@ The question is then how to assign these weight vectors. Three different ways ca
 \item Learn, for each specific map, the combination of weight vectors that produces better results.
 \end{itemize}
 
-This section details the efforts made in order to test the third variant, by using a stochastic hill climbing algorithm on each one of the maps. The goal is to check if by varying the weight vectors between segments, better solutions can be achieved. 
+This section shows some initial results in order to test the third variant, by using a stochastic hill climbing algorithm on each one of the maps. The goal is to check if, by varying the weight vectors between segments, better solutions can be achieved. 
 
-A solution is identified by a string of integers, where each integer refers to one of the weight vectors utilized in the previous sections. The solution is evaluated playing a particular map $10$ times, and its fitness is obtained by calculating the average of those runs. A population of $10$ individuals is kept, and the solutions of the initial population are created either randomly, or mutated from base individuals. These base individuals have all segments with the same weight vector $W_1$, $W_2$, or $W_3$ ($W_4$ is out of this experiment, as it shown not to be that influential). 
+A solution is identified by a string of integers, where each integer refers to one of the weight vectors utilized in the previous sections ( $1 = W_1 = (0.33,0.33,0.33)$, $2 = W_2 = (0.1,0.3,0.6)$ and $3 = W_3 = (0.1,0.6,0.3)$. $W_4$ has been left out of this experiment, as it shown not to be that influential). The solution is evaluated playing a particular map $10$ times, and its fitness is obtained by calculating the average of those runs. A population of $10$ individuals is kept, and the solutions of the initial population are created either randomly, or mutated from base individuals. These base individuals have all segments with the same weight vector $W_1$, $W_2$, or $W_3$. 
 
-The best solution (determined by dominance) is promoted to the next generation and it is mutated to generate other individuals. Also, a portion of individuals is generated randomly at every generation, until the end of the algorithm. Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.
+The best solution, determined by dominance, is kept and promoted to the next generation, where it is mutated to generate other individuals of the population. Also, a portion of the individuals of the next population is created randomly at every generation, until the end of the algorithm, which is established at $50$ generations. 
 
-%\begin{table}[!t]
-%\begin{center}
-%%\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
-%\begin{tabular}{|p{0.8cm}|p{2.2cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|}
-%\hline
-%\textbf{Map}  & \textbf{Weight genome} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-% \multirow{3}{*}{\textbf{Map 1}} & $0000000000000$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
-% & $2010201001112$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$\\
-%\hline
-%\end{tabular}
-%\caption{MO-PTSP Results with different weights: Each row corresponds to a run in the associated map. It gives results for two weights: the one below is the best after the run, while the one on the top is that from Table~\ref{tab:resMOPTSP} with the most similar genome. Each genome is a string of the form $xyz$, that represents $W_xW_yW_z$, where each value is a weight used in that particular segment.}
-%\label{tab:resVarW}
-%\end{center}
-%\end{table}
-
+Table~\ref{tab:resVarW} shows the results obtained on each run, one per map.  Each row corresponds to a run in the associated map, and it provides different results depending on the weights vector. The top three are the base individuals, taken from Table~\ref{tab:resMOPTSP} for comparison. The forth result on each row is the best one after the run. Each genome is a string of the form $xyz$, that represents $W_xW_yW_z$, where each value is a weight used in that particular segment. The last column indicates if the evolved genome dominates ($\preceq$) or not ($\O$) each one of the base genomes for that particular map.
 
 \begin{table}[!t]
 \begin{center}
-%\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
 \begin{tabular}{|p{0.8cm}|p{1.95cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|m{0.1cm}|}
 \hline
 \textbf{Map}  & \textbf{Weight genome} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} & \textbf{D}\\ 
@@ -1089,68 +1046,78 @@ The best solution (determined by dominance) is promoted to the next generation a
  \multirow{3}{*}{\textbf{Map 1}} & $11111111111111$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$ & $\preceq$ \\
  & $22222222222222$ & $1657 \pm 8$ & $130 \pm 2$ & $773 \pm 11$ & $\preceq$ \\
  & $33333333333333$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$ & $\preceq$ \\
- & $21201101220001$ & $1619 \pm $ & $130 \pm $ & $744 \pm $ & \\
+ & $32312212331112$ & $1619 \pm 12$ & $130 \pm 2$ & $744 \pm 15$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 2}} & $11111111111111$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$ & $\preceq$ \\
  & $22222222222222$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$} & $\preceq$ \\
  & $33333333333333$ & $1416 \pm 8$ & \bm{$219 \pm 4$} & $360 \pm 3$ & $\preceq$ \\
- & $12020201212102$ & $1390 \pm $ & $210 \pm $ & $353 \pm $ & \\
+ & $23131312323213$ & $1390 \pm 10$ & $210 \pm 3$ & $353 \pm 3$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 3}} & $11111111111111$ & $1373 \pm 6$ & $221 \pm 3$& $301 \pm 7$ & $\preceq$ \\
- & $22222222222222$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$} & $\O$ \\
+ & $22222222222222$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$} & $\preceq$ \\
  & $33333333333333$ & $1385 \pm 6$ & \bm{$203 \pm 4$} & $291 \pm 7$ & $\O$ \\
- & $00001112001120$ & $1364 \pm $ & $223 \pm $ & $269 \pm $ & \\
+ & $11122222112231$ & $1358 \pm 9$ & $219 \pm 7$ & $263 \pm 12$ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 4}} & $11111111111111$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$ & $\O$ \\
- & $22222222222222$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$} & $\O$ \\
- & $33333333333333$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$ & $\preceq$ \\
- & $22212221201211$ & $1408 \pm $ & $271 \pm $ & $584 \pm $ & \\
+ \multirow{3}{*}{\textbf{Map 4}} & $11111111111111$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$ & $\preceq$ \\
+ & $22222222222222$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$} & $\preceq$ \\
+ & $33333333333333$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$ &  $\O$ \\
+ & $11121131212112$ & $1360 \pm 4$ & $282 \pm 5$ & $540 \pm 4$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 5}} & $11111111111111$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$ & $\preceq$ \\
  & $22222222222222$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$} & $\preceq$ \\
  & $33333333333333$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$ & $\O$ \\
- & $10200102000100$ & $1397 \pm $ & $448 \pm $ & $535 \pm $ & \\
+ & $21311213111211$ & $1397 \pm 11$ & $448 \pm 10$ & $535 \pm 5$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 6}} & $11111111111111$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$ & $\preceq$ \\
  & $22222222222222$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$} & $\preceq$ \\
  & $33333333333333$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$ & $\O$ \\
- & $20010201000000$ & $1570 \pm $ & $535 \pm $ & $266 \pm $ & \\
+ & $31121312111111$ & $1570 \pm 16$ & $535 \pm 10$ & $266 \pm 6$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 7}} & $11111111111111$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$ & $\preceq$ \\
  & $22222222222222$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$} & $\preceq$ \\
  & $33333333333333$ & $1489 \pm 12$ & \bm{$549 \pm 3$} & $264 \pm 6$ & $\O$ \\
- & $00221100210221$ & $1401 \pm $ & $563 \pm $ & $230 \pm $ & \\
+ & $11332211321332$ & $1401 \pm 12$ & $563 \pm 4$ & $230 \pm 12$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 8}} & $11111111111111$ & $1761 \pm 9$ & $254 \pm 5$& $382 \pm 3$ & $\preceq$ \\
- & $22222222222222$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$} & $\O$ \\
+ & $22222222222222$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$} & $\preceq$ \\
  & $33333333333333$ & $1826 \pm 10$ & \bm{$230 \pm 3$} & $392 \pm 7$ & $\O$ \\
- & $12110020202212$ & $1747 \pm $ & $247 \pm $ & $363 \pm $ & \\
+ & $23221131313323$ & $1747 \pm 11$ & $247 \pm 9$ & $363 \pm 9$ & \\
 \hline
  \multirow{3}{*}{\textbf{Map 9}} & $11111111111111$ & $2501 \pm 14$ & $926 \pm 6$& $574 \pm 9$ & $\preceq$ \\
  & $22222222222222$ & $2503 \pm 10$ & $921 \pm 10$ & \bm{$524 \pm 8$} & $\preceq$ \\
  & $33333333333333$ & $2641 \pm 14$ & \bm{$833 \pm 5$} & $574 \pm 14$ & $\O$ \\
- & $10021220222112$ & $2463 \pm $ & $891 \pm $ & $523 \pm $ & \\
+ & $21132331333223$ & $2463 \pm 19$ & $891 \pm 8$ & $523 \pm 9$ & \\
 \hline
- \multirow{3}{*}{\textbf{Map 10}} & $11111111111111$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$ & $\O$ \\
- & $22222222222222$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$ & $\O$ \\
+ \multirow{3}{*}{\textbf{Map 10}} & $11111111111111$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$ & $\preceq$ \\
+ & $22222222222222$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$ & $\preceq$ \\
  & $33333333333333$ & $1542 \pm 10$ & \bm{$554 \pm 4$} & $229 \pm 5$ & $\O$ \\
- & $00200000011100$ & $1418 \pm $ & $623 \pm $ & $197 \pm $ & \\
+ & $11311111322231$ & $1418 \pm 9$ & $623 \pm 9$ & $197 \pm 2$ & \\
 \hline
 \end{tabular}
-\caption{MO-PTSP Results with different weights: Each row corresponds to a run in the associated map. It gives results for two weights: the one below is the best after the run, while the one on the top is that from Table~\ref{tab:resMOPTSP} with the most similar genome. Each genome is a string of the form $xyz$, that represents $W_xW_yW_z$, where each value is a weight used in that particular segment.}
+\caption{MO-PTSP Results with different weights.}
 \label{tab:resVarW}
 \end{center}
 \end{table}
 
+These results suggest some interesting concepts. First of all, it is indeed possible to obtain better results by varying the weights of the objectives along the route: in $22$ out of the $30$ comparisons made, the evolved solution dominates the base individuals and, in the other $8$, both solutions in the comparison would be in the same Pareto front of solutions. 
+
+If the focus is set on what particular weights are more successful, it is interesting to see that the best configurations found are better, in all maps, than the base individuals with all weights equal to $W_1$ ($w_t = 0.33, w_f = 0.33, w_d = 0.33$) and $W_2$ ($w_t = 0.1, w_f = 0.3, w_d = 0.6$). In other words, it was always possible to find a combination of weight vectors that performed better than approaches that gave the same weight to all objectives, and also the ones prioritizing low damage.
+
+It is also worthwhile to mention that those cases where dominance over the base individual was not achieved, this base was the one that prioritized fuel. Actually, it can be seen that in these cases, the result in the fuel objective is the one that avoids the dominance to happen, obtaining a better value than the evolved solution in this particular objective.
 
 
 \section{Conclusions and Future Work} \label{sec:conc}
 
+This paper presents a multi-objective version of Monte Carlo Tree Search (MO-MCTS) for real-time games, scenarios where the time budget allowed for finding out the best possible action is significantly reduced. MO-MCTS is tested, in comparison with a single MCTS algorithm and a rolling horizon NSGA-II, in two different real-time games, the Deep Sea Treasure (DST) and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). This comparison is made by using the same heuristics that determine the value of a given state, so the focus is set on how the algorithms explore the search space on each problem.
 
+The results obtained in this study show the proficiency of the algorithm proposed, as it provides better solutions than the ones obtained by the other algorithms in comparison. Also, the MO-MCTS approach samples successfully across the different solutions in the Pareto front (optimal front in the DST, the best found in MO-PTSP), depending on the weights provided to each objective. Finally, some initial results are obtained on the idea of using distinct weight vectors for the objective in different situations on the game, showing that it is possible to improve the results by performing these variations.
 
+The stochastic hill climbing algorithm used for creating strings of weight vectors for the MO-PTSP is relatively simple, although it was able to obtain very good results. However, it could be desirable to model behaviours that dynamically change the weight vectors according to measurements of the game state, instead of evolving a different solution for each particular map. A possible extension for this work is to analyze and discover features in the game state that allows to establish relationships between game situations and the weight vectors to use for each objective. This mechanism would be general enough to be applicable to many different maps without requiring specific learning in any particular level.
+
+Finally, the results this paper allow to presume that multi-objective approaches can provide high quality level of play in real-time games, and not only in the ones used as benchmarks in this research. Games (and other domains) where the goal can be decomposed in several simultaneous tasks, especially when these tasks are in conflict with each other, can benefit from approaches like the one presented here.
 
 \section*{Acknowledgments}
-This work was supported by EPSRC grants EP/H048588/1, under the project entitled ``UCT for Games and Beyond''.
+This work was supported by EPSRC grants EP/H048588/1, under the project entitled ``UCT for Games and Beyond''. The authors would also like to thank Edward Powley and Daniel Whitehouse for their work in the controller \texttt{PurofMovio} for the MO-PTSP.
 
 
 % Can use something like this to put references on a page
