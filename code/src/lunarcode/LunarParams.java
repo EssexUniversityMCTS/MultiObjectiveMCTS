@@ -49,6 +49,6 @@ public class LunarParams {
     // make the landscape totally flat?
     public static boolean flatLandscape = false;
 
-    public static Vector2d startingPoint = new Vector2d(200, 200);
+    public static Vector2d startingPoint = new Vector2d(400, 200);
     public static Vector2d landingFacing = new Vector2d(0, 1);
 }

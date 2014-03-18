@@ -67,6 +67,25 @@ public class LunarShip extends Ship {
         rotVel *= LunarParams.friction;
     }
 
+
+
+
+    public void updateCont(double thrust, double spin) {
+        // set previous (current) position
+        ps = s.copy();
+
+
+        thrust(thrust * LunarParams.dt);
+        spin(spin * LunarParams.dt);
+
+        // adjust position and velocity
+        s.add(v, LunarParams.dt);
+        d.rotate(rotVel * LunarParams.dt);
+
+        v.mul(LunarParams.friction);
+        rotVel *= LunarParams.friction;
+    }
+
     public void setNextMove(int shipMove) {
         lastMove = shipMove;
     }
