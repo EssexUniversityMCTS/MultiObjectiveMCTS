@@ -6,6 +6,7 @@ import framework.core.Game;
 import framework.core.PTSPConstants;
 import framework.utils.ElapsedCpuTimer;
 import framework.utils.JEasyFrame;
+import framework.utils.Vector2d;
 
 /**
  * Created by Samuel Roberts, 2013
@@ -17,6 +18,7 @@ public class LunarRun {
 
     public static Game game;
     public static LunarLanderEvoCont cont;
+    //public static LunarLanderΗΟΟCont cont;
 
     public static void main(String[] args) {
         runGame();
@@ -25,6 +27,7 @@ public class LunarRun {
     public static void prepareGame() {
         game = new LunarGame();
         cont = new LunarLanderEvoCont();
+        //cont = new LunarLanderΗΟΟCont();
     }
 
     public static void runGame() {
@@ -44,6 +47,13 @@ public class LunarRun {
             ((LunarGame) game).tickCont(actionToExecute[0], actionToExecute[1]);
             System.out.println("speed = " + ((LunarGame) game).getShip().v.mag() + " " + ((LunarGame) game).landedSuccessfully);
             view.repaint();
+
+            Vector2d nv = ((LunarGame) game).ship.d.copy();
+            nv.normalise();
+
+            double anglePoints = nv.dot(LunarParams.landingFacing) / (nv.mag() * LunarParams.landingFacing.mag());
+            anglePoints = Math.acos(anglePoints);
+            System.out.println("anglePoints = " + anglePoints);
             try {
                 Thread.sleep(LunarParams.delay);
             } catch (InterruptedException e) {
@@ -52,7 +62,7 @@ public class LunarRun {
 
         }
         System.out.println("Ship landed with velocity " + ((LunarShip) game.getShip()).v.mag() + "Victory?" + ((LunarGame) game).landedSuccessfully);
-        System.exit(0);
+        //System.exit(0);
     }
 
 

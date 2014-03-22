@@ -7,6 +7,8 @@ import framework.utils.Vector2d;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+;
 
 /**
  * Created by Samuel Roberts, 2013
@@ -17,6 +19,8 @@ public class LunarGame extends Game {
     public LunarTerrain terrain;
     public LunarShip ship;
     public int ticks;
+    public Random random = new Random();
+
 
     // did the ship contact the landscape?
     public boolean landed;
@@ -35,6 +39,8 @@ public class LunarGame extends Game {
 
         // add gravity to the ship
         ship.v.add(0, LunarParams.lunarGravity * LunarParams.dt);
+        thrust+=random.nextGaussian()*0.01;
+        spin += random.nextGaussian()*0.0001;
         ship.updateCont(thrust,spin);
 
         // wrap ship around screen based on centre x (basic but works)
@@ -44,7 +50,13 @@ public class LunarGame extends Game {
         // check for collision
         if(terrain.isShipColliding(ship)) {
             landed = true;
-            if(terrain.onLandingPad(ship) && ship.v.mag() <= LunarParams.survivableVelocity) landedSuccessfully = true;
+            Vector2d nv = ship.d.copy();
+            nv.normalise();
+
+            double anglePoints = nv.dot(LunarParams.landingFacing) / (nv.mag() * LunarParams.landingFacing.mag());
+            anglePoints = Math.acos(anglePoints);
+            //System.out.println(anglePoints);
+            if(terrain.onLandingPad(ship) && ship.v.mag() <= LunarParams.survivableVelocity && (anglePoints < 0.1)) landedSuccessfully = true;
         }
 
         ticks++;

@@ -10,6 +10,11 @@
       <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.0.13.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/JMetal-3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/MOEAFramework-1.16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mcts/lib/cloning-1.7.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mcts/lib/jgraphx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mcts/lib/junit-4.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mcts/lib/kryo-2.21-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mcts/lib/objenesis-1.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

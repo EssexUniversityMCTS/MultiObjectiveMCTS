@@ -15,14 +15,31 @@ import java.util.Arrays;
  */
 public class LunarLanderEvoCont {
 
+    private double[] solution;
+    private int s_i = 0;
+    private int macro_counter = 0;
+
     public double[] getAction(Game copy, ElapsedCpuTimer ect) {
 
-        CMAEvolutionStrategy cma = new CMAEvolutionStrategy();
-        cma.setDimension(10); // overwrite some loaded properties
-        cma.parameters.setPopulationSize(20);
-        cma.setInitialX(0.5); // in each dimension, also setTypicalX can be used
-        cma.setInitialStandardDeviation(0.3);
         LunarLanderObjective fitfun = new LunarLanderObjective((LunarGame) copy.getCopy());
+
+        if(solution!=null) {
+            double[] tbr = fitfun.convertInputs(solution[s_i],solution[s_i+1]);
+            macro_counter+=1;
+            if(macro_counter >= fitfun.MACRO_LENGTH) {
+
+                s_i+=2;
+                macro_counter = 0;
+            }
+            return tbr;
+        }
+
+        CMAEvolutionStrategy cma = new CMAEvolutionStrategy();
+        cma.setDimension(8); // overwrite some loaded properties
+        //cma.parameters.setPopulationSize(10);
+        cma.setInitialX(0.5); // in each dimension, also setTypicalX can be used
+        cma.setInitialStandardDeviation(0.2);
+
         double[] fitness = cma.init();
 
         while (!ect.exceededMaxTime()) {
@@ -49,21 +66,21 @@ public class LunarLanderEvoCont {
         double[] best = cma.getBestX().clone();
 
 
-//        for (int i = 0; i < best.length ; i++) {
-//
-//            if(best[i] < 0 ) {
-//                best[i] = 0.0;
-//            }
-//
-//            if(best[i] > 1 ) {
-//                best[i] = 1.0;
-//            }
-//        }
-
         System.out.println("best" + Arrays.toString(best));
         System.out.println(cma.getBestFunctionValue() + " " + cma.getCountEval()) ;
         //System.exit(0);
         double[] tbr = fitfun.convertInputs(best[0],best[1]);
+        
+        if(cma.getBestFunctionValue() < -LunarLanderObjective.WIN_BASE) {
+            //LunarLanderObjective.MACRO_LENGTH -=1;
+
+            solution = best;
+            s_i = 0;
+            macro_counter = 1;
+
+        }
+        System.out.println("LunarLanderObjective.MACRO_LENGTH = " + LunarLanderObjective.MACRO_LENGTH);
+        System.out.println("cma.getBestFunctionValue() = " + cma.getBestFunctionValue());
         //LunarGame g = (LunarGame) copy.getCopy();
         //g.tickCont(tbr[0],tbr[1]);
         //System.out.println(g.getShip().v.mag() + " sdfdf")      ;
