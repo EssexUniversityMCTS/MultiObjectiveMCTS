@@ -18,7 +18,7 @@ public class LunarRun {
 
     public static Game game;
     public static LunarLanderEvoCont cont;
-    //public static LunarLanderΗΟΟCont cont;
+    //public static LunarLanderHOOCont cont;
 
     public static void main(String[] args) {
         runGame();
@@ -27,7 +27,7 @@ public class LunarRun {
     public static void prepareGame() {
         game = new LunarGame();
         cont = new LunarLanderEvoCont();
-        //cont = new LunarLanderΗΟΟCont();
+        //cont = new LunarLanderHOOCont();
     }
 
     public static void runGame() {

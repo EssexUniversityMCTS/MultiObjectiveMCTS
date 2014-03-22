@@ -15,7 +15,7 @@ import java.util.Arrays;
  * Date: 17/03/14
  * Time: 13:57
  */
-public class LunarLanderΗΟΟCont {
+public class LunarLanderHOOCont {
 
     public double[] getAction(Game copy, ElapsedCpuTimer ect) {
 
