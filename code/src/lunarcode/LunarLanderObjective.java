@@ -32,7 +32,7 @@ public class LunarLanderObjective implements IObjectiveFunction {
         double xdist_oring =   Math.abs(game.getShip().s.x - nearestPad.x);
         double y_maxspeed = 2;
         double x_ignorspeed = 1;
-        if (distFromPad > 40) {
+        if (distFromPad > 60) {
             y_maxspeed = 30;
             x_ignorspeed = 10;
         }
@@ -68,7 +68,7 @@ public class LunarLanderObjective implements IObjectiveFunction {
                             double anglePoints = nv.dot(vertical) / (nv.mag() * vertical.mag());
                             anglePoints = Math.acos(anglePoints);
 
-                            if (anglePoints < 0.5) {
+                            if (anglePoints < 0.8) {
                                 anglePoints = 0.0;
                             }
                             score -= anglePoints;

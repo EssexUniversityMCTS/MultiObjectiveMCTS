@@ -39,8 +39,8 @@ public class LunarGame extends Game {
 
         // add gravity to the ship
         ship.v.add(0, LunarParams.lunarGravity * LunarParams.dt);
-        thrust+=random.nextGaussian()*0.01;
-        spin += random.nextGaussian()*0.0001;
+        thrust+=random.nextGaussian()*0.1;
+        spin += random.nextGaussian()*0.01;
         ship.updateCont(thrust,spin);
 
         // wrap ship around screen based on centre x (basic but works)
