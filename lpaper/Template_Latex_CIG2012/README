@@ -1,0 +1,8 @@
+To compile the sample article in PDF format just type:
+
+latex SamplePaper.tex
+bibtex SamplePaper.tex
+latex SamplePaper.tex
+latex SamplePaper.tex
+
+dvipdf SamplePaper
