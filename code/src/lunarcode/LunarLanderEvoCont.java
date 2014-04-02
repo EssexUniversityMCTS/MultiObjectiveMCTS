@@ -39,6 +39,7 @@ public class LunarLanderEvoCont {
         //cma.parameters.setPopulationSize(10);
         cma.setInitialX(0.5); // in each dimension, also setTypicalX can be used
         cma.setInitialStandardDeviation(0.2);
+        cma.options.verbosity = -1;
 
         double[] fitness = cma.init();
 
@@ -66,8 +67,8 @@ public class LunarLanderEvoCont {
         double[] best = cma.getBestX().clone();
 
 
-        System.out.println("best" + Arrays.toString(best));
-        System.out.println(cma.getBestFunctionValue() + " " + cma.getCountEval()) ;
+        //System.out.println("best" + Arrays.toString(best));
+        //System.out.println(cma.getBestFunctionValue() + " " + cma.getCountEval()) ;
         //System.exit(0);
         double[] tbr = fitfun.convertInputs(best[0],best[1]);
         
@@ -80,13 +81,13 @@ public class LunarLanderEvoCont {
 
         }
         //System.out.println("LunarLanderObjective.MACRO_LENGTH = " + LunarLanderObjective.MACRO_LENGTH);
-        System.out.println("cma.getBestFunctionValue() = " + cma.getBestFunctionValue());
+        //System.out.println(cma.getBestFunctionValue());
         //LunarGame g = (LunarGame) copy.getCopy();
         //g.tickCont(tbr[0],tbr[1]);
         //System.out.println(g.getShip().v.mag() + " sdfdf")      ;
 
 
-        System.out.println("tbtr" + Arrays.toString(tbr));
+        //System.out.println("tbtr" + Arrays.toString(tbr));
 
         return tbr;
 

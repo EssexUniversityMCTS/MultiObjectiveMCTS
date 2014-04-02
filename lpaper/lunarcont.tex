@@ -328,7 +328,7 @@ As the landscape is stored as a series of line segments, interpolation must be u
         \begin{subfigure}[b]{0.32\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{graphics/online-IP-crop.pdf}
-                \caption{Scores for a noise level of $l=1$ under variable function evaluations.\vspace{0.14in} }
+                \caption{Scores for a noise level of $l=1$ under variable function evaluations. }
                 \label{fig:IP}
         \end{subfigure}   \begin{subfigure}[b]{0.32\textwidth}
                 \centering
@@ -338,11 +338,11 @@ As the landscape is stored as a series of line segments, interpolation must be u
         \end{subfigure}  \begin{subfigure}[b]{0.32\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{graphics/online-noise-IP_100-crop.pdf}
-                \caption{Score for 100 iterations under variable noise level $l$.\vspace{0.14in}}
+                \caption{Score for 100 iterations under variable noise level $l$.}
                 \label{fig:IP-N-100}
         \end{subfigure}%
 
-         \caption{Performance of all algorithms in the Inverted Pendulum benchmark (error bars for the 95th percentile). Higher scores are better}
+         \caption{Performance of both T-HOLOP and EVO-P in the Inverted Pendulum benchmark (error bars for the 95th percentile). Higher scores are better}
          \label{fig:IP-all}
 
 \end{figure*}
@@ -419,6 +419,32 @@ In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitute o
 \section{Results} \label{sec:Experiments}
 We present the results of our experiments below.
 
+\begin{figure*}[ht]
+  %\centering
+
+
+
+  \centering
+        \begin{subfigure}{0.49\textwidth}
+                \centering
+                \includegraphics[width=1.0\textwidth]{./lunarexps/sample-crop.pdf}
+                \caption{Best value for each tick EVO-P could find. }
+                \label{fig:sample}
+        \end{subfigure}  
+        \begin{subfigure}{0.49\textwidth}
+                \centering
+                \includegraphics[width=1.0\textwidth]{./lunarexps/sample-detail-crop.pdf}
+                \caption{Detail of Figure \ref{fig:sample}, when the ship is closer to landing.}
+                \label{fig:sample-detail}
+
+        \end{subfigure}
+       
+
+         \caption{Sample run for EVO-P. Best fitness discovered at each tick is shown. Notice the big ``bump'' in fitness when the ship gets close to the landing pad}
+         \label{fig:samples}
+
+\end{figure*}
+
 \subsection{Benchmark Problems}
 
 
@@ -440,6 +466,8 @@ For the double integrator experiment, we had slightly different results. The Wei
 
 
 Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:IP-N-100}, \ref{fig:DI-N-50}, \ref{fig:DI-N-100}) closely mimic the performance of their constant noise counterparts. For the inverted pendulum, using just 50 iterations (Figure \ref{fig:IP-N-50}) EVO-P is able to stabilise the pendulum with . This still applies if we increase the number of function evaluations to 100 (Figure \ref{fig:DI-N-100}). On the other hand, the results start to get closer to the fixed noise level experiments if we increase the number of iterations in the Inverted Pendulum experiment to 100 (Figure \ref{fig:IP-N-50}).
+
+
 
 
 \section{Conclusion} \label{sec:conclusion}

@@ -8,6 +8,11 @@ import framework.utils.ElapsedCpuTimer;
 import framework.utils.JEasyFrame;
 import framework.utils.Vector2d;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * Created by Samuel Roberts, 2013
  */
@@ -21,7 +26,9 @@ public class LunarRun {
     //public static LunarLanderHOOCont cont;
 
     public static void main(String[] args) {
-        runGame();
+        //runGame();
+        runGames(1);
+
     }
 
     public static void prepareGame() {
@@ -32,11 +39,10 @@ public class LunarRun {
 
     public static void runGame() {
         prepareGame();
-        LunarView view = new LunarView((LunarGame)game, (LunarShip)game.getShip());
+        LunarView view = new LunarView((LunarGame) game, (LunarShip) game.getShip());
         JEasyFrame frame = new JEasyFrame(view, "Lunar Lander Cont");
 
-        while(!game.isEnded())
-        {
+        while (!game.isEnded()) {
 
             ElapsedCpuTimer ect = new ElapsedCpuTimer(ElapsedCpuTimer.TimerType.CPU_TIME);
             ect.setMaxTimeMillis(PTSPConstants.ACTION_TIME_MS);
@@ -64,63 +70,71 @@ public class LunarRun {
         System.out.println("Ship landed with velocity " + ((LunarShip) game.getShip()).v.mag() + "Victory?" + ((LunarGame) game).landedSuccessfully);
         //System.exit(0);
     }
+//
+//
+
+
+    public static void runGames(int trials) {
+        //Prepare the average results.
+
+
+        BufferedWriter writer = null;
+        try {
+
+            File logFile = new File("/home/ssamot/projects/MultiObjectiveMCTS/lpaper/lunarexps/noise_statistics.csv");
+            logFile.createNewFile();
 
 
 
 
+            //Close writer
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
-//    public static void runGames(int trials) {
-//        //Prepare the average results.
-//
-//
-//        StatSummary ssWp = new StatSummary();
-//        StatSummary ssTime = new StatSummary();
-//        StatSummary ssFuel = new StatSummary();
-//
-//
-//        int numGamesPlayed = 0;
-//
-//
-//        //For each trial...
-//        for(int i=0;i<trials;i++)
-//        {
-//            // ... create a new game.
-//            prepareGame();
-//
-//            numGamesPlayed++; //another game
-//
-//            //PLay the game until the end.
-//            while(!game.isEnded())
-//            {
-//                //When the result is expected:
-//                long due = System.currentTimeMillis()+ PTSPConstants.ACTION_TIME_MS;
-//
-//                //Advance the game.
-//                int actionToExecute = cont.getAction(game.getCopy(), due);
-//
-//                //Exceeded time
-//                long exceeded = System.currentTimeMillis() - due;
-//                /*if(exceeded > PTSPConstants.TIME_ACTION_DISQ)
-//                {
-//                    actionToExecute = 0;
-//                    numGamesPlayed--;
-//                    m_game.abort();
-//
-//                }else{  */
-//
-//                // if(exceeded > PTSPConstants.ACTION_TIME_MS)
-//                //     actionToExecute = 0;
-//
-//                game.tick(actionToExecute);
-//                //}
-//
-//
-//
-//            }
-//
-//            //Update the averages with the results of this trial.
-//            trials++;
-//        }
-//    }
+
+        int numGamesPlayed = 0;
+
+
+        //For each trial...
+        for (int i = 0; i < trials; i++) {
+            // ... create a new game.
+            prepareGame();
+
+            numGamesPlayed++; //another game
+
+            //PLay the game until the end.
+            while (!game.isEnded()) {
+
+                //Advance the game.
+                ElapsedCpuTimer ect = new ElapsedCpuTimer(ElapsedCpuTimer.TimerType.CPU_TIME);
+                ect.setMaxTimeMillis(PTSPConstants.ACTION_TIME_MS);
+
+
+                double[] actionToExecute = cont.getAction(game, ect);
+
+                ((LunarGame) game).tickCont(actionToExecute[0], actionToExecute[1]);
+
+
+            }
+
+            System.out.println("i = " + i);
+            System.out.println("trials = " + trials);
+
+            System.out.println("Ship landed with velocity " + ((LunarShip) game.getShip()).v.mag() + "Victory?" + ((LunarGame) game).landedSuccessfully);
+
+            //writer.write()
+
+        }
+
+
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

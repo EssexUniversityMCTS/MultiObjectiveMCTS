@@ -93,7 +93,7 @@ public class LunarLanderObjective implements IObjectiveFunction {
 
         if(phase == 0) {
             double xdist = Math.abs(cGame.getShip().s.x - nearestPad.x);
-            double ydist = Math.abs(cGame.getShip().s.y - nearestPad.y);
+            //double ydist = Math.abs(cGame.getShip().s.y - nearestPad.y);
             Vector2d speed = cGame.getShip().v;
             score = -Math.abs(speed.mag() - 100) - xdist;
             //score += getScorePhaseA(game, cGame, nearestPad, 2, 50);
