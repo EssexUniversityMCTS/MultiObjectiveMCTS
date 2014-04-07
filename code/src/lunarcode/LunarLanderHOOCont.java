@@ -26,13 +26,13 @@ public class LunarLanderHOOCont {
         MCTS.DEBUG = false;
 
         HOOClass func = new HOOClass((LunarGame) copy);
-        int dimension = 2;
+        int dimension = 8;
         int iterations = 10000;
-        HOOOptimiser hoo = new HOOOptimiser(func, dimension, iterations, min,
-                max, gamma);
-
-//        EDECBOptimiser hoo = new EDECBOptimiser(func, dimension, iterations, min,
+//        HOOOptimiser hoo = new HOOOptimiser(func, dimension, iterations, min,
 //                max, gamma);
+
+        EDECBOptimiser hoo = new EDECBOptimiser(func, dimension, iterations, min,
+                max, gamma);
         LunarLanderObjective fitfun = new LunarLanderObjective((LunarGame) copy.getCopy());
 
 
@@ -42,9 +42,10 @@ public class LunarLanderHOOCont {
             i++;
         }
 
+        System.out.println("i = " + i);
 
         double[] best = hoo.getBestNode().sampleAction();
-        System.out.println("best" + Arrays.toString(best));
+        //System.out.println("best" + Arrays.toString(best));
         //System.out.println(hoo + " " + i) ;
         //System.exit(0);
         double[] tbr = fitfun.convertInputs(best[0],best[1]);
@@ -53,7 +54,7 @@ public class LunarLanderHOOCont {
         //System.out.println(g.getShip().v.mag() + " sdfdf")      ;
 
 
-        System.out.println("tbtr" + Arrays.toString(tbr));
+        //System.out.println("tbtr" + Arrays.toString(tbr));
 
         return tbr;
 

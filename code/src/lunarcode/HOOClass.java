@@ -33,10 +33,10 @@ public class HOOClass extends ContinuousProblem {
        LunarLanderObjective obj = new LunarLanderObjective(game);
 
        double score = obj.valueOf(x);
-       min = Math.min(min,score);
-       max = Math.max(max, score); 
-       
-       //return -(score-min)/(max-min);
+//       min = Math.min(min,score);
+//       max = Math.max(max, score);
+//
+//       //return -(score-min)/(max-min);
         return -score;
     }
 

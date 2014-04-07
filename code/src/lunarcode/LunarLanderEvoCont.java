@@ -35,10 +35,10 @@ public class LunarLanderEvoCont {
 //        }
 
         CMAEvolutionStrategy cma = new CMAEvolutionStrategy();
-        cma.setDimension(9); // overwrite some loaded properties
-        //cma.parameters.setPopulationSize(10);
+        cma.setDimension(8); // overwrite some loaded properties
+        //cma.parameters.setPopulationSize(20);
         cma.setInitialX(0.5); // in each dimension, also setTypicalX can be used
-        cma.setInitialStandardDeviation(0.2);
+        cma.setInitialStandardDeviation(0.5/3.0);
         cma.options.verbosity = -1;
 
         double[] fitness = cma.init();

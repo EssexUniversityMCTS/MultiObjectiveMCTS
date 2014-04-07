@@ -419,29 +419,83 @@ In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitute o
 \section{Results} \label{sec:Experiments}
 We present the results of our experiments below.
 
+\begin{table}
+	\begin{tabular}{lrrrr}
+\hline
+ Map Name   &   Success Mean &   Success CI &   Ticks Mean &   Tick CI \\
+\hline
+ map2       &            1   &     0        &       2925.9 &   184.437 \\
+ map1-tall  &            1   &     0        &       2733   &   159.34  \\
+ map1-easy  &            1   &     0        &       2293   &   123.917 \\
+ map1-wall  &            0.9 &     0.226216 &       2421.6 &   682.893 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+% \begin{figure*}[ht]
+%   %\centering
+
+
+
+%   \centering
+%         \begin{subfigure}{0.49\textwidth}
+%                 \centering
+%                 \includegraphics[width=1.0\textwidth]{./lunarexps/sample-crop.pdf}
+%                 \caption{Best value for each tick EVO-P could find. }
+%                 \label{fig:sample}
+%         \end{subfigure}  
+%         \begin{subfigure}{0.49\textwidth}
+%                 \centering
+%                 \includegraphics[width=1.0\textwidth]{./lunarexps/sample-detail-crop.pdf}
+%                 \caption{Detail of Figure \ref{fig:sample}, when the ship is closer to landing.}
+%                 \label{fig:sample-detail}
+
+%         \end{subfigure}
+       
+
+%          \caption{Sample run for EVO-P. Best fitness discovered at each tick is shown. Notice the big ``bump'' in fitness when the ship gets close to the landing pad}
+%          \label{fig:samples}
+
+% \end{figure*}
+
+
 \begin{figure*}[ht]
-  %\centering
+  \centering
 
 
 
   \centering
         \begin{subfigure}{0.49\textwidth}
                 \centering
-                \includegraphics[width=1.0\textwidth]{./lunarexps/sample-crop.pdf}
-                \caption{Best value for each tick EVO-P could find. }
-                \label{fig:sample}
+                \includegraphics[width=1.0\textwidth]{./graphics/map2.pdf}
+                \caption{Map. }
+                \label{fig:map2}
         \end{subfigure}  
         \begin{subfigure}{0.49\textwidth}
                 \centering
-                \includegraphics[width=1.0\textwidth]{./lunarexps/sample-detail-crop.pdf}
+                \includegraphics[width=1.0\textwidth]{./graphics/map1-easy.pdf}
+                \caption{sdfdf}
+                \label{fig:map1-easy}
+
+        \end{subfigure}
+\\
+        \begin{subfigure}{0.49\textwidth}
+                \centering
+                \includegraphics[width=1.0\textwidth]{./graphics/map1-tall.pdf}
                 \caption{Detail of Figure \ref{fig:sample}, when the ship is closer to landing.}
-                \label{fig:sample-detail}
+                \label{fig:map1-tall}\end{subfigure}\begin{subfigure}{0.49\textwidth}
+                \centering
+                \includegraphics[width=1.0\textwidth]{./graphics/map1-wall.pdf}
+                \caption{Detail of Figure \ref{fig:sample}, when the ship is closer to landing.}
+                \label{fig:map-wall}
 
         \end{subfigure}
        
 
          \caption{Sample run for EVO-P. Best fitness discovered at each tick is shown. Notice the big ``bump'' in fitness when the ship gets close to the landing pad}
-         \label{fig:samples}
+         \label{fig:maps}
 
 \end{figure*}
 

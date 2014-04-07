@@ -37,7 +37,8 @@ public class LunarParams {
     public static double friction = 1.0;
 
     // terrain generation values
-    public static int randomSeed = 104353;
+    //public static int randomSeed = 20394; //104353;
+    public static int randomSeed = 104353; //104353;
     public static int numPoints = 100;
     public static int numLandingPads = 1;
     public static int landingPadSize = 5;
@@ -49,6 +50,15 @@ public class LunarParams {
     // make the landscape totally flat?
     public static boolean flatLandscape = false;
 
-    public static Vector2d startingPoint = new Vector2d(700, 100);
+    public static Vector2d startingPoint = new Vector2d(130, 200);
+
+    //public static Vector2d startingPoint = new Vector2d(600, 30);
+
+    //public static Vector2d startingPoint = new Vector2d(750, 300);
+
+    // map 2
+    //public static Vector2d startingPoint = new Vector2d(100, 400);
+
+
     public static Vector2d landingFacing = new Vector2d(1,0);
 }
