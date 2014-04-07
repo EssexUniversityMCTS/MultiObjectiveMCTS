@@ -6,6 +6,7 @@
 \usepackage{bbm}
 \usepackage{amssymb}
 
+
 \pdfminorversion=3
 
 \newcommand{\defeq}{\vcentcolon=}
@@ -20,6 +21,8 @@
 \DeclareMathOperator{\dis}{d}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
 
 \newcommand{\twopartdef}[4]
 {
@@ -302,7 +305,7 @@ Each vertex of this landscape is generated sequentially. % INCOMPLETE due to unc
 
 \subsubsection{Spaceship Physics}
 
-The spaceship within this game world is modelled as an a circular mass with some basic physical properties, such as a position within the game world $\boldsymbol {s}$, a velocity $\boldsymbol {v}$, an orientation $\theta$, an angular velocity $\omega$ and a radius of a bounding sphere $r$ used for collision detection with the landscape.
+The spaceship within this game world is modelled as an a circular mass with some basic physical properties, such as a position within the game world $\bm {s}$, a velocity $\bm {v}$, an orientation $\bm{d}$, an angular velocity $\omega$ and a radius of a bounding sphere $r$ used for collision detection with the landscape.
 
 This collision detection method is based on the lowest point of the spaceship's bounding circle coming into intersection with the highest point of the landscape for the line perpendicular between the ship and the bottom of the playing field, as can be seen in Figure \ref{fig:diagram_landscapepoint}.
 
@@ -314,7 +317,7 @@ This collision detection method is based on the lowest point of the spaceship's 
 \label{fig:diagram_landscapepoint}
 \end{figure}
 
-As the landscape is stored as a series of line segments, interpolation must be used in the event the ship is not perfectly aligned with one of the landscape axes. The point that lies on the line segment that the ship is being checked against is calculated through simple linear interpolation based on which two vertices the ship is horizontally closest to. For the ship's centre $\boldsymbol {s}$, the left nearest landscape vertex $\boldsymbol {p}^{l}$ and the right nearest landscape vertex $\boldsymbol {p}^{r}$, the point of collision $\boldsymbol {p}^{c}$ against the landscape is calculated as 
+As the landscape is stored as a series of line segments, interpolation must be used in the event the ship is not perfectly aligned with one of the landscape axes. The point that lies on the line segment that the ship is being checked against is calculated through simple linear interpolation based on which two vertices the ship is horizontally closest to. For the ship's centre $\bm {s}$, the left nearest landscape vertex $\bm {p}^{l}$ and the right nearest landscape vertex $\bm {p}^{r}$, the point of collision $\bm {p}^{c}$ against the landscape is calculated as 
 
 % does this constitute self-plaigarism???
 
@@ -375,20 +378,20 @@ As the landscape is stored as a series of line segments, interpolation must be u
 \end{figure*}
 
 \begin{equation}
-\boldsymbol {p}_{x}^{c} = \boldsymbol {s}_{x}
-\boldsymbol {p}_{y}^{c} = \boldsymbol {p}_{y}^{l} + v(\boldsymbol {p}_{y}^{r} - \boldsymbol {p}_{y}^{l})
+\bm {p}_{x}^{c} = \bm {s}_{x}
+\bm {p}_{y}^{c} = \bm {p}_{y}^{l} + v(\bm {p}_{y}^{r} - \bm {p}_{y}^{l})
 \end{equation}
 
 where $v$ is a value between $0$ to $1$ used for interpolation, and can be calculated as follows.
 
 \begin{equation}
-v = \frac{ {\boldsymbol {s}_{x} - \boldsymbol {p}_{x}^{l}}}{ {\boldsymbol {p}_{x}^{r} - \boldsymbol {p}_{x}^{l}} }
+v = \frac{ {\bm {s}_{x} - \bm {p}_{x}^{l}}}{ {\bm {p}_{x}^{r} - \bm {p}_{x}^{l}} }
 \end{equation}
 
 Collision is then true if the following statement is true:
 
 \begin{equation}
-\boldsymbol {s}_{y} + r \geq \boldsymbol {p}^{c}_{y}
+\bm {s}_{y} + r \geq \bm {p}^{c}_{y}
 \end{equation}
 
 The ship colliding with the landscape constitutes the end of the {\itshape Lunar Lander} game. The conditions surrounding this collision, including speed, orientation of the ship, and fuel used, constitute whether the nature of the collision is a success or a failure.
@@ -404,33 +407,32 @@ Finally each linear thrust and angular impulse is repeated for $X$ actions, the 
 
 \subsubsection{Heuristic} % this too
 
-Lunar Lander has a setup where a player gets rewards if and only if it actually lands on the pad. This creates the problem of rollouts (whether used by EVO-P or T-HOLOP) rarely will see a reward. In order to circumvent this, as it is common in other games, we use a heuristic for each state. In order to counter this tendency, as is common in games, we used a two-stage heuristic. The first stage involves the ship trying to reach the landing pad. 
+Lunar Lander has a setup where a player gets rewards if and only if it actually lands on the pad. This creates the problem of rollouts (whether used by EVO-P or T-HOLOP) rarely will see a reward. In order to circumvent this, as it is common in other games, we use a heuristic for each state. Initially, we can define a number of vectors that portray the 
+
+\begin{align}
+& \bm{du} = [1,0]\notag\\ 
+& \bm{dl} = [1,2]\notag\\
+& \bm{dr} = [1,-2]
+\label{eq:vectors}
+\end{align}
+
+
+The vectors defined in Equation \ref{eq:vectors} define three directions for the ship. The first one, $\bm{du}$, define a ship standing upright, the second one, $\bm{dl}$, define tilting to the left, while the third one $\bm{dr}$ a ship tilting to the right. We make use of these vectors in order to help align the ship in the right direction, deepening on which way the landing point is. 
 
 
 \begin{multline}
-rng = -\sum{arccos(vl\cdot\theta)/||vl||*||\theta||} - |\boldsymbol {v_y} - V_{y}^{max}| \\
-h = \twopartdef{ -|(|\boldsymbol {v}| - C) - |\boldsymbol {s}_{x} - \boldsymbol {np}_{x}||}{||\boldsymbol {s} - \boldsymbol {np}|| < D}
-{rng - |\boldsymbol {v_x}|   }{Otherwise}
+f = \twopartdef{-\sum{arccos(\bm{dl}\cdot\bm{d}/\norm{\bm{dl}}\norm{\bm{d}}})}{\bm{np_x} < \bm{s_x}}{-\sum{arccos(\bm{dr}\cdot\bm{d}/\norm{\bm{dr}}\norm{\bm{d}}})} {otherwise}\\
+l = -\sum{arccos(\bm{du}\cdot\bm{d}/\norm{\bm{du}}\norm{\bm{d}}}) - \abs{\bm {v_y} - V_{y}^{max}} \\
+h = \twopartdef{ \abs{-(\norm{\bm {v}} - C) - \abs{\bm {s}_{x} - \bm {np}_{x}}} - f}{\norm{\bm {s} - \bm {np}} < D}
+{l - |\bm {v_x}|   }{Otherwise}
 \label{eq:h1}
-\end{multline}
+\end{multline}rng
 
-In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitute of speed, which we set to $C=100$. $D = 60$ is the distance from the landing point $np$ where this heuristic takes precedence.  Intuitively, the upper part of the heuristic $h$ tries to get the ship above the landing point as fast as possible while maintaining a certain speed. The second part of the heuristic tries to minimise velocity on the $x$ axis (as the ship tries to land), maintain a minimum landing speed on the $y$ axis and get a certain angle (the summation term $rng$) as close to vector $vl = (0,-1)$, i.e. help the ship stay upright through the duration of the rollout.  
+In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitude of speed, which we set to $C=30$. $D = 60$ is the distance from the landing point $np$ where this heuristic takes precedence.  Intuitively, the upper part of the heuristic $h$ tries to get the ship above the landing point as fast as possible while maintaining a certain speed. The second part of the heuristic tries to minimise velocity on the $x$ axis (as the ship tries to land), maintain a minimum landing speed on the $y$ axis and get a certain angle (the summation term $f$) as close to vector $du$, i.e. help the ship stay upright through the duration of the rollout.  It's worth noting the main reason why we use a heuristic of this kind, one that includes not only the final state, but makes use of the path of the state as well, is that there is not enough information to discern states if one takes into account direction only, without incorporating the angular velocity. The ship might be spinning madly, but the end of the rollout might find it in the correct direction. 
 
 \section{Results} \label{sec:Experiments}
 We present the results of our experiments below.
 
-\begin{table}
-	\begin{tabular}{lrrrr}
-\hline
- Map Name   &   Success Mean &   Success CI &   Ticks Mean &   Tick CI \\
-\hline
- map2       &            1   &     0        &       2925.9 &   184.437 \\
- map1-tall  &            1   &     0        &       2733   &   159.34  \\
- map1-easy  &            1   &     0        &       2293   &   123.917 \\
- map1-wall  &            0.9 &     0.226216 &       2421.6 &   682.893 \\
-\hline
-\end{tabular}
-\end{table}
 
 
 
@@ -470,13 +472,13 @@ We present the results of our experiments below.
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map2.pdf}
-                \caption{Map. }
+                \caption{Map A,  where the ship is lower then the pad}
                 \label{fig:map2}
         \end{subfigure}  
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map1-easy.pdf}
-                \caption{sdfdf}
+                \caption{Map B, an easy map where only the first heuristic is used}
                 \label{fig:map1-easy}
 
         \end{subfigure}
@@ -484,17 +486,17 @@ We present the results of our experiments below.
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map1-tall.pdf}
-                \caption{Detail of Figure \ref{fig:sample}, when the ship is closer to landing.}
+                \caption{Map C, where the ship is close to the top of the screen}
                 \label{fig:map1-tall}\end{subfigure}\begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map1-wall.pdf}
-                \caption{Detail of Figure \ref{fig:sample}, when the ship is closer to landing.}
+                \caption{Map D, where the ship is behind a wall }
                 \label{fig:map-wall}
 
         \end{subfigure}
        
 
-         \caption{Sample run for EVO-P. Best fitness discovered at each tick is shown. Notice the big ``bump'' in fitness when the ship gets close to the landing pad}
+         \caption{The four different maps used in our experiments. The maps capture different position/properties}
          \label{fig:maps}
 
 \end{figure*}
@@ -521,10 +523,30 @@ For the double integrator experiment, we had slightly different results. The Wei
 
 Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:IP-N-100}, \ref{fig:DI-N-50}, \ref{fig:DI-N-100}) closely mimic the performance of their constant noise counterparts. For the inverted pendulum, using just 50 iterations (Figure \ref{fig:IP-N-50}) EVO-P is able to stabilise the pendulum with . This still applies if we increase the number of function evaluations to 100 (Figure \ref{fig:DI-N-100}). On the other hand, the results start to get closer to the fixed noise level experiments if we increase the number of iterations in the Inverted Pendulum experiment to 100 (Figure \ref{fig:IP-N-50}).
 
+\subsection{Lunar Lander}
 
+\begin{table}[h]
+	\begin{tabular}{lrrrr}
+\hline
+ Map Name   &   Success Mean &   Success CI &   Ticks Mean &   Tick CI \\
+\hline
+ Map A       &            1   &     0        &       2925.9 &   $\pm 184.437$ \\
+ Map B  &            1   &     0        &       2733   &   $\pm 159.34$  \\
+ Map C  &            1   &     0        &       2293   &   $\pm 123.917$ \\
+ Map D  &            0.9 &     $\pm 0.226216$ &       2421.6 &   $\pm 682.893$ \\
+\hline
+\end{tabular}
+\label{tb:results}
+\end{table}
+
+
+For lunar lander, we run $10$ runs for each map in Figure \ref{fig:maps}, and the results for EVO-P can be seen in Table \ref{tb:results}. The results include the mean number of successful landings and the mean time it took to land the ship, alongside their confidence for the $95$th interval.   For EVO-P we used the default CMA-ES population size, each individual was bound between, each gene had a length of $8$ and each action pair ($x[i], x[i+1]$) was repeated $7$ times. We derived these number experimentally, however we did not optimise for them (not even implicitly) to any serious degree.  
+
+There are a number of things to notice here. The first one is that the only in Map D, where the ship starts the problem facing a wall do we get a failure to land, and this is due to a crash. This has to do with the fact that even a minor thrust can push you a bit forward and drive the ship to a position where there is no longer the possibility of recovery from a crush (or the combination of that recovery is extremely hard to get). The Second thing to observe is that we get there slowly, but this is by design, as we he have made the flying speed of the ship controllable. One can pottentially tweak all the default parameters we have used, plus the ones incorporated in CMA-ES as a kind of meta-heuristic search and achieve much better results. Another thing to note is that EVO-P lands the ship (on average) almost at the same time on MAPS B, C, D, although map has the same landscape as the other two but the ship is much closer. This is due to the fact that the minimum landing speed, set on one of our heuristics, is really low and The final thing we would like to note is that we have only included the results for EVO-P because T-HOLOP failed to land the ship using the same heuristic, and behaved badly. It's worth noting here that T-HOLOP requires rewards between certain bounds and this is not the case with our heuristic. For completeness purposes, we did change the UCB-like node selection policy of T-HOO to e-greedy, in which case we DID get the ship to behave reasonably, albeit the failure to land was evident here as well. This is important we think for a number of reasons. The first one is that it shows that different Heuristics might be needed for different algorithms. Although this might be self-evident, it shows that one must design heuristics with a specific algorithm in mind. 
 
 
 \section{Conclusion} \label{sec:conclusion}
+We showed that it's possible to use evolution in a rolling horizon setting, making it possible to create agents using off-the-shelf evolutionary algorithms and a generative model. We used an experimental setup that included both simple benchmark problems and a popular arcade game, Lunar Lander. Unfortunately, it seems that different algorithms require different heuristics to work properly in the case that absorbing states are not met during rollouts. In future research we aim to improve MCTS-like algorithms for continuous settings by including a learning module, possibly in the form of actor-critic algorithms. This should automate learning the heuristics (after some ad-hoc played games) and help guide the rollouts towards more sensible solutions. 
 
  
 % Use \section* for the acknowledgments

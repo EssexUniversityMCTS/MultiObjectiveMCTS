@@ -36,15 +36,18 @@ public class LunarLanderHOOCont {
         LunarLanderObjective fitfun = new LunarLanderObjective((LunarGame) copy.getCopy());
 
 
-        int i = 0;
+        //int i = 0;
         while (!ect.exceededMaxTime()) {
-            hoo.runForSim(1);
-            i++;
+            hoo.runForSim(50);
+            //i++;
         }
 
-        System.out.println("i = " + i);
+        //System.out.println("i = " + i);
 
-        double[] best = hoo.getBestNode().sampleAction();
+        //double[] best = hoo.getBestNode().sampleAction();
+        double[] best = func.best;
+
+        //System.out.println(Arrays.toString(hoo.getBestNode().getMax()) + " " +  Arrays.toString(hoo.getBestNode().getMin()) ) ;
         //System.out.println("best" + Arrays.toString(best));
         //System.out.println(hoo + " " + i) ;
         //System.exit(0);
