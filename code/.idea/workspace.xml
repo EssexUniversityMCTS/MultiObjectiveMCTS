@@ -82,6 +82,15 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="LunarGame.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarGame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="19" selection-start="598" selection-end="598" vertical-scroll-proportion="0.025885558" vertical-offset="281" max-vertical-offset="1545">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="LunarLanderHOOCont.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarLanderHOOCont.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -94,16 +103,16 @@
       <file leaf-file-name="LunarRun.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarRun.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="37" selection-start="2371" selection-end="2371" vertical-scroll-proportion="0.0" vertical-offset="645" max-vertical-offset="2490">
+            <state line="156" column="138" selection-start="4648" selection-end="4648" vertical-scroll-proportion="0.0" vertical-offset="1590" max-vertical-offset="2490">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LunarParams.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="LunarParams.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarParams.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="4" selection-start="1660" selection-end="1660" vertical-scroll-proportion="0.51263535" vertical-offset="466" max-vertical-offset="1020">
+            <state line="52" column="4" selection-start="1660" selection-end="1660" vertical-scroll-proportion="0.0" vertical-offset="286" max-vertical-offset="1020">
               <folding />
             </state>
           </provider>
@@ -139,8 +148,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1600" />
-    <option name="height" value="881" />
+    <option name="width" value="1920" />
+    <option name="height" value="1061" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -564,7 +573,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1600" height="881" extended-state="0" />
+    <frame x="0" y="0" width="1920" height="1061" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -583,8 +592,8 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18233083" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26733923" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15187891" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21788284" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32912987" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -868,13 +877,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarGame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="24" selection-start="806" selection-end="806" vertical-scroll-proportion="-0.19736843" vertical-offset="465" max-vertical-offset="1545">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../mcts/src/java/ssamot/mcts/StatisticsNode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="28" column="29" selection-start="960" selection-end="960" vertical-scroll-proportion="0.31015038" vertical-offset="0" max-vertical-offset="532">
@@ -954,16 +956,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarRun.java">
+    <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarParams.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="37" selection-start="2371" selection-end="2371" vertical-scroll-proportion="0.0" vertical-offset="645" max-vertical-offset="2490">
+        <state line="52" column="4" selection-start="1660" selection-end="1660" vertical-scroll-proportion="0.0" vertical-offset="286" max-vertical-offset="1020">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarParams.java">
+    <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarRun.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="4" selection-start="1660" selection-end="1660" vertical-scroll-proportion="0.51263535" vertical-offset="466" max-vertical-offset="1020">
+        <state line="156" column="138" selection-start="4648" selection-end="4648" vertical-scroll-proportion="0.0" vertical-offset="1590" max-vertical-offset="2490">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lunarcode/LunarGame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="19" selection-start="598" selection-end="598" vertical-scroll-proportion="0.025885558" vertical-offset="281" max-vertical-offset="1545">
           <folding />
         </state>
       </provider>

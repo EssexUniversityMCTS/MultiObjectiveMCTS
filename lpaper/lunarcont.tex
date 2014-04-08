@@ -52,7 +52,7 @@
 
 
 \begin{abstract}
-It is often the case that games have continuous dynamics and allow for continuous actions, possibly with with some added noise. For larger games with complicated dynamics, having agents learn offline behaviours in such a setting is a daunting task. On the other hand, provided a forward model is available, one might try to spread the cost of search/learning in a rolling horizon fashion (e.g. as in Monte Carlo Tree Search). In this paper we compare T-HOLOP (Truncated Hierarchical Open Loop Planning), an open loop planning algorithm at least partially inspired by MCTS with a version evolutionary planning using CMA-ES (which we call EVO-P) in two planning benchmark problems (Cart Balancing and the Double Integrator) and Lunar Lander, a classic arcade game. He show that EVO-P outperforms T-HOLOP in almost all settings. We conclude that off-the-shelf evolutionary algorithms can be used successfully in a rolling horizon setting, and might offer considerable advantages over more formal methods. 
+It is often the case that games have continuous dynamics and allow for continuous actions, possibly with with some added noise. For larger games with complicated dynamics, having agents learn offline behaviours in such a setting is a daunting task. On the other hand, provided a forward model is available, one might try to spread the cost of search/learning in a rolling horizon fashion (e.g. as in Monte Carlo Tree Search). In this paper we compare T-HOLOP (Truncated Hierarchical Open Loop Planning), an open loop planning algorithm at least partially inspired by MCTS with a version evolutionary planning using CMA-ES (which we call EVO-P) in two planning benchmark problems (Cart Balancing and the Double Integrator) and Lunar Lander, a classic arcade game. He show that EVO-P outperforms T-HOLOP in the classic benchmarks, while T-HOLOP is unable to find a solution using the same heuristic. We conclude that off-the-shelf evolutionary algorithms can be used successfully in a rolling horizon setting, and that a different type of heuristics might be needed under different optimisation algorithms. 
 
 \end{abstract}
 
@@ -69,7 +69,7 @@ was developed using only $50 - 300$ simulations per action (the game simulator r
 from the controller every 40ms).
 
 
-Recently, algorithms stemming from, or at least partially inspired by, MCTS aiming at solving planning problems involving continuous states and actions have come to light. A typical such algorithm is Hierarchical Optimistic Open Loop Planing (HOLOP)~\cite{weinstein2012bandit}. HOLOP is based partially on a strong~\cite{hoo2011} real-valued optimisation algorithm called HOO (for ``Hierarchical Optimistic Optimisation''). In this paper two contributions are made; the first contribution is the comparison of two versions of a very popular and strong evolutionary strategy: EVO-P, the open loop planning algorithm using Covariance Matrix Adaptation Evolutionary Strategy (CMA-ES)~\cite{hansen2003reducing} with a version of HOLOP, which stands for Hierarchical Open Loop Optimistic Planning~\cite{hoo2011} on two standard benchmark problems, the double integrator and the reverse pendulum.  For speed purposed, we use T-HOO (Truncated Hierarchical Optimistic Optimisation), a faster version of HOO~\cite{hoo2011}, as the engine of HOLOP, hence we name the algorithm used T-HOLOP.  Our second contribution is the use of the these algorithms in Lunar Lander, a popular arcade game, coupled with a strong two-stage heuristic. We show that while EVO-P performs really well, T-HOLOP struggles. 
+Recently, algorithms stemming from, or at least partially inspired by, MCTS aiming at solving planning problems involving continuous states and actions have come to light. A typical such algorithm is Hierarchical Optimistic Open Loop Planing (HOLOP)~\cite{weinstein2012bandit}. HOLOP is based partially on a strong~\cite{hoo2011} real-valued optimisation algorithm called HOO (for ``Hierarchical Optimistic Optimisation''). In this paper two contributions are made; the first contribution is the comparison of two versions of a very popular and strong evolutionary strategy: EVO-P, the open loop planning algorithm using Covariance Matrix Adaptation Evolutionary Strategy (CMA-ES)~\cite{hansen2003reducing} with a version of HOLOP, which stands for Hierarchical Open Loop Optimistic Planning~\cite{hoo2011} on two standard benchmark problems, the double integrator and the reverse pendulum.  For speed purposed, we use T-HOO (Truncated Hierarchical Optimistic Optimisation), a faster version of HOO~\cite{hoo2011}, as the engine of HOLOP, hence we name the algorithm used T-HOLOP.  Our second contribution is the use of the these algorithms in Lunar Lander, a popular arcade game, coupled with a strong two-stage heuristic. We show that while EVO-P performs reasonably well, T-HOLOP struggles. 
 
 While evolution is commonly used to evolve a reactive neural network controller (in a process commonly called neuro-evolution) for these and other RL problems,
 it should be noted that evolution is being applied in a very different way here. In this paper, evolution is applied to perform each action given the current state.  This approach can only be applied when a generative
@@ -82,7 +82,7 @@ Section~\ref{sec:Planning} explains why and how the above algorithms can be used
 
 \section{Algorithms for Continuous Function Optimisation} \label{sec:Optimisation}
 
-This is the first background section of this paper, which aims to introduce the two core optimisation algorithms on which our contributions are made. We will present both algorithms from an implementer's viewpoint, without explicitly justifying the design and mathematical choices behind them, nor going into too much detail. Interested readers should look at the cited bibliography for extensive discussions. 
+This is the first background section of this paper, which aims to introduce the two core optimisation algorithms on top of which our contributions are made. We will present both algorithms from an implementer's viewpoint, without explicitly justifying the design and mathematical choices behind them, nor going into too much detail. Interested readers should look at the cited bibliography for extensive discussions. 
 
 In general, the optimisation problem can be defined as: Given a function $f:\bm{X}\rightarrow Y $, where $X \in \mathcal{R}^n$, with $n$ being the length of vector $\bm{X}$. The domain $\bm{X}$ is usually called the search space. Our goal is to find a vector $\bm{x}_0$, for which $f(\bm{x}) > f(\bm{x_0}) $ for all $x$ (also known as ``minimisation'') or $f(\bm{x}) < f(\bm{x_0})$ for all $x$ (known as ``maximisation'').
 There are an enormous number of algorithms devoted to this problem, but only two will be presented and compared here, which are both considered state of the art in their respective fields and do not require the calculation of a gradient. If one has an analytic expression of the gradient or if the functions proposed are smooth enough, it might be better to look elsewhere for solutions (e.g. Conjugate Gradient Methods~\cite{shewchuk1994introduction}).
@@ -132,7 +132,7 @@ The main decision theoretic abstraction for planning/control is the Markov Decis
 \end{itemize}
 
 The MDP defines a single agent environment, fully observable to the agent. In an MDP, the Markov property holds (hence the name), which means that all the information an agent needs in order to act is embedded in the current state.
-A possible route of action an agent might take is known as the \textit{policy} $\pi$. A policy is a probabilistic mapping between state and actions, $\pi:S \times A \rightarrow [0,1]$, thus $\pi(s,a) \in [0,1]$,  $\sum\limits_{a\in A}{\pi(s,a)} = 1$. The set of all policies is denoted as $\Pi$. The goal of an agent in an MDP environment is to maximise its long term value. Note that since here we are dealing with continuous actions and states, sets $A$ and $S$ are metric (and infinitive). Also note that we are NOT dealing with continuous time MDPs in this paper, although there is a notion of time. 
+A possible route of action an agent might take is known as the \textit{policy} $\pi$. A policy is a probabilistic mapping between state and actions, $\pi:S \times A \rightarrow [0,1]$, thus $\pi(s,a) \in [0,1]$,  $\sum\limits_{a\in A}{\pi(s,a)} = 1$. The set of all policies is denoted as $\Pi$. The goal of an agent in an MDP environment is to maximise its long term value. Note that since here we are dealing with continuous actions and states, sets $A$ and $S$ are metric (and infinitive). Also note that we are NOT dealing with continuous time MDPs in this paper, although there is a notion of time. An example of the effects of the discount factor on rewards can be found in Figure \ref{fig:gamma}.
 
 
 
@@ -181,7 +181,7 @@ In standard UCT, a procedure similar to temporal difference learning is followed
 
 	\Procedure{$\mathsc{OOP}$} {}
 		\While{$!StoppingCondition$}
-		    \State $a \gets \mathsc{FindOpenLoopPlan}(depth, T',S')[0]$ \Comment{Execute first action of the policy}
+		    \State $a \gets \mathsc{FindOpenLoopPlan}(depth, T',S')[0]$ \Comment{Execute first action(s) of the policy}
 		    \State $s \sim T(s'|s,a)$ \Comment{Stop only at an absorbing state}
 		\EndWhile
 		\State
@@ -288,19 +288,13 @@ r = -((2 \theta / \pi)^2 + \dot{\theta}^2 + (F / 50)^2 )
 
 
 \subsection{Lunar Lander}
-We describe the properties of Lunar Lander. 
+In this section we give a brief overview of the Game of Lunar Lander, a popular arcade game. 
 
 \subsubsection{Environmental Properties}
 
 The properties of the base environment of {\itshape Lunar Lander} are that it is frictionless, and that it is a two-dimensional plane with horizontal wrapping. This can also be conceptualised as a cylinder. Anything that passes from the left edge of the playing field moves to the right instantaneously, and vice versa.
 
 The other feature of note is the jagged landscape, a simplistic representation of the noisy, crater-filled lunar landscape the game represents. This landscape is constructed as a series of line segments, with each vertex of the jagged landscape being distributed equally horizontally, and randomly vertically. % unclear?
-
-% TODO: DIAGRAM - jagged lunar landscape might be useful (reuse of old one probably not sufficient)
-
-% not sure how much detail should be gone into here? should just cite generation equations from old paper or copy over??
-
-Each vertex of this landscape is generated sequentially. % INCOMPLETE due to uncertainty listed above
 
 
 \subsubsection{Spaceship Physics}
@@ -356,7 +350,7 @@ As the landscape is stored as a series of line segments, interpolation must be u
         \begin{subfigure}[b]{0.32\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{graphics/online-DI-crop.pdf}
-                \caption{Scores for a noise level of 1 under variable function evaluations.}
+                \caption{Scores for a noise level of $l=1$ under variable function evaluations.}
                 \label{fig:DI}
         \end{subfigure}   \begin{subfigure}[b]{0.32\textwidth}
                 \centering
@@ -394,7 +388,7 @@ Collision is then true if the following statement is true:
 \bm {s}_{y} + r \geq \bm {p}^{c}_{y}
 \end{equation}
 
-The ship colliding with the landscape constitutes the end of the {\itshape Lunar Lander} game. The conditions surrounding this collision, including speed, orientation of the ship, and fuel used, constitute whether the nature of the collision is a success or a failure.
+The ship colliding with the landscape constitutes the end of the {\itshape Lunar Lander} game. The conditions surrounding this collision, including speed, orientation of the ship constitute whether the nature of the collision is a success or a failure. In this experimental setup with accept a velocity of $5$ and an angle of $< 0.1$ radians as successful landing criteria.
 
 An agent can modify the ship directions by applying linear thrust $\bm{a_T}$ and the angular impulse $\bm{a_I}$. The controllers have to identify a vector of real numbers $\bm{A}$, which each element of the set $a_i \in [0,1]$. Each even element of the vector represents the linear thrust, whereas each odd element represents angular velocity. Each linear thrust vector element is transformed by applying as follows: 
 
@@ -403,7 +397,7 @@ An agent can modify the ship directions by applying linear thrust $\bm{a_T}$ and
 \bm{a_T} = 300\bm{a_T} 
 \end{equation}
 
-Finally each linear thrust and angular impulse is repeated for $X$ actions, the effects of which we are going to explore below. 
+Finally each linear thrust and angular impulse is repeated for $X = 7$ actions, the effects of which we are going to explore below. 
 
 \subsubsection{Heuristic} % this too
 
@@ -417,18 +411,18 @@ Lunar Lander has a setup where a player gets rewards if and only if it actually 
 \end{align}
 
 
-The vectors defined in Equation \ref{eq:vectors} define three directions for the ship. The first one, $\bm{du}$, define a ship standing upright, the second one, $\bm{dl}$, define tilting to the left, while the third one $\bm{dr}$ a ship tilting to the right. We make use of these vectors in order to help align the ship in the right direction, deepening on which way the landing point is. 
+The vectors defined in Equation \ref{eq:vectors} define three directions for the ship. The first one, $\bm{du}$, define a ship standing upright, the second one, $\bm{dl}$, define tilting to the left, while the third one $\bm{dr}$ a ship tilting to the right. We make use of these vectors in order to help align the ship in the right direction, depending on which way the landing point is. 
 
 
 \begin{multline}
 f = \twopartdef{-\sum{arccos(\bm{dl}\cdot\bm{d}/\norm{\bm{dl}}\norm{\bm{d}}})}{\bm{np_x} < \bm{s_x}}{-\sum{arccos(\bm{dr}\cdot\bm{d}/\norm{\bm{dr}}\norm{\bm{d}}})} {otherwise}\\
 l = -\sum{arccos(\bm{du}\cdot\bm{d}/\norm{\bm{du}}\norm{\bm{d}}}) - \abs{\bm {v_y} - V_{y}^{max}} \\
 h = \twopartdef{ \abs{-(\norm{\bm {v}} - C) - \abs{\bm {s}_{x} - \bm {np}_{x}}} - f}{\norm{\bm {s} - \bm {np}} < D}
-{l - |\bm {v_x}|   }{Otherwise}
+{l - \abs{\bm {v_x} -C_l }  }{Otherwise}
 \label{eq:h1}
-\end{multline}rng
+\end{multline}
 
-In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitude of speed, which we set to $C=30$. $D = 60$ is the distance from the landing point $np$ where this heuristic takes precedence.  Intuitively, the upper part of the heuristic $h$ tries to get the ship above the landing point as fast as possible while maintaining a certain speed. The second part of the heuristic tries to minimise velocity on the $x$ axis (as the ship tries to land), maintain a minimum landing speed on the $y$ axis and get a certain angle (the summation term $f$) as close to vector $du$, i.e. help the ship stay upright through the duration of the rollout.  It's worth noting the main reason why we use a heuristic of this kind, one that includes not only the final state, but makes use of the path of the state as well, is that there is not enough information to discern states if one takes into account direction only, without incorporating the angular velocity. The ship might be spinning madly, but the end of the rollout might find it in the correct direction. 
+In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitude of speed, which we set to $C=30$. $D = 60$ is the distance from the landing point $np$ where this heuristic takes precedence.  Intuitively, the upper part of the heuristic $h$ tries to get the ship above the landing point as fast as possible while maintaining a certain speed. The second part of the heuristic tries to minimise velocity on the $x$ axis (as the ship tries to land with maximum speed $C_l = 2$), maintain a minimum landing speed on the $y$ axis and get a certain angle (the summation term $f$) as close to vector $du$, i.e. help the ship stay upright through the duration of the rollout.  It's worth noting the main reason why we use a heuristic of this kind, one that includes not only the final state, but makes use of the path of the state as well, is that there is not enough information to discern states if one takes into account direction only, without incorporating the angular velocity. The ship might be spinning madly, but the end of the rollout might find it in the correct direction. 
 
 \section{Results} \label{sec:Experiments}
 We present the results of our experiments below.
@@ -521,7 +515,7 @@ of iterations allowed for each algorithm. The original experiment had given the 
 For the double integrator experiment, we had slightly different results. The Weinstein paper reports a mean of $-2.72$ for 200 iterations. Using T-HOLOP we got a better mean of $-2.62$. A far better result of $-1.74$ is obtained by EVO-P. 
 
 
-Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:IP-N-100}, \ref{fig:DI-N-50}, \ref{fig:DI-N-100}) closely mimic the performance of their constant noise counterparts. For the inverted pendulum, using just 50 iterations (Figure \ref{fig:IP-N-50}) EVO-P is able to stabilise the pendulum with . This still applies if we increase the number of function evaluations to 100 (Figure \ref{fig:DI-N-100}). On the other hand, the results start to get closer to the fixed noise level experiments if we increase the number of iterations in the Inverted Pendulum experiment to 100 (Figure \ref{fig:IP-N-50}).
+Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:IP-N-100}, \ref{fig:DI-N-50}, \ref{fig:DI-N-100}) closely mimic the performance of their constant noise counterparts. For the inverted pendulum, using just 50 iterations (Figure \ref{fig:IP-N-50}) EVO-P is able to stabilise the pendulum with $50$ iterations. This still applies if we increase the number of function evaluations to 100 (Figure \ref{fig:DI-N-100}). On the other hand, the results start to get closer to the fixed noise level experiments if we increase the number of iterations in the Inverted Pendulum experiment to 100 (Figure \ref{fig:IP-N-50}).
 
 \subsection{Lunar Lander}
 
@@ -540,13 +534,13 @@ Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:I
 \end{table}
 
 
-For lunar lander, we run $10$ runs for each map in Figure \ref{fig:maps}, and the results for EVO-P can be seen in Table \ref{tb:results}. The results include the mean number of successful landings and the mean time it took to land the ship, alongside their confidence for the $95$th interval.   For EVO-P we used the default CMA-ES population size, each individual was bound between, each gene had a length of $8$ and each action pair ($x[i], x[i+1]$) was repeated $7$ times. We derived these number experimentally, however we did not optimise for them (not even implicitly) to any serious degree.  
+For lunar lander, we do $10$ runs for each map in Figure \ref{fig:maps}, and the results for EVO-P can be seen in Table \ref{tb:results}. The results include the mean number of successful landings and the mean time it took to land the ship, alongside their confidence for the $95$th interval.   For EVO-P we used the default CMA-ES population size, each individual was bound between, each gene had a length of $8$ and each action pair ($x[i], x[i+1]$) was repeated $7$ times (where $x[i]$ represents thrust and $x[i+1]$ angular thrust). We derived these numbers experimentally and we did not optimise for them (not even implicitly) to any serious degree.  
 
 There are a number of things to notice here. The first one is that the only in Map D, where the ship starts the problem facing a wall do we get a failure to land, and this is due to a crash. This has to do with the fact that even a minor thrust can push you a bit forward and drive the ship to a position where there is no longer the possibility of recovery from a crush (or the combination of that recovery is extremely hard to get). The Second thing to observe is that we get there slowly, but this is by design, as we he have made the flying speed of the ship controllable. One can pottentially tweak all the default parameters we have used, plus the ones incorporated in CMA-ES as a kind of meta-heuristic search and achieve much better results. Another thing to note is that EVO-P lands the ship (on average) almost at the same time on MAPS B, C, D, although map has the same landscape as the other two but the ship is much closer. This is due to the fact that the minimum landing speed, set on one of our heuristics, is really low and The final thing we would like to note is that we have only included the results for EVO-P because T-HOLOP failed to land the ship using the same heuristic, and behaved badly. It's worth noting here that T-HOLOP requires rewards between certain bounds and this is not the case with our heuristic. For completeness purposes, we did change the UCB-like node selection policy of T-HOO to e-greedy, in which case we DID get the ship to behave reasonably, albeit the failure to land was evident here as well. This is important we think for a number of reasons. The first one is that it shows that different Heuristics might be needed for different algorithms. Although this might be self-evident, it shows that one must design heuristics with a specific algorithm in mind. 
 
 
 \section{Conclusion} \label{sec:conclusion}
-We showed that it's possible to use evolution in a rolling horizon setting, making it possible to create agents using off-the-shelf evolutionary algorithms and a generative model. We used an experimental setup that included both simple benchmark problems and a popular arcade game, Lunar Lander. Unfortunately, it seems that different algorithms require different heuristics to work properly in the case that absorbing states are not met during rollouts. In future research we aim to improve MCTS-like algorithms for continuous settings by including a learning module, possibly in the form of actor-critic algorithms. This should automate learning the heuristics (after some ad-hoc played games) and help guide the rollouts towards more sensible solutions. 
+We showed that it is doable to use evolution in a rolling horizon setting, making it possible to create agents using off-the-shelf evolutionary algorithms and a generative model. We used an experimental setup that included both simple benchmark problems and a popular arcade game, Lunar Lander. Unfortunately, it seems that different algorithms require different heuristics to work properly in the case that absorbing states are not met during rollouts. In future research we aim to improve MCTS-like algorithms for continuous settings by including a learning module, possibly in the form of actor-critic algorithms. This should automate learning the heuristics (after some ad-hoc played games) and help guide the rollouts towards more sensible solutions, even in the case where heuristics do not favour T-HOLOP. 
 
  
 % Use \section* for the acknowledgments
