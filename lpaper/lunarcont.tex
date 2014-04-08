@@ -42,7 +42,7 @@
 \title{\ \\ \LARGE\bf Rolling Horizon methods for Games with Continuous States and Actions } 
 % TODO - better title
 
-\author{Samuel A. Roberts, Spyridon Samothrakis, Diego Perez, Simon M. Lucas}
+\author{Spyridon Samothrakis, Samuel A. Roberts, Diego Perez, Simon M. Lucas}
 
 % Uncomment out the following line for invited papers
 %\specialpapernotice{(Invited Paper)}
@@ -78,7 +78,7 @@ prior learning.  The disadvantage, compared to neuro-evolution, is that every ac
 CPU time for the simulations.  This is described in more detail in section \ref{sec:Planning} and in line with what is being done in Perez et al. \cite{perez2013rolling}, although this time in a continuous setting. 
 
 The rest of this paper is structured as follows.  Section \ref{sec:Optimisation} discusses (briefly and epigrammatically) the relevant base algorithms that are going to be used in this paper, ((Truncated) Hierarchical Online Optimisation~\cite{hoo2011} and CMA-ES~\cite{hansen2003reducing}).
-Section~\ref{sec:Planning} explains why and how the above algorithms can be used in the context of planning (and thus transformed into HOLOP and EVO-P respectively).  In Section \ref{sec:methodology} the experimental setup is described. In Section~\ref{sec:Experiments} a number of experiments are portrayed and analysed.  These form the bulk of this paper's contribution. We conclude with a short discussion in Section \ref{sec:conclusion}. 
+Section~\ref{sec:Planning} explains why and how the above algorithms can be used in the context of planning (and thus transformed into T-HOLOP and EVO-P respectively).  In Section \ref{sec:methodology} the experimental setup is described. In Section~\ref{sec:Experiments} a number of experiments are portrayed and analysed.  These form the bulk of this paper's contribution. We conclude with a short discussion in Section \ref{sec:conclusion}. 
 
 \section{Algorithms for Continuous Function Optimisation} \label{sec:Optimisation}
 
@@ -194,7 +194,7 @@ In standard UCT, a procedure similar to temporal difference learning is followed
 
 
 \section{Methodology} \label{sec:methodology}
-Our methodology is simple, yet efficient. We test T-HOLOP and EVO-P in two simple benchmark problems (see below for more) and Lunar Lander, a classic arcade game. 
+Our methodology is simple, yet efficient. We test T-HOLOP and EVO-P in two simple benchmark problems (see below for more) and Lunar Lander, a classic arcade game. EVO-P is simply CMA-ES used in a rolling horizon setting, while T-HOLOP is T-HOO used in the same manner.  
 
 
 \subsection{Simple Planning Benchmarking Problems}
@@ -500,7 +500,7 @@ We present the results of our experiments below.
 
 For the second set of experiments we have defined the following variables. The first two involve running the experiments with a fixed rollout depth of 50, i.e. each algorithm at each step plans for 50 steps ahead. We set the noise levels to $0.1 (\mathcal{U}(0,1)-0.5)*2 l$ uniform noise for the double integrator experiment and $10 (\mathcal{U}(0,1)-0.5)*2 l$  for the Inverted Pendulum.  The variable $l$ is the noise level which defines how noisy the environment is. Initially, we performed two experiments, with a variable number of iterations and a fixed noise level of one. 
 
-An example of how the \textit{predicted} reward looks like for a $2$-step look-ahead (instead of $50$ we use in the experiments) can be seen in Figure \ref{fig:vis}. We plotted the full state-space by pushing the internal generative model two steps forward for all possible actions by discretizing each action. Notice how the predicted reward landscape changes over time as the agent moves. The continuous replanning should aim to perform the action with the highest future reward.  
+
 
 
 
@@ -531,12 +531,13 @@ Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:I
 \hline
 \end{tabular}
 \label{tb:results}
+\caption{EVO-P results for different lunar lander maps}
 \end{table}
 
 
-For lunar lander, we do $10$ runs for each map in Figure \ref{fig:maps}, and the results for EVO-P can be seen in Table \ref{tb:results}. The results include the mean number of successful landings and the mean time it took to land the ship, alongside their confidence for the $95$th interval.   For EVO-P we used the default CMA-ES population size, each individual was bound between, each gene had a length of $8$ and each action pair ($x[i], x[i+1]$) was repeated $7$ times (where $x[i]$ represents thrust and $x[i+1]$ angular thrust). We derived these numbers experimentally and we did not optimise for them (not even implicitly) to any serious degree.  
+For lunar lander, we do $10$ runs for each map in Figure \ref{fig:maps}, and the results for EVO-P can be seen in Table I. The results include the mean number of successful landings and the mean time it took to land the ship, alongside their confidence for the $95$th interval.   For EVO-P we used the default CMA-ES population size, each individual was bound between, each gene had a length of $8$ and each action pair ($x[i], x[i+1]$) was repeated $7$ times (where $x[i]$ represents thrust and $x[i+1]$ angular thrust). We derived these numbers experimentally and we did not optimise for them (not even implicitly) to any serious degree.  
 
-There are a number of things to notice here. The first one is that the only in Map D, where the ship starts the problem facing a wall do we get a failure to land, and this is due to a crash. This has to do with the fact that even a minor thrust can push you a bit forward and drive the ship to a position where there is no longer the possibility of recovery from a crush (or the combination of that recovery is extremely hard to get). The Second thing to observe is that we get there slowly, but this is by design, as we he have made the flying speed of the ship controllable. One can pottentially tweak all the default parameters we have used, plus the ones incorporated in CMA-ES as a kind of meta-heuristic search and achieve much better results. Another thing to note is that EVO-P lands the ship (on average) almost at the same time on MAPS B, C, D, although map has the same landscape as the other two but the ship is much closer. This is due to the fact that the minimum landing speed, set on one of our heuristics, is really low and The final thing we would like to note is that we have only included the results for EVO-P because T-HOLOP failed to land the ship using the same heuristic, and behaved badly. It's worth noting here that T-HOLOP requires rewards between certain bounds and this is not the case with our heuristic. For completeness purposes, we did change the UCB-like node selection policy of T-HOO to e-greedy, in which case we DID get the ship to behave reasonably, albeit the failure to land was evident here as well. This is important we think for a number of reasons. The first one is that it shows that different Heuristics might be needed for different algorithms. Although this might be self-evident, it shows that one must design heuristics with a specific algorithm in mind. 
+There are a number of things to notice here. The first one is that the only in Map D, where the ship starts the problem facing a wall do we get a failure to land, and this is due to a crash. This has to do with the fact that even a minor thrust can push you a bit forward and drive the ship to a position where there is no longer the possibility of recovery from a crush (or the combination of that recovery is extremely hard to get). The Second thing to observe is that we get there slowly, but this is by design, as we he have made the flying speed of the ship controllable. One can pottentially tweak all the default parameters we have used, plus the ones incorporated in CMA-ES as a kind of meta-heuristic search and achieve much better results. Another thing to note is that EVO-P lands the ship (on average) almost at the same time on MAPS B, C, D, although map has the same landscape as the other two but the ship is much closer. This is due to the fact that the minimum landing speed, set on one of our heuristics, is really low and The final thing we would like to note is that we have only included the results for EVO-P because T-HOLOP failed to land the ship using the same heuristic, and behaved badly. It's worth noting here that T-HOLOP requires rewards between certain bounds and this is not the case with our heuristic. For completeness purposes, we did change the UCB-like node selection policy of T-HOO to e-greedy, in which case we \emph{did} get the ship to behave reasonably, albeit the failure to land was evident here as well. This is important we think for a number of reasons. The first one is that it shows that different Heuristics might be needed for different algorithms. Although this might be self-evident, it shows that one must design heuristics with a specific algorithm in mind. 
 
 
 \section{Conclusion} \label{sec:conclusion}
