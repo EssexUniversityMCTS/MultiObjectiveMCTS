@@ -1,5 +1,5 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{graphicx,times,amsmath,algorithm,caption, subcaption,nicefrac,bm}
+\usepackage{graphicx,times,amsmath,algorithm,caption, subcaption,nicefrac,bm, url}
 \usepackage{multicol}
 \usepackage[noend]{algpseudocode}
 \usepackage{mathtools}
@@ -145,7 +145,7 @@ A possible route of action an agent might take is known as the \textit{policy} $
 
 
 \subsection{Taxonomy of Planning Algorithms}
-The terminology of Chang~\cite{chang2007simulation} is followed when trying to classify planning algorithms. If the policy $\pi:S \times A \rightarrow [0,1]$ is followed, what is known as ``closed loop'' planning takes place. The agent takes an action, senses its environment, takes another action etc. An alternative to closed-loop planning, ``open-loop'' planning, requires defining time. An agent sees a ``time'' when it's about to act instead of a state, i.e it doesn't have access to $s_t$, but just $t$. An open loop policy (or plan or control) is when an agent learns a policy with the form $\pi_o:S \times \mathcal{T} \rightarrow [0,1]$, where  $\mathcal{T}$ is an ordered set of time steps. Thus, an agent takes actions irrespective of the current state it is in. Intuitively this means that a sequence of actions is formed by the agent and the agent will take these actions in sequence (e.g. $(a_1,a_2,a_3,a_4,a_5,a_6,\dots,a_n)$). Obviously this is not optimal\footnote{Not optimal in the general case. It is optimal under the condition that the MDP is deterministic, i.e. each action leads to one specific state with probability one, and everything else has a probability zero}, although sometimes is much easier to do.
+The terminology of Chang~\cite{chang2007simulation} is followed when trying to classify planning algorithms. If the policy $\pi:S \times A \rightarrow [0,1]$ is followed, what is known as ``closed loop'' planning takes place. The agent takes an action, senses its environment, takes another action etc. An alternative to closed-loop planning, ``open-loop'' planning, requires defining time. An agent sees a ``time'' when it's about to act instead of a state, i.e it doesn't have access to $s_t$, but just $t$. An open loop policy (or plan or control) is when an agent learns a policy with the form $\pi_o:A \times \mathcal{T} \rightarrow [0,1]$, where  $\mathcal{T}$ is an ordered set of time steps. Thus, an agent takes actions irrespective of the current state it is in. Intuitively this means that a sequence of actions is formed by the agent and the agent will take these actions in sequence (e.g. $(a_1,a_2,a_3,a_4,a_5,a_6,\dots,a_n)$). Obviously this is not optimal\footnote{Not optimal in the general case. It is optimal under the condition that the MDP is deterministic, i.e. each action leads to one specific state with probability one, and everything else has a probability zero}, although sometimes is much easier to do.
 
 
 Another point of interest is planning, and when it happens. In open loop planning (and what is usually termed ``planning'' without any further qualifications), an agent forms a plan once and follows it until the end.
@@ -401,7 +401,7 @@ Finally each linear thrust and angular impulse is repeated for $X = 7$ actions, 
 
 \subsubsection{Heuristic} % this too
 
-Lunar Lander has a setup where an agent gets rewards if and only if she manages to land to actually land the ship on the pad. This creates the problem of rollouts (whether used by EVO-P or T-HOLOP) rarely will see a reward. In order to circumvent this, as it is common in other games, we use a heuristic for each state. Initially, we need define a number of vectors that portray ship directions: 
+Lunar Lander has a setup where an agent gets rewards if and only if it manages to actually land the ship on the pad. This creates the problem of rollouts (whether used by EVO-P or T-HOLOP) rarely will see a reward. In order to circumvent this, as it is common in other games, we use a heuristic for each state. The heuristic was partially inspired by the two-stage approach found here : \url{http://www.cs.berkeley.edu/~jrs/4/lunar.html}\cite{lunar}. Initially, we need define a number of vectors that portray ship directions: 
 
 \begin{align}
 & \bm{du} = [1,0]\notag\\ 
@@ -414,15 +414,16 @@ Lunar Lander has a setup where an agent gets rewards if and only if she manages 
 The vectors defined in Equation \ref{eq:vectors} define three directions for the ship. The first one, $\bm{du}$, define a ship standing upright, the second one, $\bm{dl}$, define tilting to the left, while the third one $\bm{dr}$ a ship tilting to the right. We make use of these vectors in order to help align the ship in the right direction, depending on which way the landing point is. 
 
 
-\begin{multline}
-f = \twopartdef{-\sum{arccos(\bm{dl}\cdot\bm{d}/\norm{\bm{dl}}\norm{\bm{d}}})}{\bm{np_x} < \bm{s_x}}{-\sum{arccos(\bm{dr}\cdot\bm{d}/\norm{\bm{dr}}\norm{\bm{d}}})} {otherwise}\\
-l = -\sum{arccos(\bm{du}\cdot\bm{d}/\norm{\bm{du}}\norm{\bm{d}}}) - \abs{\bm {v_y} - V_{y}^{max}} \\
-h = \twopartdef{ \abs{-(\norm{\bm {v}} - C) - \abs{\bm {s}_{x} - \bm {np}_{x}}} - f}{\norm{\bm {s} - \bm {np}} < D}
-{l - \abs{\bm {v_x} -C_l }  }{Otherwise}
+\begin{align}
+f &= \twopartdef{-\sum{arccos(\bm{dl}\cdot\bm{d}/\norm{\bm{dl}}\norm{\bm{d}}})}{\bm{np_x} < \bm{s_x}}{-\sum{arccos(\bm{dr}\cdot\bm{d}/\norm{\bm{dr}}\norm{\bm{d}}})} {otherwise}\notag\\
+l &= -\sum{arccos(\bm{du}\cdot\bm{d}/\norm{\bm{du}}\norm{\bm{d}}}) - \abs{\bm {v_y} - V_{y}^{max}}\notag\\
+h &= \twopartdef{ \abs{-(\norm{\bm {v}} - C) - \abs{\bm {s}_{x} - \bm {np}_{x}}} - f}{\norm{\bm {s} - \bm {np}} < D}
+{l - \abs{\bm {v_x} -C_l }  }{Otherwise}\notag\\
+h&\gets h + p 
 \label{eq:h1}
-\end{multline}
+\end{align}
 
-In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitude of speed, which we set to $C=30$. $D = 60$ is the distance from the landing point $np$ where this heuristic takes precedence.  Intuitively, the upper part of the heuristic $h$ tries to get the ship above the landing point as fast as possible while maintaining a certain speed. The second part of the heuristic tries to minimise velocity on the $x$ axis (as the ship tries to land with maximum speed $C_l = 2$), maintain a minimum landing speed on the $y$ axis and get a certain angle (the summation term $f$) as close to vector $du$, i.e. help the ship stay upright through the duration of the rollout.  It's worth noting the main reason why we use a heuristic of this kind, one that includes not only the final state, but makes use of the path of the state as well, is that there is not enough information to discern states if one takes into account ship direction only; without incorporating the angular velocity. The ship might be spinning madly, but the end of the rollout might find it in the correct direction. 
+In the above Equation \ref{eq:h1} the constant C denotes the maximum magnitude of speed, which we set to $C=30$. $D = 60$ is the distance from the landing point $np$ where this heuristic takes precedence.  Intuitively, the upper part of the heuristic $h$ tries to get the ship above the landing point as fast as possible while maintaining a certain speed. The second part of the heuristic tries to minimise velocity on the $x$ axis (as the ship tries to land with maximum speed $C_l = 2$), maintain a minimum landing speed on the $y$ axis and get a certain angle (the summation term $f$) as close to vector $du$, i.e. help the ship stay upright through the duration of the rollout.  It's worth noting the main reason why we use a heuristic of this kind, one that includes not only the final state, but makes use of the path of the state as well, is that there is not enough information to discern states if one takes into account ship direction only; without incorporating the angular velocity,  the ship might be spinning madly, but the end of the rollout might find it in the correct direction. Finally notice that the heuristic $h$ gets the value $p=10000$ if the ship has crashed at any point during the rollout.   
 
 \section{Results} \label{sec:Experiments}
 We present the results of our experiments below.
