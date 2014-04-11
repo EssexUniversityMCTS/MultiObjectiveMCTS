@@ -52,7 +52,7 @@
 
 
 \begin{abstract}
-It is often the case that games have continuous dynamics and allow for continuous actions, possibly with with some added noise. For larger games with complicated dynamics, having agents learn offline behaviours in such a setting is a daunting task. On the other hand, provided a forward model is available, one might try to spread the cost of search/learning in a rolling horizon fashion (e.g. as in Monte Carlo Tree Search). In this paper we compare T-HOLOP (Truncated Hierarchical Open Loop Planning), an open loop planning algorithm at least partially inspired by MCTS, with a version of evolutionary planning that uses CMA-ES (which we call EVO-P) in two planning benchmark problems (Cart Balancing and the Double Integrator) and in Lunar Lander, a classic arcade game. We show that EVO-P outperforms T-HOLOP in the classic benchmarks, while T-HOLOP is unable to find a solution using the same heuristics. We conclude that off-the-shelf evolutionary algorithms can be used successfully in a rolling horizon setting, and that a different type of heuristics might be needed under different optimisation algorithms. 
+It is often the case that games have continuous dynamics and allow for continuous actions, possibly with with some added noise. For larger games with complicated dynamics, having agents learn offline behaviours in such a setting is a daunting task. On the other hand, provided a generative model is available, one might try to spread the cost of search/learning in a rolling horizon fashion (e.g. as in Monte Carlo Tree Search). In this paper we compare T-HOLOP (Truncated Hierarchical Open Loop Planning), an open loop planning algorithm at least partially inspired by MCTS, with a version of evolutionary planning that uses CMA-ES (which we call EVO-P) in two planning benchmark problems (Inverted Pendulum and the Double Integrator) and in Lunar Lander, a classic arcade game. We show that EVO-P outperforms T-HOLOP in the classic benchmarks, while T-HOLOP is unable to find a solution using the same heuristics. We conclude that off-the-shelf evolutionary algorithms can be used successfully in a rolling horizon setting, and that a different type of heuristics might be needed under different optimisation algorithms. 
 
 \end{abstract}
 
@@ -166,7 +166,7 @@ Another approach one can take is to assume that the agent has a copy of the MDP 
 
 A generative model is nothing more than a simulator of future events. This is less of a requirement than knowing the full model (which entails knowing the full function $T$), but still requires the agent to have some knowledge of the world. This category of algorithms, which are broadly termed ``Rolling Horizon'', has the following steps. From the current state, a number of simulations of possible futures is run by executing a set of action sequences (all of this in the ``mind'' of the agent). The simulations last for a certain number of steps (hence the ``rolling horizon'') or continue until an end state is encountered (i.e. when the MDP has ``absorbing'' states that cannot be acted from).
 
-Once a satisfactory plan/policy has been estimated (or the agent runs out of time, iterations etc. ) it proceeds by executing the first action of the plan, thus moving to the next state. Once there, the agent performs the same sequence of ``mental'' actions, (i.e. plans and executes the first action), until some predefined stopping condition.  In this paper we will concern ourselves \textit{only} with this method of planning. What changes from method to method is how the plan is formed. The main version of the algorithm used can be seen in Algorithm \ref{algo:ooop}.
+Once a satisfactory plan/policy has been estimated (or the agent runs out of time, iterations etc.) it proceeds by executing the first action of the plan, thus moving to the next state. Once there, the agent performs the same sequence of ``mental'' actions, (i.e. plans and executes the first action), until some predefined stopping condition.  In this paper we will concern ourselves \textit{only} with this method of planning. What changes from method to method is how the plan is formed. The main version of the algorithm used can be seen in Algorithm \ref{algo:ooop}.
 
 In standard UCT, a procedure similar to temporal difference learning is followed (or, more closely, Monte Carlo methods), where one learns the value of each state. An agent then forms a policy by choosing a value greedily. In our case, because our state space has continuous states and actions, this is impossible without the use of a function approximator (or an infinite discretization of space), which is not attempted here. What is attempted though is to learn the policy function directly without reference to state, while planning continuously from the current state. So while the agent forms open-loop plans at each clock tick, in reality it is executing a closed-loop policy. While the strategy is not provably optimal, it can work well in practice~\cite{weinstein2012bandit}. This will be seen by our experimental results (see Section \ref{sec:Experiments}). 
 
@@ -194,7 +194,7 @@ In standard UCT, a procedure similar to temporal difference learning is followed
 
 
 \section{Methodology} \label{sec:methodology}
-Our methodology is simple, yet efficient. We test T-HOLOP and EVO-P in two simple benchmark problems (see below for more detail) and n Lunar Lander, a classic arcade game. EVO-P is simply CMA-ES used in a rolling horizon setting, while T-HOLOP is T-HOO used in the same manner.  
+Our methodology is simple, yet efficient. We test T-HOLOP and EVO-P in two simple benchmark problems (see below for more detail) and in Lunar Lander, a classic arcade game. EVO-P is simply CMA-ES used in a rolling horizon setting, while T-HOLOP is T-HOO used in the same manner.  
 
 
 \subsection{Simple Planning Benchmarking Problems}
@@ -338,7 +338,7 @@ As the landscape is stored as a series of line segments, interpolation must be u
                 \label{fig:IP-N-100}
         \end{subfigure}%
 
-         \caption{Performance of both T-HOLOP and EVO-P in the Inverted Pendulum benchmark (error bars for the 95th percentile). Higher scores are better}
+         \caption{Performance of both T-HOLOP and EVO-P in the Inverted Pendulum benchmark (error bars for the 95th percentile). Higher scores are better.}
          \label{fig:IP-all}
 
 \end{figure*}
@@ -365,7 +365,7 @@ As the landscape is stored as a series of line segments, interpolation must be u
 
   \label{fig:DI-all}
 
-       \caption{Performance of all algorithms in the Double Integrator benchmark (error bars for the 95th percentile). Higher scores are better}
+       \caption{Performance of all algorithms in the Double Integrator benchmark (error bars for the 95th percentile). Higher scores are better.}
 
 
 \end{figure*}
@@ -466,13 +466,13 @@ We present the results of our experiments below.
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map2.pdf}
-                \caption{Map A,  where the ship is lower then the pad}
+                \caption{Map A,  where the ship is lower then the pad.}
                 \label{fig:map2}
         \end{subfigure}  
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map1-easy.pdf}
-                \caption{Map B, an easy map where only the first heuristic is used}
+                \caption{Map B, an easy map where only the first heuristic is used.}
                 \label{fig:map1-easy}
 
         \end{subfigure}
@@ -480,17 +480,17 @@ We present the results of our experiments below.
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map1-tall.pdf}
-                \caption{Map C, where the ship is close to the top of the screen}
+                \caption{Map C, where the ship is close to the top of the screen.}
                 \label{fig:map1-tall}\end{subfigure}\begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map1-wall.pdf}
-                \caption{Map D, where the ship is behind a wall }
+                \caption{Map D, where the ship is behind a wall.}
                 \label{fig:map-wall}
 
         \end{subfigure}
        
 
-         \caption{The four different maps used in our experiments. The maps capture different position/properties}
+         \caption{The four different maps used in our experiments. The maps capture different position/properties.}
          \label{fig:maps}
 
 \end{figure*}
@@ -531,7 +531,7 @@ Results for the variable noise levels $l$ (Figures \ref{fig:IP-N-50}, \ref{fig:I
 \hline
 \end{tabular}
 \label{tb:results}
-\caption{EVO-P results for different Lunar Lander maps}
+\caption{EVO-P results for different Lunar Lander maps.}
 \end{table}
 
 
@@ -546,7 +546,7 @@ We showed that it is doable to use evolution in a rolling horizon setting, makin
  
 % Use \section* for the acknowledgments
 \section*{Acknowledgements}
-This work was supported by EPSRC grant EP/H048588/1 entitled:``UCT for Games and Beyond'' and an EPSRC Ph.D studentship. 
+This work was supported by EPSRC grant EP/H048588/1 entitled: ``UCT for Games and Beyond'' and an EPSRC Ph.D studentship. 
 
 
 
