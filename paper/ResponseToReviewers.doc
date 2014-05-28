@@ -1,0 +1,107 @@
+﻿Dear Editor in Chief,
+Please find below our response to the associate editor and the reviewers.
+We have addressed all comments in a thorough manner, and we take this opportunity to thank the reviewers and the associate editor for their thoughtful remarks. We have also made some additional minor corrections and modifications, in order to improve the quality of the paper. All our modifications can be seen in the submitted PDF file (Perez_MOMCTS_diff.pdf), which clearly highlights the differences between the previous version and this submission.
+The revised paper is a significant improvement over the last version. We hope the reviewers will agree with our belief that the manuscript is now acceptable for publication. 
+
+Yours sincerely,
+Diego Perez, 
+Corresponding Author.
+
+
+Response to Associate Editor and to Reviewers
+Note: we have put our responses in red to mark them out clearly. We have left the reviewers' comments exactly as they were. We use red bold face for our response within this document, and red italic face when quoting snippets of text from the paper.
+Associate Editor
+Comments to the Author
+While I do not demand that you perform additional experiments with another MOEA, I think it is important that you clarify the limitations of NSGA-II and avoid giving the impression that it is the state of the art or that all MOEAs have the same characteristics as NSGA-II. It's fair to say that NSGA-II is the most well-known MOEA, but for several types of problems it has now been surpassed by other algorithms, as noted by reviewer 3.
+
+TO DO.
+"Due to the very large branching factor of Go, this game is considered the drosophila of Game AI"
+This is in, my mind, a somewhat misleading metaphor. The main advantage of the drosophila is that it is easy to study and affect all the myriad phenotypical traits of the fly; Go, on the other hand, has almost no variations at all (only the same game played on different board sizes).
+TO DO.
+
+Reviewer: 1
+Comments to the Author
+1. Table's caption should be on the topic of the table.
+TO DO. (?)
+2. The authors should make an experiment to campare with other approaches.
+Following the associate editor comments, no additional experiments have been performed.
+3. The authors should give their motivation and contribution in the revised version.
+Regarding motivation, we believe the first three paragraphs of the paper define it properly. Regarding the contribution, we have added the following sentence at the end of the sixth paragraph (section I), in order to make it clearer:
+Therefore, the main contribution of this paper is the proposal of a multi-objective version of MCTS that is applicable to real-time domains and is able to provide different solutions across the multi-objective spectrum.
+4. The authors should cite much newer related journal papers.
+TO DO. (Sanaz / recent relevant MO papers?)
+5. The authors should mention what is the difference between the proposed method and the published multi-objective optimization.
+We believe this reviewer refers to Wang's approach. Both approaches (especially ours) are described in depth in the paper. These two approaches are quite different, apart from using Pareto fronts at some point during the algorithm. We believe that stating that our algorithm is “influenced by Wang's approach” and that “some modifications are needed” may be a bit misleading, so we have rewritten this paragraph in Section IV, just before explaining our technique in detail:
+As mentioned before, one of the objectives of this paper is to propose an MO-MCTS algorithm that is suitable for real-time domains. Therefore, an approach different from Wang's is needed, in order to overcome the high computational cost involved in their approach.
+
+
+Reviewer: 2
+Comments to the Author
+
+Abstract: the layout overflows.
+We believe that this is something that only happens in the PDF version from manuscript central (as well as some other font changes in the title and the authors' lines). We have checked that the new PDF  submitted does not have this problem.
+Section II:
+"MCTS uses Upper Conﬁdence Bound (UCB1, see Equation 1) as a Tree Policy" UCB1 is a popular algorithm, but not the only one used in MCTS. Hence this sentence should be rephrased "Our implementation of MCTS uses Upper Conﬁdence Bound... This tree policy was proposed in: L. Kocsis and C. Szepesvari. 2006 (Bandit based monte-carlo planning). 
+Done. This paragraph now reads as follows:
+[…] it chooses between taking an action that leads to states with the best outcome found so far, and performing a move to go to less explored game states, respectively. In order to achieve this, Kocsis and Szepesvari (Kocsis, 2006) applied Upper Confidence Bound (UCB1, see Equation 1) as a Tree Policy. 
+The formalisation of MCTS that is used in this paper was proposed in Chaslot et al 2007 (Progressive strategies for Monte Carlo Tree search), as well as Chaslot 2010 (Monte Carlo Tree Search), one of which could also be cited
+Done. An inaccurate reference was given at the fourth paragraph of section II. We have changed it to cite Chaslot 2007, “Progressive Strategies for Monte-Carlo Tree Search“.
+"as it balances both facets of the search when the rewards are normalized between 0 and 1" This balance is application dependant. In Go for instance, coefficients much lower are used. Hence, the sentence should be reformulated to make clear that this coefficient is application dependant. 
+Done. We have stressed that sqrt(2) is a typical value for single-player games, and added a note about its dependence to the game employed. This sentence reads as follows now:
+[…] A commonly used value for single-player games is sqrt(2), as it balances both facets of the search when the rewards are normalized between 0 and 1. The value of C is application dependant, and it may vary from game to game.
+"A clear example" -> 'Clear' should be omited.
+Done.
+You mention SameGame for monte carlo tree search with a reference from 2010. Monte Carlo Tree Search was used in the game of SameGame by Schadd et al 2008 "Single-Player Monte-Carlo Tree Search", please also mention this reference.
+Done. We are now citing Schadd et al 2008 instead.
+Similarly, MCTS was applied to Morpion Solitaire first in "Reflexive Monte-Carlo Search", T. Cazenave. CGW 2007, pp. 165-173", please include this reference too. 
+Done.
+Citation 31: what are the authors?
+The dash line indicates that the authors are the same as the ones from the previous reference. We believe this is an accepted reference format.
+Page 8, top of the page:
+"1) Macro-actions for MO-PTSP 
+2) Heuristics for MO-PTSP:"
+Should there be a title before? Those two sections seems to come out of the blue. 
+Done. These are subsubsections from V.B. Similar sections were also included in V.A. In both cases, these subsections described heuristics applied to each game. We have reorganized the subsections of this section to make things clearer:
+V.A Deep Sea Treasure
+V.B Heuristics for DST 
+V.C Multi-objective PTSP
+V.D Heuristics for MO-PTSP
+If possible, please put Table II in the previous page, so the results shown relate with the text.
+This is not possible due to the size of table 1, that needs to be placed before (otherwise is the text that relates to table 1 the one that is misplaced). We have, however, moved figure 9 up so it appears next to the results on the DST (and before table 1, as it should, according to the text).
+
+Reviewer: 3
+Comments to the Author
+First of all, I am not too happy about the choice of the NSGA-II as comparison algorithm. It is true that many people still use it, but cannot really state that it is state-of-the-art. It may still be good for comparisons in 2 objectives, but allready in 3 objectives, it is well-known for years that other multi-objective algorithms are better (there are several newer developments, one of these that is especially near to the NSGA-II concerning implementation issues is the SMS-EMOA that is just more greedy).
+TO DO.
+
+
+Section III (the MO section) uses several simplifications, this could surely be improved. According to my knowledge, the generated front an MO-algorithm provides is usually called Pareto front approximation, especially if the real front is not known. Only the real front itself is called Pareto front.
+And if 2 solutions are not dominating each other, they are incomparable, aren't them?
+TO DO.
+
+Next, the Elitism description on page 3 says that the first front is always kept. But what if the first front gets larger than the population size? Shouldn't that be possible when the number of offspring individuals is equal to the population size? Don't we still need to remove some individuals?
+TO DO.
+In the beginning of the right col of page 5, I am not sure if the case is considered that the new node r is possibly dominating parts of the front (so that previously found non-dominated solutions would have to be cut out). Is it? Or isn't it possible that this happens?
+Yes, the algorithm contemplates this possibility. This paragraph has been modified and it now reads as follows:
+Here, if r is not dominated by the local Pareto front, it is added to the front and r is propagated to its parent. It may also happen that r dominates all or some solutions of the local front, in which case the new solution is included and the dominated solutions are removed from the Pareto front. If r is dominated by the node's Pareto front, the local Pareto front does not change and there is no need to maintain this propagation up the tree.
+Concerning the experimental part: on page 9 you use the term "experiment" as a synonym for "runs" or "repeats". That is somewhat confusing, to me an experiment is a higher level concept, and you partly use the term as such. Just repeating for statistical reasons is not really a new experiment.
+Done. Two modifications have been made. In the second paragraph of Section VI:
+100 experiments have been run for each pair --> 100 runs have been performed for each pair
+Also, in Section VI.B, fifth paragraph:
+the same number of experiments is run for --> the same number of runs is performed for 
+In table I, you imply that something is significantly better than something else in a statistical sense. How do you test that (details)?
+TO DO.
+The comparison between 3 algorithms (using U-tests) is done pairwise, right? There are means to do that differently (all at once), but as it is only 3, this may be acceptable. But your concept of a domination test is not entirely clear to me. You do a pairwise comparison between the repeats for the 2 algorithms and count how often the solution obtained by one algorithm dominate the one of the second algorithm? The description is a bit fuzzy here.
+TO DO.
+Visualization: numbers are nice, but I imagine that especially table II would make a nice figure. Probably much easier to understand.
+TO DO.
+The subsection VI/C is a bit different, it somehow appears when I was expecting some conclusions. I am not sure if it is really well placed here as it just touches on interesting extensions but does not really cover them.
+
+TO DO.
+Minor things:
+- figure 2: the picture has an embedded copyright notice. I am not sure if this is ok with the publisher, maybe it should be put into the caption? It is very hard to read anyway. 
+TO DO.
+- page 3, left col: litrature -> literature
+Done.
+- hardware named in the beginning of VI (experimentation): you really have a 230GHz server? Where can I order that? :-)
+Done. The actual value is 2.90GHz.

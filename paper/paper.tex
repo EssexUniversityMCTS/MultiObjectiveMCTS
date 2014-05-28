@@ -516,13 +516,13 @@ Multi-objective optimization has been a field of study in manufacturing, enginee
 
 At their most basic, many competitive games can be viewed as simply two or more opponents having the single objective of winning. Achieving victory is usually complex in interesting games, and successful approaches normally assign some form of value to a state, value being long term expected reward (i.e. expectation of victory). Due to a massive search space, heuristics are often used for this value function. An example is a chess heuristic that assigns different weights to each piece according to an estimated value.
 
-Multi-objective approaches can be applied to scenarios where several factors must be taken into account to achieve victory. The algorithms can balance between different objectives, in order to provide a wide range of strategies well suited to the different stages of the game being played, or to face existing opponents. Application of such approaches could be real-time strategy games, where long term planning must be carried out in order to balance aspects such as attack units, defensive structures and resource gathering. This should allow allow smart balancing of heuristics. 
+Multi-objective approaches can be applied to scenarios where several factors must be taken into account to achieve victory. The algorithms can balance between different objectives, in order to provide a wide range of strategies well suited to the different stages of the game being played, or to face existing opponents. Application of such approaches could be real-time strategy games, where long term planning must be carried out in order to balance aspects such as attack units, defensive structures and resource gathering. This should allow smart balancing of heuristics. 
 
 This paper proposes a multi-objective real-time algorithm version of Monte Carlo Tree Search (MCTS), a popular reinforcement learning approach that emerged in the last decade. The proposed algorithm is tested in two different games: a real-time version of the Deep Sea Treasure (DST; a classical multi-objective problem), and the Multi-Objective Physical Travelling Salesman Problem (MO-PTSP). The algorithm is also compared with another two approaches: a single-objective MCTS (that uses a weighted sum of features to value the state) and a rolling horizon Non-dominated Sorting Evolutionary Algorithm II (NSGA-II). This paper extends and formalizes our previous work described in~\cite{Perez2013a}.
 
 Two main goals can be identified in this paper: first, the proposed algorithm must be applicable to real-time domains (those where the next move to make must be decided within a small time budget) and it should obtain better or at least the same performance than the other state-of-the-art algorithms. It is important to highlight that all three algorithms tested employ the same heuristic functions to evaluate the features of a given game state. Thus, the focus of this research is set on how the algorithm explores the search space, instead of providing the best possible solution to each given problem. 
 
-Secondly, the algorithm must be able to provide solutions across the multi-objective spectrum: by parametrizing the algorithm, it must be possible to prioritize one objective over the others and therefore converge to solutions according to these preferences. 
+Secondly, the algorithm must be able to provide solutions across the multi-objective spectrum: by parametrizing the algorithm, it must be possible to prioritize one objective over the others and therefore converge to solutions according to these preferences. Therefore, the main contribution of this paper is the proposal of a multi-objective version of MCTS that is applicable to real-time domains and is able to provide different solutions across the multi-objective spectrum.
 
 The paper is structured as follows. First, Sections~\ref{sec:mcts} and~\ref{sec:moo} provide the necessary background for MCTS and multi-objective optimization, respectively. The algorithm proposed in this research is described in detail in Section~\ref{sec:momcts}. Then, Section~\ref{sec:bench} defines the games used to test the algorithms, with the results discussed in Section~\ref{sec:exp}. Finally, some conclusions and possible extensions of this work are drawn in Section~\ref{sec:conc}.
 
@@ -535,7 +535,7 @@ MCTS is considered to be an \textit{anytime} algorithm, as it is able to provide
 
 MCTS is an algorithm that builds a tree in memory. Each node in the tree maintains statistics that indicate how often a move is played from a given state ($N(s,a)$), how many times each move is played from there ($N(s)$) and the average reward ($Q(s,a)$) obtained after applying move $a$ in state $s$. The tree is built iteratively by simulating actions in the game, making move choices based on statistics stored in the nodes. 
 
-Each iteration of MCTS can be divided into several steps~\cite{Gelly2006}: \textit{Tree selection}, \textit{Expansion}, \textit{Monte Carlo simulation} and \textit{Back-propagation} (all summarized in Figure~\ref{fig:mcts}). When the algorithm starts, the tree is formed only by the root node, which holds the current state of the game. During the \textit{selection} step, the tree is navigated from the root until a maximum depth or the end of the game has been reached. 
+Each iteration of MCTS can be divided into several steps, as introduced by G. Chaslot et al.~\cite{Chaslot2007}: \textit{Tree selection}, \textit{Expansion}, \textit{Monte Carlo simulation} and \textit{Back-propagation} (all summarized in Figure~\ref{fig:mcts}). When the algorithm starts, the tree is formed only by the root node, which holds the current state of the game. During the \textit{selection} step, the tree is navigated from the root until a maximum depth or the end of the game has been reached. 
 
 \begin{figure} [!t]
 	\begin{center}
@@ -545,22 +545,22 @@ Each iteration of MCTS can be divided into several steps~\cite{Gelly2006}: \text
 	\end{center}
 \end{figure}
 
-In every one of these action decisions, MCTS balances between exploitation and exploration. In other words, it chooses between taking an action that leads to states with the best outcome found so far, and performing a move to go to less explored game states, respectively. In order to achieve this, MCTS uses Upper Confidence Bound (UCB1, see Equation~\ref{eq:ucb1}) as a \textit{Tree Policy}. 
+In every one of these action decisions, MCTS balances between exploitation and exploration. In other words, it chooses between taking an action that leads to states with the best outcome found so far, and performing a move to go to less explored game states, respectively. In order to achieve this, Kocsis and Szepesv\'{a}ri~\cite{kocsis2006bandit} applied Upper Confidence Bound (UCB1, see Equation~\ref{eq:ucb1}) as a \textit{Tree Policy}. 
 
 \begin{equation}	\label{eq:ucb1}
 a^* = \argmax_{a \in A(s)} \left\{Q(s,a) + C \sqrt{\frac{ \ln N(s) }{ N(s,a) }}\right\}
 \end{equation}
 
-The balance between exploration and exploitation can be tempered by modifying $C$. Higher values of $C$ give added weight to the second term of the UCB1 Equation~\ref{eq:ucb1}, giving preference to those actions that have been explored less, at the expense of taking actions with the highest average reward $Q(s,a)$. A commonly used value is $\sqrt{2}$, as it balances both facets of the search when the rewards are normalized between $0$ and $1$. It is worth noting that MCTS, when combined with UCB1, reaches asymptotically logarithmic regret on each node of the tree~\cite{coquelin2007bandit}. 
+The balance between exploration and exploitation can be tempered by modifying $C$. Higher values of $C$ give added weight to the second term of the UCB1 Equation~\ref{eq:ucb1}, giving preference to those actions that have been explored less, at the expense of taking actions with the highest average reward $Q(s,a)$. A commonly used value for single-player games is $\sqrt{2}$, as it balances both facets of the search when the rewards are normalized between $0$ and $1$. The value of $C$ is application dependant, and it may vary from game to game. It is worth noting that MCTS, when combined with UCB1, reaches asymptotically logarithmic regret on each node of the tree~\cite{coquelin2007bandit}. 
 
 If, during the \textit{tree selection} phase, a node has fewer children than the available number of actions from a given position, a new node is added as a child of the current one (\textit{expansion} phase) and the \textit{simulation} step starts. At this point, MCTS executes a Monte Carlo simulation (or roll-out; \textit{default policy}) from the expanded node. This is performed by choosing random (either uniformly random, or biased) actions until the game end or a pre-defined depth is reached, where the state of the game is evaluated. 
 
 Finally, during the \textit{back-propagation} step, the statistics $N(s)$, $N(s,a)$ and $Q(s,a)$ are updated for each node visited, using the reward obtained in the evaluation of the state. These steps are executed in a loop until a termination criteria is met (such as number of iterations).
 
 
-MCTS has been employed extensively in real-time games. A clear example of this is the popular real-time game \textit{Ms. PacMan}. The objective of this game is to control Ms. PacMan to clear the maze by eating all pills, without being captured by the ghosts. An important feature of this game is that it is \textit{open-ended}, as an end game situation is, most of the time, far ahead in the future and can not be devised by the algorithm during its iterations. The consequence of this is that MCTS, in its vanilla form, it is not able to know if a given ply will lead to a win or a loss in the end game state. Robles et al.~\cite{Robles2009} solved this problem by including hand-coded heuristics that guided search towards more promising portions of the search space. This approach enabled the addition of heuristics knowledge to MCTS, as in~\cite{Samothrakis, Ikehata2010}.
+MCTS has been employed extensively in real-time games. An example of this is the popular real-time game \textit{Ms. PacMan}. The objective of this game is to control Ms. PacMan to clear the maze by eating all pills, without being captured by the ghosts. An important feature of this game is that it is \textit{open-ended}, as an end game situation is, most of the time, far ahead in the future and can not be devised by the algorithm during its iterations. The consequence of this is that MCTS, in its vanilla form, it is not able to know if a given ply will lead to a win or a loss in the end game state. Robles et al.~\cite{Robles2009} solved this problem by including hand-coded heuristics that guided search towards more promising portions of the search space. This approach enabled the addition of heuristics knowledge to MCTS, as in~\cite{Samothrakis, Ikehata2010}.
 
-MCTS has also been applied to single-player games, like SameGame~\cite{Matsumoto2010}, where the player's goal is to destroy contiguous tiles of the same colour, distributed in a rectangular grid. Another use of MCTS is in the popular puzzle Morpion Solitaire~\cite{Edelkamp2010}, a connection game where the goal is to link nodes of a graph with straight lines that must contain at least five vertices. Finally, the PTSP has also been addressed by MCTS, both in the single-objective~\cite{Perez2013, Powley2012} and the multi-objective versions~\cite{Powley2013}. These papers describe the entries that won both editions of the PTSP Competition.
+MCTS has also been applied to single-player games, like SameGame~\cite{Schadd2008}, where the player's goal is to destroy contiguous tiles of the same colour, distributed in a rectangular grid. Another use of MCTS is in the popular puzzle Morpion Solitaire~\cite{Cazenave2007}, a connection game where the goal is to link nodes of a graph with straight lines that must contain at least five vertices. Finally, the PTSP has also been addressed by MCTS, both in the single-objective~\cite{Perez2013, Powley2012} and the multi-objective versions~\cite{Powley2013}. These papers describe the entries that won both editions of the PTSP Competition.
 
 It is worthwhile mentioning that in most cases found in the literature, MCTS techniques have been used with some kind of heuristic that guides the Monte Carlo simulations or the tree selection policy. In the algorithm proposed in this paper, simulations are purely random, as the objective is to compare the search abilities of the different algorithms. The intention is therefore to keep the heuristics to a minimum, and the existing pieces of domain knowledge are shared by all the algorithms presented (as in the case of the score function for MO-PTSP, described later).
 
@@ -707,7 +707,7 @@ The next step is to define the value for each state and action pair, $V(s,a)$, a
  
 The proposed algorithm was employed successfully in two domains: the DST and the Grid Scheduling problem. In both cases, the results matched the state-of-the-art, albeit at the expense of a high computational cost.
 
-As mentioned before, the objective of this paper is to propose an MO-MCTS algorithm that is suitable for real-time domains. Although the work discussed here is influenced by Wang's approach, some modifications need to be made in order to overcome the high computational cost involved in their approach.
+As mentioned before, one of the objectives of this paper is to propose an MO-MCTS algorithm that is suitable for real-time domains. Therefore, an approach different from Wang's is needed, in order to overcome the high computational cost involved in their approach.
 
 In the algorithm proposed in this paper, the reward vector $\overline{r}$ that was obtained at the end of a Monte Carlo simulation is back-propagated through the nodes visited in the last iteration until the root is reached. In the vanilla algorithm, each node would use this vector $\overline{r}$ to update its own accumulated reward vector $\overline{R}$. In the algorithm proposed here, each node in the MO-MCTS algorithm also keeps a local Pareto front ($P$), updated at each iteration with the reward vector $\overline{r}$ obtained at the end of the simulation. Algorithm~\ref{alg:updPareto} describes how the node statistics are updated in MO-MCTS.
 
@@ -733,7 +733,7 @@ In the algorithm proposed in this paper, the reward vector $\overline{r}$ that w
 \label{alg:updPareto}
 \end{algorithm}
 
-Here, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. If $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front does not change and there is no need to maintain this propagation up the tree. Three observations can be made about the mechanism described here:
+Here, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. It may also happen that $\overline{r}$ dominates all or some solutions of the local front, in which case the new solution is included and the dominated solutions are removed from the Pareto front. If $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front does not change and there is no need to maintain this propagation up the tree. Three observations can be made about the mechanism described here:
 
 \begin{itemize}
 \item Each node in the tree has an estimate of the quality of the solutions reachable from there, both as an average (as in the baseline MCTS) and as the best case scenario (by keeping the non-dominated front $P$).
@@ -795,7 +795,7 @@ The optimal Pareto front of the DST is shown in Figure~\ref{fig:optDst}. There a
 
 Section~\ref{sec:moo} introduced the problems of linear scalarization approaches when facing non-convex optimal Pareto fronts. The concave shape of the DST's optimal front means that those approximations converge to the non dominated solutions located at the edges of the Pareto front: $(81,124)$ and $(99,1)$. Note that this happens independently from the weights chosen for the linear approximation: some solutions of the front just can't be reached with these approaches. Thus, successful approaches should be able to find all elements of the optimal Pareto front and converge to any of the non dominated solutions.
 
-\subsubsection{Transposition Tables in DST} \label{ssec:transTables}
+\subsection{Heuristics for DST} \label{ssec:heurDST}
 
 The DST is a problem especially suited for the use of Transposition Tables (TT)~\cite{Childs2008} within MCTS. TT is a technique used to optimize tree search-based algorithms when two or more states can be found at different locations in the tree. It consists of sharing information between these equivalent states in a centralized manner, in order to avoid managing these positions as completely different states. Figure~\ref{fig:dstTable} shows an example of this situation in the DST.
 
@@ -810,8 +810,6 @@ The DST is a problem especially suited for the use of Transposition Tables (TT)~
 In this example, the submarine starts in the initial position ($P1$, root of the tree) and makes a sequence of moves that places it in $P2$. From this location, two optimal trajectories to move to $P3$ would be route \textit{a} and \textit{b}. In a tree that does not use TT, there would be two different nodes to represent $P3$, although the location and number of moves performed up to this point are the same (thus, the states are equivalent). It is worthwhile highlighting that the coordinates of the vessel are not enough to identify two equivalent states, the number of moves is also needed: imagine a third route from $P2$ to $P3$ with the moves: \textit{Up}, \textit{Right}, \textit{Right}, \textit{Down}, \textit{Down}. As the submarine performs $5$ moves, the states are not the same, and the node where the ship is in $P3$ now would be two levels deeper in the tree.
 
 TT tables are implemented in the MCTS algorithms tested in this benchmark by using hash tables that store a \textit{representative} node for each pair $(position, moves)$ found.  The key of the hash map then needs to be obtained from three values: position coordinates $x$ and $y$ of the ship in the board, and number of moves, indicated by the depth of the node in the tree. Hence, transpositions can only happen at the same depth within the tree, a feature that has been successfully tried before in the literature~\cite{Kozelek2009}.
-
-\subsubsection{Heuristics for DST} \label{sssec:heurDST}
 
 As DST has two different objectives, number of moves and value of the treasure, the quality of a state can be assessed by two rewards, $\rho_p$ and $\rho_v$, for each objective respectively. $\rho_p$ is adjusted to be maximized using the maximum number of moves in the game, while $\rho_v$ is simply the value of the cell that holds the treasure. Therefore, the reward vector to maximize is defined as $\overline{r} = \{ \rho_p, \rho_v\}$. Equation~\ref{eq:dst} summarizes these rewards:
 
@@ -845,7 +843,7 @@ Figure~\ref{fig:sampleMap} shows an example of an MO-PTSP map, as drawn by the f
 	\end{center}
 \end{figure}
 
-\subsubsection{Macro-actions for MO-PTSP} \label{sssec:macro}
+\subsection{Heuristics for MO-PTSP} \label{sssec:heurMOPTSP}
 
 All the algorithms tested in the MO-PTSP in this research employ macro-actions, a concept that can be used for coarsening the action space by applying the action chosen by the control algorithm in several consecutive cycles, instead of just in the next one. 
 
@@ -854,8 +852,6 @@ Previous research in PTSP~\cite{Perez2013, Perez2012} suggests that using macro-
 A macro-action of length $L$ is defined as a repetition of a given action during $L$ consecutive time steps. The main advantage of macro-actions is that the control algorithms can see further in the future, and then reduce the implication of open-endedness in real-time games (see Section~\ref{sec:mcts}). As this reduces the search space significantly, a better algorithm performance is allowed. A consequence of using macro-actions is also that the algorithm can employ $L$ consecutive steps to plan the next move (the next macro-action) to make. Therefore, instead of spending $40$ milliseconds, as in MO-PTSP, to define the next action, the algorithm can employ $40 \times L$ milliseconds for this task, and hence perform a more extensive search. 
 
 In MO-PTSP, the macro-action size is $L = 15$, a value that has shown its proficiency before in PTSP. For more information about macro-actions and their application to real-time navigation problems such as the PTSP, the reader is referred to~\cite{Perez2013}.
-
-\subsubsection{Heuristics for MO-PTSP} \label{sssec:heurMOPTSP}
 
 In order to evaluate a game state in MO-PTSP, three different measures or rewards are taken, $\rho_t, \rho_f, \rho_d$, one for each one of the objectives: time, fuel and damage, respectively. All these rewards are defined so they have to be maximized. The first reward uses a measure of distance for the time objective, as indicated in Equation~\ref{eq:dist}: 
 
@@ -900,15 +896,10 @@ The final reward vector to be maximized is therefore $\overline{r} = \{ \rho_t, 
 
 The experiments performed in this research compare three different algorithms in the two benchmarks presented in Section~\ref{sec:bench}: a single objective MCTS (referred to here simply as \textit{MCTS}), the Multi-Objective MCTS (\textit{MO-MCTS}) and a rolling horizon version of the NSGA-II algorithm described in Section~\ref{sec:moo} (\textit{NSGA-II}). This NSGA-II version evolves a population where the individuals are sequences of actions (macro-actions in the MO-PTSP case), obtaining the fitness from the state of the game after applying the sequence. The population sizes, determined empirically, were set to $20$ and $50$ individuals for DST and MO-PTSP respectively. The value of $C$ in Equation~\ref{eq:ucb1} and~\ref{eq:moucb} is set to $\sqrt{2}$.
 
-All the algorithms have a limited number of evaluations before providing an action to perform. In order for these games to be real-time, the time budget allowed is close to $40$ milliseconds. With the objective of avoiding congestion peaks at the machine where the experiments are run, the average number of evaluations possible in $40$ ms is calculated and employed in the tests. This leads to $4500$ evaluations in the DST, and $500$ evaluations for MO-PTSP, using the same server where the PTSP and MO-PTSP competitions were run\footnote{Intel Core i5, 230GHz, 4GB of RAM.}.
+All the algorithms have a limited number of evaluations before providing an action to perform. In order for these games to be real-time, the time budget allowed is close to $40$ milliseconds. With the objective of avoiding congestion peaks at the machine where the experiments are run, the average number of evaluations possible in $40$ ms is calculated and employed in the tests. This leads to $4500$ evaluations in the DST, and $500$ evaluations for MO-PTSP, using the same server where the PTSP and MO-PTSP competitions were run\footnote{Intel Core i5, 2.90GHz, 4GB of RAM.}.
 
 
 \subsection{Results in DST} \label{ssec:resDST}
-
-As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the players. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
-
-The weight vector for DST has two dimensions. This vector is here referred to as $W = (w_p, w_v)$, where $w_p$ weights moves; and $w_v$ weights the treasure value ($w_v = 1 - w_p$). $w_p$ takes values between $0$ and $1$, with a precision of $0.01$, and $100$ experiments have been run for each pair $(w_p, w_v)$. Hence, the game has been played a total of $10000$ times, for each algorithm.
-
 
 \begin{figure*}[!t]
 	\centering
@@ -916,6 +907,12 @@ The weight vector for DST has two dimensions. This vector is here referred to as
 	\caption{Results in DST: percentages of each optima found during $100$ games played with different weight vectors. Scalarization approaches converge to the edges of the optimal front, whereas Pareto approaches are able to find all optimal solutions. The proposed algorithm, MO-MCTS, finds these solutions significantly more often than NSGA-II.}
 	\label{fig:extCase}
 \end{figure*}
+
+As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the players. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
+
+The weight vector for DST has two dimensions. This vector is here referred to as $W = (w_p, w_v)$, where $w_p$ weights moves; and $w_v$ weights the treasure value ($w_v = 1 - w_p$). $w_p$ takes values between $0$ and $1$, with a precision of $0.01$, and $100$ runs have been performed for each pair $(w_p, w_v)$. Hence, the game has been played a total of $10000$ times, for each algorithm.
+
+
 
 Figure~\ref{fig:extCase} shows the results obtained after these experiments were performed. The first point to note is that MCTS only converges (mostly) to the two optimal points located at the edges of the optimal Pareto front (\textit{OPT-1} and \textit{OPT-10}, see also Figure~\ref{fig:optDst}). This is an expected result, as K. Deb. suggested in~\cite{Deb2001} and was also discussed before in Section~\ref{sec:moo}: linear scalarization approaches only converge to the edges of the optimal Pareto front if its shape is non-convex.
 
@@ -943,7 +940,7 @@ The first point to check is if the different weight vectors affect the solutions
  \multirow{3}{*}{\textbf{Map 1}} & $(0.33,0.33,0.33)$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
  & $(0.1,0.3,0.6)$ & $1657 \pm 8$ & $130 \pm 2$ & \bm{$773 \pm 11$}\\
  & $(0.1,0.6,0.3)$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$\\
- & $(0.6,0.1,0.3)$ & \bm{$1649 \pm 8$} & $132 \pm 2$ & $833 \pm 13$\\
+ & $(0.6,0.1,0.3)$ & $1649 \pm 8$ & $132 \pm 2$ & $833 \pm 13$\\
 \hline
  \multirow{3}{*}{\textbf{Map 2}} & $(0.33,0.33,0.33)$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$\\
  & $(0.1,0.3,0.6)$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$}\\
@@ -963,12 +960,12 @@ The first point to check is if the different weight vectors affect the solutions
  \multirow{3}{*}{\textbf{Map 5}} & $(0.33,0.33,0.33)$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$\\
  & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$}\\
  & $(0.1,0.6,0.3)$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$\\
- & $(0.6,0.1,0.3)$ & \bm{$1399 \pm 9$} & $469 \pm 4$ & $547 \pm 3$\\
+ & $(0.6,0.1,0.3)$ & $1399 \pm 9$ & $469 \pm 4$ & $547 \pm 3$\\
 \hline
  \multirow{3}{*}{\textbf{Map 6}} & $(0.33,0.33,0.33)$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$\\
  & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$}\\
  & $(0.1,0.6,0.3)$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$\\
- & $(0.6,0.1,0.3)$ & \bm{$1571 \pm 7$} & $559 \pm 5$ & $294 \pm 4$\\
+ & $(0.6,0.1,0.3)$ & $1571 \pm 7$ & $559 \pm 5$ & $294 \pm 4$\\
 \hline
  \multirow{3}{*}{\textbf{Map 7}} & $(0.33,0.33,0.33)$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$\\
  & $(0.1,0.3,0.6)$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$}\\
@@ -998,7 +995,7 @@ The first point to check is if the different weight vectors affect the solutions
 
 Some exceptions can be explained by analysing the specific maps: in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the smallest fuel consumption). Also, in map 10, there is no difference in the damage objective, however map 10 is a map with no obstacles to damage the ship (thus only lava lakes deal damage). This also results in this map being the one with the lowest overall damage. It can also be seen that, in those maps where time has priority, the results for this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
 
-These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of experiments is run for NSGA-II and MCTS in the $10$ maps of the benchmark.
+These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of runs is performed for NSGA-II and MCTS in the $10$ maps of the benchmark.
 
 In order to compare the several algorithms, the results are examined in pairs, in terms of dominance. The procedure is as follows: once all games on a single map have been run, the Mann-Whitney-Wilcoxon non-parametric test with $95\%$ confidence is calculated on the three objectives. If the measures on all objectives are assumed to be drawn from different distributions, their averages are compared for a dominance test (if not, then no dominance relationship can be derived from the results). If one result dominates another, then the algorithm dominates the other in that particular map. 
 
