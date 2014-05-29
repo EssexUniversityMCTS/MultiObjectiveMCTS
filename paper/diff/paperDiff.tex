@@ -617,8 +617,10 @@ In this case, it is said that these solutions are non-dominated with respect to 
 
 \begin{figure} [!t]
 	\begin{center}
-	\includegraphics[scale=0.235]{img/moopDec.png}
-	\caption{Decision and objective spaces in a \DIFdelbeginFL \DIFdelFL{MOOP }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MOP }\DIFaddendFL with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form a non-dominated set.}
+	\DIFdelbeginFL %DIFDELCMD < \includegraphics[scale=0.235]{img/moopDec.png}
+%DIFDELCMD < 	%%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[scale=0.235]{img/moopDec2.png}
+	\DIFaddendFL \caption{Decision and objective spaces in a \DIFdelbeginFL \DIFdelFL{MOOP }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{MOP }\DIFaddendFL with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form a non-dominated set. \DIFaddbeginFL \DIFaddFL{From~}\cite{Brockhoff2013}\DIFaddFL{.}\DIFaddendFL }
 	\label{fig:moop}
 	\end{center}
 \end{figure}
@@ -761,7 +763,7 @@ In the algorithm proposed in this paper, the reward vector $\overline{r}$ that w
 \label{alg:updPareto}
 \end{algorithm}
 
-Here, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. \DIFdelbegin \DIFdel{In case }\DIFdelend \DIFaddbegin \DIFadd{If }\DIFaddend $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front does not change and there is no need to \DIFdelbegin \DIFdel{keep }\DIFdelend \DIFaddbegin \DIFadd{maintain }\DIFaddend this propagation up the tree. Three observations can be made about the mechanism described here:
+Here, if $\overline{r}$ is not dominated by the local Pareto front, it is added to the front and $\overline{r}$ is propagated to its parent. \DIFdelbegin \DIFdel{In case }\DIFdelend \DIFaddbegin \DIFadd{It may also happen that $\overline{r}$ dominates all or some solutions of the local front, in which case the new solution is included and the dominated solutions are removed from the Pareto front. If }\DIFaddend $\overline{r}$ is dominated by the node's Pareto front, the local Pareto front does not change and there is no need to \DIFdelbegin \DIFdel{keep }\DIFdelend \DIFaddbegin \DIFadd{maintain }\DIFaddend this propagation up the tree. Three observations can be made about the mechanism described here:
 
 \begin{itemize}
 \item Each node in the tree has an estimate of the quality of the solutions reachable from there, both as an average (as in the baseline MCTS) and as the best case scenario (by keeping the non-dominated front $P$).
@@ -960,7 +962,7 @@ All \DIFaddbegin \DIFadd{the }\DIFaddend algorithms have a limited number of eva
 
 \DIFaddend As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the players. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
 
-The weight vector for DST has two dimensions. This vector is here referred to as $W = (w_p, w_v)$, where $w_p$ weights moves; and $w_v$ weights the treasure value ($w_v = 1 - w_p$). $w_p$ takes values between $0$ and $1$, with a precision of $0.01$, and $100$ experiments have been run for each pair $(w_p, w_v)$. Hence, the game has been played a total of $10000$ times, for each algorithm.
+The weight vector for DST has two dimensions. This vector is here referred to as $W = (w_p, w_v)$, where $w_p$ weights moves; and $w_v$ weights the treasure value ($w_v = 1 - w_p$). $w_p$ takes values between $0$ and $1$, with a precision of $0.01$, and $100$ \DIFdelbegin \DIFdel{experiments have been run }\DIFdelend \DIFaddbegin \DIFadd{runs have been performed }\DIFaddend for each pair $(w_p, w_v)$. Hence, the game has been played a total of $10000$ times, for each algorithm.
 
 
 
@@ -1003,7 +1005,8 @@ The first point to check is if the different weight vectors affect the solutions
  \multirow{3}{*}{\textbf{Map 1}} & $(0.33,0.33,0.33)$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
  & $(0.1,0.3,0.6)$ & $1657 \pm 8$ & $130 \pm 2$ & \bm{$773 \pm 11$}\\
  & $(0.1,0.6,0.3)$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$\\
- & $(0.6,0.1,0.3)$ & \bm{$1649 \pm 8$} & $132 \pm 2$ & $833 \pm 13$\\
+ & $(0.6,0.1,0.3)$ & \DIFdelbeginFL %DIFDELCMD < \bm{$1649 \pm 8$} %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$1649 \pm 8$ }\DIFaddendFL & $132 \pm 2$ & $833 \pm 13$\\
 \hline
  \multirow{3}{*}{\textbf{Map 2}} & $(0.33,0.33,0.33)$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$\\
  & $(0.1,0.3,0.6)$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$}\\
@@ -1023,12 +1026,14 @@ The first point to check is if the different weight vectors affect the solutions
  \multirow{3}{*}{\textbf{Map 5}} & $(0.33,0.33,0.33)$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$\\
  & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$}\\
  & $(0.1,0.6,0.3)$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$\\
- & $(0.6,0.1,0.3)$ & \bm{$1399 \pm 9$} & $469 \pm 4$ & $547 \pm 3$\\
+ & $(0.6,0.1,0.3)$ & \DIFdelbeginFL %DIFDELCMD < \bm{$1399 \pm 9$} %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$1399 \pm 9$ }\DIFaddendFL & $469 \pm 4$ & $547 \pm 3$\\
 \hline
  \multirow{3}{*}{\textbf{Map 6}} & $(0.33,0.33,0.33)$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$\\
  & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$}\\
  & $(0.1,0.6,0.3)$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$\\
- & $(0.6,0.1,0.3)$ & \bm{$1571 \pm 7$} & $559 \pm 5$ & $294 \pm 4$\\
+ & $(0.6,0.1,0.3)$ & \DIFdelbeginFL %DIFDELCMD < \bm{$1571 \pm 7$} %%%
+\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$1571 \pm 7$ }\DIFaddendFL & $559 \pm 5$ & $294 \pm 4$\\
 \hline
  \multirow{3}{*}{\textbf{Map 7}} & $(0.33,0.33,0.33)$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$\\
  & $(0.1,0.3,0.6)$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$}\\
@@ -1058,11 +1063,11 @@ The first point to check is if the different weight vectors affect the solutions
 
 Some exceptions can be explained by analysing the \DIFdelbegin \DIFdel{map}\DIFdelend \DIFaddbegin \DIFadd{specific maps}\DIFaddend : in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the smallest fuel consumption). Also, in map 10, there is no difference in the damage objective\DIFdelbegin \DIFdel{: but }\DIFdelend \DIFaddbegin \DIFadd{, however }\DIFaddend map 10 is a map with no obstacles to damage the ship (thus only lava lakes deal damage). This also results in this map being the one with the lowest overall damage. It can also be seen that, in those maps where time has priority, the results for this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
 
-These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of experiments is run for NSGA-II and MCTS in the $10$ maps of the benchmark.
+These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of \DIFdelbegin \DIFdel{experiments is run }\DIFdelend \DIFaddbegin \DIFadd{runs is performed }\DIFaddend for NSGA-II and MCTS in the $10$ maps of the benchmark.
 
 In order to compare the several algorithms, the results are examined in pairs, in terms of dominance. The procedure is as follows: once all games on a single map have been run, the Mann-Whitney-Wilcoxon non-parametric test with $95\%$ confidence is calculated on the three objectives. If the measures on all objectives are assumed to be drawn from different distributions, their averages are compared for a dominance test (if not, then no dominance relationship can be derived from the results). If one result dominates another, then the algorithm dominates the other in that particular map. 
 
-Extending this comparison to all maps, each pair of algorithms ends with a triplet $(D, \O, d)$, where $D$ is the number of maps where the first algorithm dominates the second, $\O$ is the amount of maps where no dominance can be established, and $d$ states the number of maps where the first is dominated by the second. Table~\ref{tab:resMOPTSP} summarizes these results for all \DIFaddbegin \DIFadd{the }\DIFaddend algorithms tested.
+Extending this comparison to all maps, each pair of algorithms ends with a triplet $(D, \O, d)$\DIFdelbegin \DIFdel{, where }\DIFdelend \DIFaddbegin \DIFadd{. }\DIFaddend $D$ is the number of maps where the first algorithm dominates the second\DIFdelbegin \DIFdel{, }\DIFdelend \DIFaddbegin \DIFadd{. }\DIFaddend $\O$ is the amount of maps where no dominance can be established, \DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{either because the Mann-Whitney-Wilcoxon non-parametric test failed, or because there is no dominance according to the dominance rules described in Section~\ref{sec:moo}. Finally, }\DIFaddend $d$ states the number of maps where the first is dominated by the second. \DIFaddbegin \DIFadd{For example, a triplet $(D, \O, d) = (8,2,0)$ comparing algorithms $A$ and $B$ would mean that the results obtained by $A$ dominate those from $B$ in $8$ of the $10$ maps, and that it is not possible to derive any dominance in the other $2$. }\DIFaddend Table~\ref{tab:resMOPTSP} summarizes these results for all \DIFaddbegin \DIFadd{the }\DIFaddend algorithms tested.
 
 \begin{table*}[!t]
 \begin{center}

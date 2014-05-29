@@ -51,10 +51,19 @@ C.~Browne, E.~Powley, D.~Whitehouse, S.~Lucas, P.~Cowling, P.~Rohlfshagen,
   Carlo Tree Search Methods}},'' \emph{IEEE Transactions on Computational
   Intelligence and AI in Games}, vol. 4:1, pp. 1--43, 2012.
 
-\bibitem{Gelly2006}
-S.~Gelly, Y.~Wang, R.~Munos, and O.~Teytaud, ``{{Modification of UCT with
-  Patterns in Monte-Carlo Go}},'' Inst. Nat. Rech. Inform. Auto. (INRIA),
-  Paris, Tech. Rep., 2006.
+\bibitem{Chaslot2007}
+\BIBentryALTinterwordspacing
+G.~M. J.-B. Chaslot, M.~H.~M. Winands, H.~J. van~den Herik, J.~W. H.~M.
+  Uiterwijk, and B.~Bouzy, ``{Progressive Strategies for Monte-Carlo Tree
+  Search},'' \emph{New Math. Nat. Comput.}, vol.~4, no.~3, pp. 343--357, 2007.
+  [Online]. Available:
+  \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.77.9239\&amp;r%
+ep=rep1\&amp;type=pdf}
+\BIBentrySTDinterwordspacing
+
+\bibitem{kocsis2006bandit}
+L.~Kocsis and C.~Szepesv\'{a}ri, ``Bandit based {Monte-Carlo} planning,''
+  \emph{Machine Learning: ECML 2006}, vol. 4212, pp. 282--293, 2006.
 
 \bibitem{coquelin2007bandit}
 P.-A. Coquelin, R.~Munos \emph{et~al.}, ``{{Bandit Algorithms for Tree
@@ -76,18 +85,14 @@ N.~Ikehata and T.~Ito, ``{{Monte Carlo Tree Search in Ms. Pac-Man}},'' in
   \emph{Proc. 15th Game Progrramming Workshop}, Kanagawa, Japan, 2010, pp.
   1--8.
 
-\bibitem{Matsumoto2010}
-S.~Matsumoto, N.~Hirosue, K.~Itonaga, K.~Yokoo, and H.~Futahashi,
-  ``{{Evaluation of Simulation Strategy on Single-Player Monte-Carlo Tree
-  Search and its Discussion for a Practical Scheduling Problem}},'' in
-  \emph{Proceedings of the International MultiConference of Engineers and
-  Computer Scientists}, vol.~3, Hong Kong, 2010, pp. 2086--2091.
+\bibitem{Schadd2008}
+M.~P.~D. Schadd, M.~H.~M. Winands, H.~J. van~den Herik, G.~M. J.-B. Chaslot,
+  and J.~W. H.~M. Uiterwijk, ``{Single-Player Monte-Carlo Tree Search},'' in
+  \emph{Proceedings of Computer Games, LNCS 5131}, 2008, pp. 1--12.
 
-\bibitem{Edelkamp2010}
-S.~Edelkamp, P.~Kissmann, D.~Sulewski, and H.~Messerschmidt, ``{{Finding the
-  Needle in the Haystack with Heuristically Guided Swarm Tree Search}},'' in
-  \emph{Multikonf. Wirtschaftsinform.}, Gottingen, Germany, 2010, pp.
-  2295--2308.
+\bibitem{Cazenave2007}
+T.~Cazenave, ``{Reflexive Monte-Carlo Search},'' in \emph{Proc. Comput. Games
+  Workshop}, Amsterdam, Netherlands, 2007, pp. 165--173.
 
 \bibitem{Perez2013}
 D.~Perez, E.~J. Powley, D.~Whitehouse, P.~Rohlfshagen, S.~Samothrakis, P.~I.
@@ -105,6 +110,11 @@ E.~J. Powley, D.~Whitehouse, and P.~I. Cowling, ``{{Monte Carlo Tree Search
 ------, ``{{Monte Carlo Tree Search with Macro-Actions and Heuristic Route
   Planning for the Multiobjective Physical Travelling Salesman Problem}},'' in
   \emph{Proc. IEEE Conf. Comput. Intell. Games}, 2013, pp. 73--80.
+
+\bibitem{Brockhoff2013}
+D.~Brockhoff, ``Tutorial on evolutionary multiobjective optimization,'' in
+  \emph{Proceedings of the 15th Annual Conference Companion on Genetic and
+  Evolutionary Computation}, 2013, pp. 307--334.
 
 \bibitem{Deb2001}
 K.~Deb, \emph{{{Multi-Objective Optimization using Evolutionary
