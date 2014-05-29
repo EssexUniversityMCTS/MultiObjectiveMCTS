@@ -589,8 +589,8 @@ In this case, it is said that these solutions are non-dominated with respect to 
 
 \begin{figure} [!t]
 	\begin{center}
-	\includegraphics[scale=0.235]{img/moopDec.png}
-	\caption{Decision and objective spaces in a MOP with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form a non-dominated set.}
+	\includegraphics[scale=0.235]{img/moopDec2.png}
+	\caption{Decision and objective spaces in a MOP with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form a non-dominated set. From~\cite{Brockhoff2013}.}
 	\label{fig:moop}
 	\end{center}
 \end{figure}
@@ -999,7 +999,7 @@ These results suggest that the weights effectively work on making the algorithm 
 
 In order to compare the several algorithms, the results are examined in pairs, in terms of dominance. The procedure is as follows: once all games on a single map have been run, the Mann-Whitney-Wilcoxon non-parametric test with $95\%$ confidence is calculated on the three objectives. If the measures on all objectives are assumed to be drawn from different distributions, their averages are compared for a dominance test (if not, then no dominance relationship can be derived from the results). If one result dominates another, then the algorithm dominates the other in that particular map. 
 
-Extending this comparison to all maps, each pair of algorithms ends with a triplet $(D, \O, d)$, where $D$ is the number of maps where the first algorithm dominates the second, $\O$ is the amount of maps where no dominance can be established, and $d$ states the number of maps where the first is dominated by the second. Table~\ref{tab:resMOPTSP} summarizes these results for all the algorithms tested.
+Extending this comparison to all maps, each pair of algorithms ends with a triplet $(D, \O, d)$. $D$ is the number of maps where the first algorithm dominates the second. $\O$ is the amount of maps where no dominance can be established, either because the Mann-Whitney-Wilcoxon non-parametric test failed, or because there is no dominance according to the dominance rules described in Section~\ref{sec:moo}. Finally, $d$ states the number of maps where the first is dominated by the second. For example, a triplet $(D, \O, d) = (8,2,0)$ comparing algorithms $A$ and $B$ would mean that the results obtained by $A$ dominate those from $B$ in $8$ of the $10$ maps, and that it is not possible to derive any dominance in the other $2$. Table~\ref{tab:resMOPTSP} summarizes these results for all the algorithms tested.
 
 \begin{table*}[!t]
 \begin{center}
