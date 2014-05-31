@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.28)  29 MAY 2014 15:43
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.28)  31 MAY 2014 18:35
 entering extended mode
  %&-line parsing enabled.
 **paperDiff.tex
@@ -784,46 +784,49 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 ] <img/mcts.png, id=43, 517.935pt x 364.36125pt>
 File: img/mcts.png Graphic file (type png)
 
-<use img/mcts.png>
-Underfull \vbox (badness 1226) has occurred while \output is active []
-
- [2 <./img/mcts.png>] <img/moopDec2.png, id=83, 1021.56656pt x 417.05812pt>
+<use img/mcts.png> [2 <./img/mcts.png>]
+<img/moopDec2.png, id=83, 1021.56656pt x 417.05812pt>
 File: img/moopDec2.png Graphic file (type png)
-
-<use img/moopDec2.png>
+ <use img/moopDec2.png>
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 660.
+put line 661.
 
-Underfull \hbox (badness 5681) in paragraph at lines 666--667
+Underfull \hbox (badness 5681) in paragraph at lines 667--668
 []\OT1/ptm/m/n/10 Fast non-dominated sort-ing: The func-tion $\OML/cmm/m/it/10 
 F \OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 6412) in paragraph at lines 666--667
+Underfull \hbox (badness 6412) in paragraph at lines 667--668
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 U\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 t\OT1/cm
 r/m/n/10 ))$ \OT1/ptm/m/n/10 per-forms a non-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 667--668
+Underfull \hbox (badness 10000) in paragraph at lines 668--669
 []\OT1/ptm/m/n/10 Crowding dis-tance: The func-tion
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 667--668
+Underfull \hbox (badness 10000) in paragraph at lines 668--669
 []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 F[]\OT1/cmr/m/n/10 )$ \OT1/ptm/m/n/10 as-si
 gns to
  []
 
 [3 <./img/moopDec2.png>]
-Underfull \hbox (badness 2894) in paragraph at lines 685--686
+Underfull \hbox (badness 1430) in paragraph at lines 669--670
+\OT1/ptm/m/n/10 front $\OML/cmm/m/it/10 F[]$ []|   []   |   []   |   []   |   [
+]   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 2894) in paragraph at lines 686--687
 []\OT1/ptm/m/n/10 Multi-objective Re-in-force-ment Learn-ing (MORL) [[]]
  []
 
 <img/hv.png, id=121, 554.82281pt x 431.36156pt>
 File: img/hv.png Graphic file (type png)
- <use img/hv.png> [4 <./img/hv.png>] <img/wangHV.png, id=145, 453.19313pt x 447
+ <use img/hv.png> [4 <./img/hv.png>] <img/wangHV.png, id=143, 453.19313pt x 447
 .17062pt>
 File: img/wangHV.png Graphic file (type png)
  <use img/wangHV.png>
@@ -834,166 +837,157 @@ File: img/dst.png Graphic file (type png)
 <img/optDST.png, id=167, 531.48563pt x 411.03563pt>
 File: img/optDST.png Graphic file (type png)
  <use img/optDST.png>
-[6 <./img/dst.png (PNG copy)> <./img/optDST.png>]
-<img/dstTransTables.png, id=179, 536.0025pt x 263.48438pt>
+<img/dstTransTables.png, id=171, 536.0025pt x 263.48438pt>
 File: img/dstTransTables.png Graphic file (type png)
 
-<use img/dstTransTables.png> [7 <./img/dstTransTables.png>]
-<img/moptspmap.png, id=200, 386.94562pt x 352.31625pt>
+<use img/dstTransTables.png> [6 <./img/dst.png (PNG copy)>] [7 <./img/optDST.pn
+g> <./img/dstTransTables.png>]
+<img/moptspmap.png, id=199, 386.94562pt x 352.31625pt>
 File: img/moptspmap.png Graphic file (type png)
  <use img/moptspmap.png>
 [8 <./img/moptspmap.png (PNG copy)>]
-<img/dstAll.png, id=226, 2168.1pt x 722.7pt>
+<img/dstAll.png, id=227, 2168.1pt x 722.7pt>
 File: img/dstAll.png Graphic file (type png)
  <use img/dstAll.png>
-Overfull \hbox (13.20154pt too wide) in paragraph at lines 958--959
+Overfull \hbox (13.20154pt too wide) in paragraph at lines 964--965
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1009--1009
-[]||   []
+Underfull \hbox (badness 2351) in paragraph at lines 978--983
+[]|   []   |   []   |   []   |   []   |   []   |   []   |   []   |   []   |   [
+]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1030--1030
-[]||   []
+Underfull \hbox (badness 7116) in paragraph at lines 986--987
+|   []   |   []   |   []   |   []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1036--1036
-[]||   []
- []
-
-
-Overfull \hbox (4.23763pt too wide) in paragraph at lines 1053--1053
+Overfull \hbox (4.23763pt too wide) in paragraph at lines 1045--1045
 []|[]| 
  []
 
 
-Underfull \hbox (badness 2213) in paragraph at lines 1064--1065
-[]\OT1/ptm/m/n/10 Some ex-cep-tions can be ex-plained by analysing the
+Underfull \hbox (badness 2351) in paragraph at lines 1056--1058
+[]|   []   |   []   |   []   |   []   |   []   |   []   |   []   |   []   |   [
+]
+ []
+
+
+Underfull \hbox (badness 7116) in paragraph at lines 1060--1061
+|   []   |   []   |   []   |   []
  []
 
 [9]
-
-LaTeX Warning: Command \O invalid in math mode on input line 1070.
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1070.
+Underfull \hbox (badness 2213) in paragraph at lines 1067--1068
+[]\OT1/ptm/m/n/10 Some ex-cep-tions can be ex-plained by analysing the
+ []
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1070.
+LaTeX Warning: Command \O invalid in math mode on input line 1073.
 
 
-Underfull \hbox (badness 2875) in paragraph at lines 1070--1071
+LaTeX Warning: Command \O invalid in math mode on input line 1073.
+
+
+LaTeX Warning: Command \O invalid in math mode on input line 1073.
+
+
+Underfull \hbox (badness 2875) in paragraph at lines 1073--1074
 \OT1/ptm/m/n/10 the num-ber of maps where the first al-go-rithm dom-i-
  []
 
 
-Underfull \hbox (badness 2027) in paragraph at lines 1070--1071
+Underfull \hbox (badness 2027) in paragraph at lines 1073--1074
 \OT1/ptm/m/n/10 nates the sec-ond[]|   []   [][]|   []   []$\OT1/cmr/m/n/10 ^^_
 $ \OT1/ptm/m/n/10 is the amount of maps where
  []
 
 
-Underfull \hbox (badness 3536) in paragraph at lines 1070--1071
+Underfull \hbox (badness 3536) in paragraph at lines 1073--1074
 \OT1/ptm/m/n/10 no dom-i-nance can be es-tab-lished, []|   []   [][]|   []   | 
   []
  []
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1076.
+LaTeX Warning: Command \O invalid in math mode on input line 1079.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1076.
+LaTeX Warning: Command \O invalid in math mode on input line 1079.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1076.
+LaTeX Warning: Command \O invalid in math mode on input line 1079.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1076.
+LaTeX Warning: Command \O invalid in math mode on input line 1079.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1099.
+LaTeX Warning: Command \O invalid in math mode on input line 1102.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1099.
+LaTeX Warning: Command \O invalid in math mode on input line 1102.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1099.
+LaTeX Warning: Command \O invalid in math mode on input line 1102.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1099.
+LaTeX Warning: Command \O invalid in math mode on input line 1102.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1108--1109
+Underfull \hbox (badness 10000) in paragraph at lines 1111--1112
 []\OT1/ptm/m/n/10 Additionally, Ta-ble []II[] con-tains a fourth en-try,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1110--1111
+Underfull \hbox (badness 10000) in paragraph at lines 1113--1114
 []\OT1/ptm/m/n/10 However, it is very im-por-tant to high-light that
  []
 
 
-Underfull \hbox (badness 1762) in paragraph at lines 1110--1111
+Underfull \hbox (badness 1762) in paragraph at lines 1113--1114
 \OT1/pcr/m/n/10 PurofMovio \OT1/ptm/m/n/10 is not us-ing the same heuris-tics a
 s the
  []
 
 
-Underfull \hbox (badness 1546) in paragraph at lines 1110--1111
+Underfull \hbox (badness 1546) in paragraph at lines 1113--1114
 \OT1/ptm/m/n/10 the win-ning en-try of the com-pe-ti-tion. It is likely that
  []
 
 [10 <./img/dstAll.png>]
 
-LaTeX Warning: Command \O invalid in math mode on input line 1134.
+LaTeX Warning: Command \O invalid in math mode on input line 1137.
 
-
-Overfull \hbox (2.93053pt too wide) in paragraph at lines 1140--1141
+[11]
+Overfull \hbox (2.93053pt too wide) in paragraph at lines 1143--1144
 []|\OT1/ptm/b/n/8 D| 
  []
 
 
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1142--1142
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1145--1145
 []|$\OT1/cmr/m/n/8 11111111111111$| 
  []
 
 
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1142--1143
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1145--1146
 []|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1143--1143
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1146--1146
 []|$\OT1/cmr/m/n/8 22222222222222$| 
  []
 
 
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1143--1144
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1146--1147
 []|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1144--1144
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1144--1145
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1145--1145
-[]|$\OT1/cmr/m/n/8 32312212331112$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1147--1147
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
@@ -1003,32 +997,32 @@ Overfull \hbox (3.76576pt too wide) in paragraph at lines 1147--1148
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1148--1148
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1148--1149
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1149--1149
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1149--1150
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 32312212331112$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1150--1150
-[]|$\OT1/cmr/m/n/8 23131312323213$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1150--1151
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1151--1151
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1151--1152
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1152--1152
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
@@ -1038,367 +1032,385 @@ Overfull \hbox (3.76576pt too wide) in paragraph at lines 1152--1153
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1153--1153
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1153--1154
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1154--1154
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1154.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1154--1155
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 23131312323213$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1155--1155
-[]|$\OT1/cmr/m/n/8 11122222112231$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1155--1156
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1156--1156
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1156--1157
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1157--1157
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
+LaTeX Warning: Command \O invalid in math mode on input line 1157.
+
+
 Overfull \hbox (3.76576pt too wide) in paragraph at lines 1157--1158
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1158--1158
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1158--1159
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1159--1159
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1159.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1159--1160
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 11122222112231$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1160--1160
-[]|$\OT1/cmr/m/n/8 11121131212112$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1160--1161
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1161--1161
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1161--1162
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1162--1162
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
+LaTeX Warning: Command \O invalid in math mode on input line 1162.
+
+
 Overfull \hbox (3.76576pt too wide) in paragraph at lines 1162--1163
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1163--1163
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1163--1164
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1164--1164
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1164.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1164--1165
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 11121131212112$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1165--1165
-[]|$\OT1/cmr/m/n/8 21311213111211$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1165--1166
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1166--1166
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1166--1167
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1167--1167
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
+LaTeX Warning: Command \O invalid in math mode on input line 1167.
+
+
 Overfull \hbox (3.76576pt too wide) in paragraph at lines 1167--1168
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1168--1168
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1168--1169
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1169--1169
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1169.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1169--1170
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 21311213111211$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1170--1170
-[]|$\OT1/cmr/m/n/8 31121312111111$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1170--1171
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1171--1171
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1171--1172
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1172--1172
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
+LaTeX Warning: Command \O invalid in math mode on input line 1172.
+
+
 Overfull \hbox (3.76576pt too wide) in paragraph at lines 1172--1173
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1173--1173
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1173--1174
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1174--1174
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1174.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1174--1175
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 31121312111111$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1175--1175
-[]|$\OT1/cmr/m/n/8 11332211321332$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1175--1176
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1176--1176
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1176--1177
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1177--1177
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
+LaTeX Warning: Command \O invalid in math mode on input line 1177.
+
+
 Overfull \hbox (3.76576pt too wide) in paragraph at lines 1177--1178
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1178--1178
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1178--1179
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1179--1179
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1179.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1179--1180
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 11332211321332$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1180--1180
-[]|$\OT1/cmr/m/n/8 23221131313323$| 
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1180--1181
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1181--1181
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1181--1182
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1182--1182
-[]|$\OT1/cmr/m/n/8 11111111111111$| 
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
+LaTeX Warning: Command \O invalid in math mode on input line 1182.
+
+
 Overfull \hbox (3.76576pt too wide) in paragraph at lines 1182--1183
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
+[]|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1183--1183
-[]|$\OT1/cmr/m/n/8 22222222222222$| 
- []
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1183--1184
-[]|$\OMS/cmsy/m/n/8 ^^V$| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1184--1184
-[]|$\OT1/cmr/m/n/8 33333333333333$| 
- []
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 1184.
-
-
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1184--1185
-[]|$\OT1/cmr/m/n/8 ^^_$| 
+[]|$\OT1/cmr/m/n/8 23221131313323$| 
  []
 
 
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1185--1185
-[]|$\OT1/cmr/m/n/8 21132331333223$| 
- []
-
-
-Overfull \hbox (4.23763pt too wide) in paragraph at lines 1187--1187
-[]|[]| 
- []
-
-
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1187--1187
 []|$\OT1/cmr/m/n/8 11111111111111$| 
  []
 
 
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1187--1188
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1185--1186
 []|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1188--1188
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1186--1186
 []|$\OT1/cmr/m/n/8 22222222222222$| 
  []
 
 
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1188--1189
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1186--1187
 []|$\OMS/cmsy/m/n/8 ^^V$| 
  []
 
 
-Overfull \hbox (4.01808pt too wide) in paragraph at lines 1189--1189
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1187--1187
 []|$\OT1/cmr/m/n/8 33333333333333$| 
  []
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1189.
+LaTeX Warning: Command \O invalid in math mode on input line 1187.
 
 
-Overfull \hbox (3.76576pt too wide) in paragraph at lines 1189--1190
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1187--1188
 []|$\OT1/cmr/m/n/8 ^^_$| 
  []
 
 
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1188--1188
+[]|$\OT1/cmr/m/n/8 21132331333223$| 
+ []
+
+
+Overfull \hbox (4.23763pt too wide) in paragraph at lines 1190--1190
+[]|[]| 
+ []
+
+
 Overfull \hbox (4.01808pt too wide) in paragraph at lines 1190--1190
+[]|$\OT1/cmr/m/n/8 11111111111111$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1190--1191
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1191--1191
+[]|$\OT1/cmr/m/n/8 22222222222222$| 
+ []
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1191--1192
+[]|$\OMS/cmsy/m/n/8 ^^V$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1192--1192
+[]|$\OT1/cmr/m/n/8 33333333333333$| 
+ []
+
+
+LaTeX Warning: Command \O invalid in math mode on input line 1192.
+
+
+Overfull \hbox (3.76576pt too wide) in paragraph at lines 1192--1193
+[]|$\OT1/cmr/m/n/8 ^^_$| 
+ []
+
+
+Overfull \hbox (4.01808pt too wide) in paragraph at lines 1193--1193
 []|$\OT1/cmr/m/n/8 11311111322231$| 
  []
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1193.
+LaTeX Warning: Command \O invalid in math mode on input line 1196.
 
 
-LaTeX Warning: Command \O invalid in math mode on input line 1193.
+LaTeX Warning: Command \O invalid in math mode on input line 1196.
 
-[11] [12] (./paperDiff.bbl) <photos/perez.jpg, id=279, 778.91pt x 1019.81pt>
+[12] (./paperDiff.bbl [13]) <photos/perez.jpg, id=290, 778.91pt x 1019.81pt>
 File: photos/perez.jpg Graphic file (type jpg)
 
 <use photos/perez.jpg>
 File: photos/perez.jpg Graphic file (type jpg)
  <use photos/perez.jpg>
-<photos/sanaz.jpg, id=282, 142.5325pt x 213.79875pt>
+<photos/sanaz.jpg, id=293, 142.5325pt x 213.79875pt>
 File: photos/sanaz.jpg Graphic file (type jpg)
  <use photos/sanaz.jpg>
 File: photos/sanaz.jpg Graphic file (type jpg)
 
-<use photos/sanaz.jpg> [13 <./photos/perez.jpg> <./photos/sanaz.jpg>]
-<./photos/spyro.jpg, id=298, 116.68594pt x 135.50626pt>
+<use photos/sanaz.jpg> <./photos/spyro.jpg, id=296, 116.68594pt x 135.50626pt>
 File: ./photos/spyro.jpg Graphic file (type jpg)
 
 <use ./photos/spyro.jpg>
 File: ./photos/spyro.jpg Graphic file (type jpg)
  <use ./photos/spyro.jpg>
-<photos/lucas.png, id=301, 206.7725pt x 240.9pt>
+<photos/lucas.png, id=299, 206.7725pt x 240.9pt>
 File: photos/lucas.png Graphic file (type png)
  <use photos/lucas.png>
 File: photos/lucas.png Graphic file (type png)
 
 <use photos/lucas.png> [14
 
- <./photos/spyro.jpg> <./photos/lucas.png>]
-(./paperDiff.aux) ) 
+ <./photos/perez.jpg> <./photos/sanaz.jpg> <./photos/spyro.jpg> <./photos/lucas
+.png>] (./paperDiff.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 16931 strings out of 493848
- 295198 string characters out of 1152823
- 473703 words of memory out of 3000000
+ 16932 strings out of 493848
+ 295209 string characters out of 1152823
+ 481703 words of memory out of 3000000
  19712 multiletter control sequences out of 15000+50000
  52018 words of font info for 111 fonts, out of 3000000 for 9000
  721 hyphenation exceptions out of 8191
- 63i,14n,92p,1236b,430s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/
-share/texmf-texlive/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr/share/
-texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-texliv
-e/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/typ
-e1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb></u
-sr/share/texmf-texlive/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/sha
-re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-tex
-live/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/am
-sfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cms
-y10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></us
-r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texm
-f-texlive/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/share/texmf-texl
-ive/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-texlive/fo
-nts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/time
-s/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb></usr/
-share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/
-fonts/type1/urw/times/utmri8a.pfb>
-Output written on paperDiff.pdf (14 pages, 1535017 bytes).
+ 63i,14n,92p,1236b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
+ve/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-texlive/fonts/type1/pub
+lic/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi6.
+pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/sh
+are/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texmf-texlive/
+fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/
+public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pf
+b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-tex
+live/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-texlive/fonts/t
+ype1/public/amsfonts/latxfont/lasy6.pfb></usr/share/texmf-texlive/fonts/type1/p
+ublic/amsfonts/symbols/msbm10.pfb></usr/share/texmf-texlive/fonts/type1/urw/cou
+rier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-texli
+ve/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/t
+imes/utmri8a.pfb>
+Output written on paperDiff.pdf (14 pages, 1544844 bytes).
 PDF statistics:
- 404 PDF objects out of 1000 (max. 8388607)
- 102 named destinations out of 1000 (max. 500000)
+ 408 PDF objects out of 1000 (max. 8388607)
+ 103 named destinations out of 1000 (max. 500000)
  126 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -554,7 +554,7 @@ The paper is structured as follows. First, Sections~\ref{sec:mcts} and~\ref{sec:
 
 \section{Monte Carlo Tree Search} \label{sec:mcts}
 
-Monte Carlo Tree Search (MCTS) is a tree search algorithm that was originally applied to board games, gaining momentum and popularity in the game of Go. This game is played in a square grid board, with a size of $19 \times 19$ in the original game, and $9 \times 9$ in its reduced version. The game is played in turns, and the objective is to surround the opponent's stones by placing stones in any available position on the board. Due to the very large branching factor of Go, this game is considered the drosophila of Game AI, and MCTS players have reached professional level play in the reduced board size version~\cite{Lee2009}. After its success in Go, MCTS has been used extensively by many researchers in this and different domains. An extensive survey of MCTS methods, variations and applications, has been written by Browne et al.~\cite{Browne2012}. 
+Monte Carlo Tree Search (MCTS) is a tree search algorithm that was originally applied to board games, gaining momentum and popularity in the game of Go. This game is played in a square grid board, with a size of $19 \times 19$ in the original game, and $9 \times 9$ in its reduced version. The game is played in turns, and the objective is to surround the opponent's stones by placing stones in any available position on the board. Due to the very large branching factor of \DIFdelbegin \DIFdel{Go, this game is considered the drosophila of Game AI, and MCTS players have reached }\DIFdelend \DIFaddbegin \DIFadd{the game and the absence of clear heuristics to tackle it, Go became object of study for many researchers. MCTS was the first algorithm able to reach }\DIFaddend professional level play in the reduced board size version~\cite{Lee2009}. After its success in Go, MCTS has been used extensively by many researchers in this and different domains. An extensive survey of MCTS methods, variations and applications, has been written by Browne et al.~\cite{Browne2012}. 
 
 MCTS is considered to be an \textit{anytime} algorithm, as it is able to provide a valid next move to choose at any moment in time. This is true independently from how many iterations the algorithm is able to make (although, in general, more iterations usually produce better results). This differs from other algorithms (such as A* in single player games, and standard Min-Max for two player games) that normally provide the next play only after they have finished. This makes MCTS a suitable candidate for real-time domains, where the decision time budget is limited, affecting the number of iterations that can be performed.
 
@@ -630,7 +630,8 @@ There are many different algorithms in the \DIFdelbegin \DIFdel{litrature which 
 
 A popular choice for multi-objective optimization problems are evolutionary multi-objective optimization (EMO) algorithms~\cite{Coello1999, Zhou2011}. 
 The goal of EMO algorithms is to find a set of optimal solutions with a good convergence to the Pareto-front as well as a good spread and diversity along the Pareto-front.
-One of the most well-known algorithms in the literature is the Non-dominated Sorting Evolutionary Algorithm II (NSGA-{II})~\cite{Deb2002}, \DIFaddbegin \DIFadd{the }\DIFaddend pseudocode of which is shown in Algorithm~\ref{alg:nsga2}. As in any evolutionary algorithm, NSGA-{II} evolves a set of $N$ individuals in a population denoted as $Pop$ with the difference that they are ranked according to \DIFaddbegin \DIFadd{a }\DIFaddend dominance criterion and a crowding distance measure\DIFdelbegin \DIFdel{which is }\DIFdelend \DIFaddbegin \DIFadd{, which are }\DIFaddend used to maintain a good diversity of solutions.  
+One of the most well-known algorithms in the literature is the Non-dominated Sorting Evolutionary Algorithm II (NSGA-{II})~\cite{Deb2002}, \DIFaddbegin \DIFadd{the }\DIFaddend pseudocode of which is shown in Algorithm~\ref{alg:nsga2}. As in any evolutionary algorithm, NSGA-{II} evolves a set of $N$ individuals in a population denoted as $Pop$ with the difference that they are ranked according to \DIFaddbegin \DIFadd{a }\DIFaddend dominance criterion and a crowding distance measure\DIFdelbegin \DIFdel{which is }\DIFdelend \DIFaddbegin \DIFadd{, which are }\DIFaddend used to maintain a good diversity of solutions. \DIFaddbegin \DIFadd{After each iteration of the algorithm, only the best $N$ individuals according to this ranking are maintained to the next generation.
+}\DIFaddend 
 
 \begin{algorithm}[!t]
 \begin{algorithmic}[1]
@@ -664,8 +665,8 @@ One of the most well-known algorithms in the literature is the Non-dominated Sor
 The three main pillars of the NSGA-2 algorithm are:
 \begin{itemize}
 \item Fast non-dominated sorting: The function $F = \Call{fastNonDominatedSort}{U(t)}$ performs a non-dominated sorting and ranks the individuals stored in a set $U$ into several non-dominated fronts denoted as $F_i$, where the solutions in $F_0$ are the non-dominated solutions in the entire set. $F_i$ is the set of non-dominated solutions in $R \setminus (F_0 \cup \cdots \cup F_{i-1})$. 
-\item Crowding distance: The function $\Call{crowdingDistanceAssignment}{F_i}$ assigns to each one of the individuals in $F_i$ a crowding distance value, which is the distance between the individual and its neighbours. The individuals with the smallest crowding distances are selected with a lower probability than the ones with \DIFdelbegin \DIFdel{the }\DIFdelend larger values.  
-\item Elitism: The solutions in the first front $F_0$ always survive to the next population. 
+\item Crowding distance: The function $\Call{crowdingDistanceAssignment}{F_i}$ assigns to each one of the individuals in $F_i$ a crowding distance value, which is the distance between the individual and its neighbours. The individuals with the smallest crowding distances are selected with a lower probability than the ones with \DIFdelbegin \DIFdel{the }\DIFdelend larger values.   
+\item Elitism: The \DIFdelbegin \DIFdel{solutions in }\DIFdelend \DIFaddbegin \DIFadd{individuals from }\DIFaddend the first front $F_0$ \DIFaddbegin \DIFadd{are always ranked first, according to the dominance criterion and their crowding distance. This ensures that the best solutions }\DIFaddend always survive to the next \DIFdelbegin \DIFdel{population}\DIFdelend \DIFaddbegin \DIFadd{generation}\DIFaddend .
 \end{itemize}
 
 
@@ -953,33 +954,19 @@ All \DIFaddbegin \DIFadd{the }\DIFaddend algorithms have a limited number of eva
 
 \subsection{Results in DST} \label{ssec:resDST}
 
-\DIFaddbegin \begin{figure*}[!t]
-	\centering
-	\includegraphics[width=2.1\columnwidth]{img/dstAll}
-	\caption{\DIFaddFL{Results in DST: percentages of each optima found during $100$ games played with different weight vectors. Scalarization approaches converge to the edges of the optimal front, whereas Pareto approaches are able to find all optimal solutions. The proposed algorithm, MO-MCTS, finds these solutions significantly more often than NSGA-II.}}
-	\label{fig:extCase}
-\end{figure*}
 
-\DIFaddend As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the players. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
+As the optimal Pareto front of the DST is known, a measure of performance can be obtained by observing the percentage of times these solutions are found by the players. As the solution that the algorithms converge to depends on the weights vector employed during the search (see end of Section~\ref{sec:momcts}), the approach taken here is to provide different weight vectors $W$ and analyze them separately.  
 
 The weight vector for DST has two dimensions. This vector is here referred to as $W = (w_p, w_v)$, where $w_p$ weights moves; and $w_v$ weights the treasure value ($w_v = 1 - w_p$). $w_p$ takes values between $0$ and $1$, with a precision of $0.01$, and $100$ \DIFdelbegin \DIFdel{experiments have been run }\DIFdelend \DIFaddbegin \DIFadd{runs have been performed }\DIFaddend for each pair $(w_p, w_v)$. Hence, the game has been played a total of $10000$ times, for each algorithm.
 
+\begin{figure*}[!t]
+	\centering
+	\includegraphics[width=2.1\columnwidth]{img/dstAll}
+	\caption{Results in DST: percentages of each optima found during $100$ games played with different weight vectors. Scalarization approaches converge to the edges of the optimal front, whereas Pareto approaches are able to find all optimal solutions. The proposed algorithm, MO-MCTS, finds these solutions significantly more often than NSGA-II.}
+	\label{fig:extCase}
+\end{figure*}
 
-
-\DIFdelbegin %DIFDELCMD < \begin{figure*}[!t]
-%DIFDELCMD < 	\centering
-%DIFDELCMD < 	\includegraphics[width=2.1\columnwidth]{img/dstAll}
-%DIFDELCMD < 	%%%
-%DIFDELCMD < \caption{%
-{%DIFAUXCMD
-\DIFdel{Results in DST: percentages of each optima found during $100$ games played with different weight vectors. Scalarization approaches converge to the edges of the optimal front, whereas Pareto approaches are able to find all optimal solutions. The proposed algorithm, MO-MCTS, finds these solutions significantly more often than NSGA-II.}}
-	%DIFAUXCMD
-%DIFDELCMD < \label{fig:extCase}
-%DIFDELCMD < \end{figure*}
-%DIFDELCMD < 
-
-%DIFDELCMD < %%%
-\DIFdelend Figure~\ref{fig:extCase} shows the results obtained after these experiments were performed. The first point to note is that MCTS only converges (mostly) to the two optimal points located at the edges of the optimal Pareto front (\textit{OPT-1} and \textit{OPT-10}, see also Figure~\ref{fig:optDst}). This is an expected result, as K. Deb. suggested in~\cite{Deb2001} and was also discussed before in Section~\ref{sec:moo}: linear scalarization approaches only converge to the edges of the optimal Pareto front if its shape is non-convex.
+Figure~\ref{fig:extCase} shows the results obtained after these experiments were performed. The first point to note is that MCTS only converges (mostly) to the two optimal points located at the edges of the optimal Pareto front (\textit{OPT-1} and \textit{OPT-10}, see also Figure~\ref{fig:optDst}). This is an expected result, as K. Deb. suggested in~\cite{Deb2001} and was also discussed before in Section~\ref{sec:moo}: linear scalarization approaches only converge to the edges of the optimal Pareto front if its shape is non-convex.
 
 The results show clearly how approximating the optimal Pareto front allows for finding all possible solutions. Both \DIFaddbegin \DIFadd{the }\DIFaddend NSGA-II and MO-MCTS approaches are able to converge to any solution in the front given the appropriate weight vector. It is important to highlight that these two algorithms employed the \DIFdelbegin \DIFdel{euclidean }\DIFdelend \DIFaddbegin \DIFadd{Euclidean }\DIFaddend distance action selection (see Section~\ref{sec:momcts}). Other experiments, not included in this paper, showed that weighted sum action selection provides similar results to MCTS (that is, convergence to the edges of the front). The crucial distinction to make here is that both algorithms, NSGA-II and MO-MCTS, allow for better action selection mechanisms, \DIFdelbegin \DIFdel{that }\DIFdelend \DIFaddbegin \DIFadd{which }\DIFaddend are able to overcome this problem by approximating a global Pareto front.
 
@@ -988,14 +975,22 @@ Finally, in the comparison between NSGA-II and MO-MCTS, the latter algorithm obt
 
 \subsection{Results in MO-PTSP} \label{ssec:resMOPTSP}
 
-The same three algorithms have been tested in the MO-PTSP domain. The experiments are performed in the $10$ maps available within the framework~\footnote{Available at \url{www.ptsp-game.net}}. In this case, the optimal Pareto front is not known in advance, and normally \DIFdelbegin \DIFdel{it will differ }\DIFdelend \DIFaddbegin \DIFadd{differs }\DIFaddend from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
+\DIFdelbegin \DIFdel{The same three algorithms have been tested in the MO-PTSP domain. The experiments are performed in the $10$ maps available within the framework~}\footnote{\DIFdel{Available at }%DIFDELCMD < \url{www.ptsp-game.net}%%%
+}%DIFAUXCMD
+\addtocounter{footnote}{-1}%DIFAUXCMD
+\DIFdel{. In this case, the optimal Pareto front is not known in advance, and normally it will differ from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
+}%DIFDELCMD < 
 
-The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives \DIFdelbegin \DIFdel{with }\DIFdelend \DIFaddbegin \DIFadd{as having }\DIFaddend the same weight, while the other three give more relevance to different objectives. These vectors then provide a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses these weights to select an action based on a weighted sum, which in preliminary experiments has shown better performance than the Euclidean distance mechanism.
+%DIFDELCMD < %%%
+\DIFdel{The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives with the same weight, while the other three give more relevance to different objectives. These vectors then provide a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses these weights to select an action based on a weighted sum, which in preliminary experiments has shown better performance than the Euclidean distance mechanism.
+}%DIFDELCMD < 
 
-The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
+%DIFDELCMD < %%%
+\DIFdel{The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
+}%DIFDELCMD < 
 
-
-\begin{table}[!t]
+%DIFDELCMD < %%%
+\DIFdelend \begin{table}[!t]
 \begin{center}
 %\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
 \begin{tabular}{|p{0.8cm}|p{2.2cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|}
@@ -1005,8 +1000,7 @@ The first point to check is if the different weight vectors affect the solutions
  \multirow{3}{*}{\textbf{Map 1}} & $(0.33,0.33,0.33)$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
  & $(0.1,0.3,0.6)$ & $1657 \pm 8$ & $130 \pm 2$ & \bm{$773 \pm 11$}\\
  & $(0.1,0.6,0.3)$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$\\
- & $(0.6,0.1,0.3)$ & \DIFdelbeginFL %DIFDELCMD < \bm{$1649 \pm 8$} %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$1649 \pm 8$ }\DIFaddendFL & $132 \pm 2$ & $833 \pm 13$\\
+ & $(0.6,0.1,0.3)$ & $1649 \pm 8$ & $132 \pm 2$ & $833 \pm 13$\\
 \hline
  \multirow{3}{*}{\textbf{Map 2}} & $(0.33,0.33,0.33)$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$\\
  & $(0.1,0.3,0.6)$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$}\\
@@ -1024,16 +1018,14 @@ The first point to check is if the different weight vectors affect the solutions
  & $(0.6,0.1,0.3)$ & $1388 \pm 6$ & $309 \pm 4$ & $559 \pm 5$\\
 \hline
  \multirow{3}{*}{\textbf{Map 5}} & $(0.33,0.33,0.33)$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$\\
- & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & \bm{$541 \pm 4$}\\
+ & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & $541 \pm 4$\\
  & $(0.1,0.6,0.3)$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$\\
- & $(0.6,0.1,0.3)$ & \DIFdelbeginFL %DIFDELCMD < \bm{$1399 \pm 9$} %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$1399 \pm 9$ }\DIFaddendFL & $469 \pm 4$ & $547 \pm 3$\\
+ & $(0.6,0.1,0.3)$ & $1399 \pm 9$ & $469 \pm 4$ & $547 \pm 3$\\
 \hline
  \multirow{3}{*}{\textbf{Map 6}} & $(0.33,0.33,0.33)$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$\\
- & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & \bm{$286 \pm 5$}\\
+ & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & $286 \pm 5$\\
  & $(0.1,0.6,0.3)$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$\\
- & $(0.6,0.1,0.3)$ & \DIFdelbeginFL %DIFDELCMD < \bm{$1571 \pm 7$} %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$1571 \pm 7$ }\DIFaddendFL & $559 \pm 5$ & $294 \pm 4$\\
+ & $(0.6,0.1,0.3)$ & $1571 \pm 7$ & $559 \pm 5$ & $294 \pm 4$\\
 \hline
  \multirow{3}{*}{\textbf{Map 7}} & $(0.33,0.33,0.33)$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$\\
  & $(0.1,0.3,0.6)$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$}\\
@@ -1056,12 +1048,23 @@ The first point to check is if the different weight vectors affect the solutions
  & $(0.6,0.1,0.3)$ & \bm{$1378 \pm 5$} & $663 \pm 6$ & $202 \pm 4$\\
 \hline
 \end{tabular}
-\caption{MO-MCTS results in MO-PTSP with different weight vectors. Significantly better results per map are in bold.}
+\caption{MO-MCTS results in MO-PTSP with different weight vectors. \DIFdelbeginFL \DIFdelFL{Significantly better }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{Values in bold indicate the best }\DIFaddendFL results \DIFdelbeginFL \DIFdelFL{per }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{on each }\DIFaddendFL map\DIFaddbeginFL \DIFaddFL{, when they }\DIFaddendFL are \DIFdelbeginFL \DIFdelFL{in bold}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{separated at least by $2$ standard errors from the others}\DIFaddendFL .}
 \label{tab:weights}
 \end{center}
 \end{table}
 
-Some exceptions can be explained by analysing the \DIFdelbegin \DIFdel{map}\DIFdelend \DIFaddbegin \DIFadd{specific maps}\DIFaddend : in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the smallest fuel consumption). Also, in map 10, there is no difference in the damage objective\DIFdelbegin \DIFdel{: but }\DIFdelend \DIFaddbegin \DIFadd{, however }\DIFaddend map 10 is a map with no obstacles to damage the ship (thus only lava lakes deal damage). This also results in this map being the one with the lowest overall damage. It can also be seen that, in those maps where time has priority, the results for this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
+\DIFaddbegin \DIFadd{The same three algorithms have been tested in the MO-PTSP domain. The experiments are performed in the $10$ maps available within the framework~}\footnote{\DIFadd{Available at }\url{www.ptsp-game.net}}\DIFadd{. In this case, the optimal Pareto front is not known in advance, and normally differs from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
+}
+
+\DIFadd{The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives as having the same weight, while the other three give more relevance to different objectives. These vectors then provide a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses these weights to select an action based on a weighted sum, which in preliminary experiments has shown better performance than the Euclidean distance mechanism.
+}
+
+\DIFadd{The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
+}
+
+
+
+\DIFaddend Some exceptions can be explained by analysing the \DIFdelbegin \DIFdel{map}\DIFdelend \DIFaddbegin \DIFadd{specific maps}\DIFaddend : in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the smallest fuel consumption). Also, in map 10, there is no difference in the damage objective\DIFdelbegin \DIFdel{: but }\DIFdelend \DIFaddbegin \DIFadd{, however }\DIFaddend map 10 is a map with no obstacles to damage the ship (thus only lava lakes deal damage). This also results in this map being the one with the lowest overall damage. It can also be seen that, in those maps where time has priority, the results for this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
 
 These results suggest that the weights effectively work on making the algorithm converge to different points in the Pareto front discovered by the algorithm. Now, it is time to compare these results with the other algorithms. In order to do this, the same number of \DIFdelbegin \DIFdel{experiments is run }\DIFdelend \DIFaddbegin \DIFadd{runs is performed }\DIFaddend for NSGA-II and MCTS in the $10$ maps of the benchmark.
 
