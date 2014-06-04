@@ -135,6 +135,24 @@ K.~Deb, A.~Pratap, S.~Agarwal, and T.~Meyarivan, ``{{A Fast Elitist
   Multi-Objective Genetic Algorithm: NSGA-II}},'' \emph{IEEE Transactions on
   Evolutionary Computation}, vol.~6, pp. 182--197, 2002.
 
+\bibitem{Jain2013}
+H.~Jain and K.~Deb, ``{{An Improved Adaptive Approach for Elitist Nondominated
+  Sorting Genetic Algorithm for Many-Objective Optimization}},'' in
+  \emph{Evolutionary Multi-Criterion Optimization}, ser. Lecture Notes in
+  Computer Science, R.~Purshouse, P.~Fleming, C.~Fonseca, S.~Greco, and
+  J.~Shaw, Eds.\hskip 1em plus 0.5em minus 0.4em\relax Springer Berlin
+  Heidelberg, 2013, vol. 7811, pp. 307--321.
+
+\bibitem{Beume2007}
+N.~Beume, B.~Naujoks, and M.~Emmerich, ``{{SMS-EMOA: Multiobjective Selection
+  Based on Dominated Hypervolume}},'' \emph{European Journal of Operational
+  Research}, vol. 181, no.~3, pp. 1653--1669, 2007.
+
+\bibitem{Zhang2007a}
+Q.~Zhang and H.~Li, ``{{MOEA/D: A Multiobjective Evolutionary Algorithm Based
+  on Decomposition}},'' \emph{IEEE Transactions on Evolutionary Computation},
+  vol.~11, no.~6, pp. 712--731, 2007.
+
 \bibitem{Sutton1998}
 R.~Sutton and A.~Barto, \emph{{{Reinforcement Learning: An Introduction
   (Adaptive Computation and Machine Learning)}}}.\hskip 1em plus 0.5em minus

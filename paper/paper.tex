@@ -585,7 +585,7 @@ It is said that a solution $\vec x$ \textit{dominates} another solution $\vec y$
 When these two conditions apply, it is said that $\vec x \preceq \vec y$ ($\vec x$ dominates $\vec y$). The \textit{dominance} condition provides a partial ordering between solutions in the objective space.
 
 However, there are some cases where it cannot be said that $\vec x \preceq \vec y$ or $\vec y \preceq \vec x$. 
-In this case, it is said that these solutions are non-dominated with respect to each other. Solutions that are not dominated can be grouped in a \textit{non-dominated set}. Given a non-dominated set $P$, it is said that $P$ is the \textit{Pareto-set} if there is no other solution in the decision space that dominates any member of $P$. The corresponding objective vectors of the members in the Pareto-set build a so called \textit{Pareto-front}. The relations between decision and objective space, dominance and the non-dominated set are depicted in Figure~\ref{fig:moop}.
+In this case, it is said that these solutions are indifferent to each other. Solutions that are not dominated can be grouped in a \textit{non-dominated set}. Given a non-dominated set $P$, it is said that $P$ is the \textit{Pareto-set} if there is no other solution in the decision space that dominates any member of $P$. The corresponding objective vectors of the members in the Pareto-set build a so called \textit{Pareto-front}. The relations between decision and objective space, dominance and the non-dominated set are depicted in Figure~\ref{fig:moop}.
 
 \begin{figure} [!t]
 	\begin{center}
@@ -600,7 +600,7 @@ There are many different algorithms in the literature that are proposed to tackl
 
 A popular choice for multi-objective optimization problems are evolutionary multi-objective optimization (EMO) algorithms~\cite{Coello1999, Zhou2011}. 
 The goal of EMO algorithms is to find a set of optimal solutions with a good convergence to the Pareto-front as well as a good spread and diversity along the Pareto-front.
-One of the most well-known algorithms in the literature is the Non-dominated Sorting Evolutionary Algorithm II (NSGA-{II})~\cite{Deb2002}, the pseudocode of which is shown in Algorithm~\ref{alg:nsga2}. As in any evolutionary algorithm, NSGA-{II} evolves a set of $N$ individuals in a population denoted as $Pop$ with the difference that they are ranked according to a dominance criterion and a crowding distance measure, which are used to maintain a good diversity of solutions. After each iteration of the algorithm, only the best $N$ individuals according to this ranking are maintained to the next generation.
+One of the most well-known algorithms in the literature is the Non-dominated Sorting Evolutionary Algorithm II (NSGA-{II})~\cite{Deb2002}, the pseudocode of which is shown in Algorithm~\ref{alg:nsga2}. NSGA-II is known to deliver solutions with very good diversity and convergence to the Pareto-front for 2-objective problems. However, for problems with more than 3 objectives, other approaches such as NSGA-III~\cite{Jain2013}, SMS-EMOA~\cite{Beume2007} and MOEA/D~\cite{Zhang2007a} are shown to outperform NSGA-II. As in any evolutionary algorithm, NSGA-{II} evolves a set of $N$ individuals in a population denoted as $Pop$ with the difference that they are ranked according to a dominance criterion and a crowding distance measure, which are used to maintain a good diversity of solutions. After each iteration of the algorithm, only the best $N$ individuals according to this ranking are maintained to the next generation.
 
 \begin{algorithm}[!t]
 \begin{algorithmic}[1]
@@ -631,7 +631,7 @@ One of the most well-known algorithms in the literature is the Non-dominated Sor
 \label{alg:nsga2}
 \end{algorithm}
 
-The three main pillars of the NSGA-2 algorithm are:
+The three main pillars of the NSGA-II algorithm are:
 \begin{itemize}
 \item Fast non-dominated sorting: The function $F = \Call{fastNonDominatedSort}{U(t)}$ performs a non-dominated sorting and ranks the individuals stored in a set $U$ into several non-dominated fronts denoted as $F_i$, where the solutions in $F_0$ are the non-dominated solutions in the entire set. $F_i$ is the set of non-dominated solutions in $R \setminus (F_0 \cup \cdots \cup F_{i-1})$. 
 \item Crowding distance: The function $\Call{crowdingDistanceAssignment}{F_i}$ assigns to each one of the individuals in $F_i$ a crowding distance value, which is the distance between the individual and its neighbours. The individuals with the smallest crowding distances are selected with a lower probability than the ones with larger values.   
@@ -922,6 +922,13 @@ Finally, in the comparison between NSGA-II and MO-MCTS, the latter algorithm obt
 
 \subsection{Results in MO-PTSP} \label{ssec:resMOPTSP}
 
+The same three algorithms have been tested in the MO-PTSP domain. The experiments are performed in the $10$ maps available within the framework~\footnote{Available at \url{www.ptsp-game.net}}. In this case, the optimal Pareto front is not known in advance, and normally differs from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
+
+The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives as having the same weight, while the other three give more relevance to different objectives. These vectors then provide a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses these weights to select an action based on a weighted sum, which in preliminary experiments has shown better performance than the Euclidean distance mechanism.
+
+The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
+
+
 \begin{table}[!t]
 \begin{center}
 %\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
@@ -980,18 +987,10 @@ Finally, in the comparison between NSGA-II and MO-MCTS, the latter algorithm obt
  & $(0.6,0.1,0.3)$ & \bm{$1378 \pm 5$} & $663 \pm 6$ & $202 \pm 4$\\
 \hline
 \end{tabular}
-\caption{MO-MCTS results in MO-PTSP with different weight vectors. Values in bold indicate the best results on each map, when they are separated at least by $2$ standard errors from the others.}
+\caption{MO-PTSP results with different weight vectors. Values in bold indicate the best results on each map, when they are separated at least by $2$ standard errors from the others.}
 \label{tab:weights}
 \end{center}
 \end{table}
-
-The same three algorithms have been tested in the MO-PTSP domain. The experiments are performed in the $10$ maps available within the framework~\footnote{Available at \url{www.ptsp-game.net}}. In this case, the optimal Pareto front is not known in advance, and normally differs from one map to another. Hence, the mechanisms to compare the performance of the algorithms tested need to be different than the one used for DST.
-
-The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives as having the same weight, while the other three give more relevance to different objectives. These vectors then provide a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses these weights to select an action based on a weighted sum, which in preliminary experiments has shown better performance than the Euclidean distance mechanism.
-
-The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
-
-
 
 Some exceptions can be explained by analysing the specific maps: in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the smallest fuel consumption). Also, in map 10, there is no difference in the damage objective, however map 10 is a map with no obstacles to damage the ship (thus only lava lakes deal damage). This also results in this map being the one with the lowest overall damage. It can also be seen that, in those maps where time has priority, the results for this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
 
