@@ -926,71 +926,206 @@ The same three algorithms have been tested in the MO-PTSP domain. The experiment
 
 The idea is as follows. First of all, $4$ different weight vectors are tested: $W_1 = (0.33,0.33,0.33)$, $W_2 = (0.1,0.3,0.6)$, $W_3 = (0.1,0.6,0.3)$ and $W_4 = (0.6,0.1,0.3)$, where each $w_i$ corresponds to the weight for an objective ($w_t$ for time, $w_f$ for fuel and $w_d$ for damage, in this order). $W_1$ treats all objectives as having the same weight, while the other three give more relevance to different objectives. These vectors then provide a wide spectrum for weights in this benchmark. In this case, MO-MCTS uses these weights to select an action based on a weighted sum, which in preliminary experiments has shown better performance than the Euclidean distance mechanism.
 
-The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
+The first point to check is if the different weight vectors affect the solutions obtained by MO-MCTS. Table~\ref{tab:weights} shows the results of executing the MO-MCTS controller during $30$ games in each one of the $10$ maps of the MO-PTSP, for every weight vector. This table includes the averages obtained and the p-value for the results of the objective with the highest weight, compared with the result from the default weight vector $W_1 = (0.33,0.33,0.33)$ in the same map. It can be seen that the highest weight in $W$ leads, in most of the cases, to the best solution in that objective in the map. 
+
+
+%\begin{table}[!t]
+%\begin{center}
+%%\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
+%\begin{tabular}{|p{0.8cm}|p{2.2cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|}
+%\hline
+%\textbf{Map}  & \textbf{$W:(w_t, w_f, w_d)$} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $(0.33,0.33,0.33)$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
+% & $(0.1,0.3,0.6)$ & $1657 \pm 8$ & $130 \pm 2$ & \bm{$773 \pm 11$}\\
+% & $(0.1,0.6,0.3)$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$\\
+% & $(0.6,0.1,0.3)$ & $1649 \pm 8$ & $132 \pm 2$ & $833 \pm 13$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 2}} & $(0.33,0.33,0.33)$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$\\
+% & $(0.1,0.3,0.6)$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$}\\
+% & $(0.1,0.6,0.3)$ & $1416 \pm 8$ & \bm{$219 \pm 4$} & $360 \pm 3$\\
+% & $(0.6,0.1,0.3)$ & $1396 \pm 8$ & $245 \pm 5$ & $361 \pm 2$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 3}} & $(0.33,0.33,0.33)$ & $1373 \pm 6$ & $221 \pm 3$& $301 \pm 7$\\
+% & $(0.1,0.3,0.6)$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$}\\
+% & $(0.1,0.6,0.3)$ & $1385 \pm 6$ & \bm{$203 \pm 4$} & $291 \pm 7$\\
+% & $(0.6,0.1,0.3)$ & \bm{$1363 \pm 4$} & $229 \pm 4$ & $285 \pm 7$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 4}} & $(0.33,0.33,0.33)$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$\\
+% & $(0.1,0.3,0.6)$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$}\\
+% & $(0.1,0.6,0.3)$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$\\
+% & $(0.6,0.1,0.3)$ & $1388 \pm 6$ & $309 \pm 4$ & $559 \pm 5$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 5}} & $(0.33,0.33,0.33)$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$\\
+% & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & $541 \pm 4$\\
+% & $(0.1,0.6,0.3)$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$\\
+% & $(0.6,0.1,0.3)$ & $1399 \pm 9$ & $469 \pm 4$ & $547 \pm 3$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 6}} & $(0.33,0.33,0.33)$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$\\
+% & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & $286 \pm 5$\\
+% & $(0.1,0.6,0.3)$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$\\
+% & $(0.6,0.1,0.3)$ & $1571 \pm 7$ & $559 \pm 5$ & $294 \pm 4$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 7}} & $(0.33,0.33,0.33)$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$\\
+% & $(0.1,0.3,0.6)$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$}\\
+% & $(0.1,0.6,0.3)$ & $1489 \pm 12$ & \bm{$549 \pm 3$} & $264 \pm 6$\\
+% & $(0.6,0.1,0.3)$ & \bm{$1407 \pm 8$} & $618 \pm 5$ & $270 \pm 6$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 8}} & $(0.33,0.33,0.33)$ & $1761 \pm 9$ & $254 \pm 5$& $382 \pm 3$\\
+% & $(0.1,0.3,0.6)$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$}\\
+% & $(0.1,0.6,0.3)$ & $1826 \pm 10$ & \bm{$230 \pm 3$} & $392 \pm 7$\\
+% & $(0.6,0.1,0.3)$ & \bm{$1732 \pm 9$} & $311 \pm 8$ & $379 \pm 6$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 9}} & $(0.33,0.33,0.33)$ & $2501 \pm 14$ & $926 \pm 6$& $574 \pm 9$\\
+% & $(0.1,0.3,0.6)$ & $2503 \pm 10$ & $921 \pm 10$ & \bm{$524 \pm 8$}\\
+% & $(0.1,0.6,0.3)$ & $2641 \pm 14$ & \bm{$833 \pm 5$} & $574 \pm 14$\\
+% & $(0.6,0.1,0.3)$ & \bm{$2470 \pm 9$} & $956 \pm 5$ & $573 \pm 8$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 10}} & $(0.33,0.33,0.33)$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$\\
+% & $(0.1,0.3,0.6)$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$\\
+% & $(0.1,0.6,0.3)$ & $1542 \pm 10$ & \bm{$554 \pm 4$} & $229 \pm 5$\\
+% & $(0.6,0.1,0.3)$ & \bm{$1378 \pm 5$} & $663 \pm 6$ & $202 \pm 4$\\
+%\hline
+%\end{tabular}
+%\caption{MO-PTSP results with different weight vectors. Values in bold indicate the best results on each map, when they are separated at least by $2$ standard errors from the others.}
+%\label{tab:weights}
+%\end{center}
+%\end{table}
 
 
 \begin{table}[!t]
 \begin{center}
 %\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
-\begin{tabular}{|p{0.8cm}|p{2.2cm}|m{1.13cm}|m{1.13cm}|m{1.13cm}|}
+\bgroup
+%\def\arraystretch{0.9}%  1 is the default, change whatever you need
+\renewcommand\tabcolsep{5pt}
+\begin{tabular}{|p{0.9cm}|p{0.5cm}|m{1.9cm}|m{1.75cm}|m{1.75cm}|}
 \hline
-\textbf{Map}  & \textbf{$W:(w_t, w_f, w_d)$} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
+\textbf{Map}  & \textbf{$W$} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
 \hline
- \multirow{3}{*}{\textbf{Map 1}} & $(0.33,0.33,0.33)$ & $1654 \pm 7$ & $131 \pm 2$& $846 \pm 13$\\
- & $(0.1,0.3,0.6)$ & $1657 \pm 8$ & $130 \pm 2$ & \bm{$773 \pm 11$}\\
- & $(0.1,0.6,0.3)$ & $1681 \pm 11$ & $131 \pm 2$ & $837 \pm 15$\\
- & $(0.6,0.1,0.3)$ & $1649 \pm 8$ & $132 \pm 2$ & $833 \pm 13$\\
+ \multirow{3}{*}{\textbf{Map 1}} & $W_1$ & $1654$ & $131$& $846$\\
+ & $W_2$ & $1657$ & $130$ & \textbf{773} \bm{$(<0.01)$}\\
+ & $W_3$ & $1681$ & $131$ $(1.0)$ & $837$\\
+ & $W_4$ & $1649$ $(0.63)$ & $132$ & $833$\\
 \hline
- \multirow{3}{*}{\textbf{Map 2}} & $(0.33,0.33,0.33)$ & $1409 \pm 7$ & $235 \pm 4$& $364 \pm 3$\\
- & $(0.1,0.3,0.6)$ & $1402 \pm 6$ & $236 \pm 5$ & \bm{$354 \pm 2$}\\
- & $(0.1,0.6,0.3)$ & $1416 \pm 8$ & \bm{$219 \pm 4$} & $360 \pm 3$\\
- & $(0.6,0.1,0.3)$ & $1396 \pm 8$ & $245 \pm 5$ & $361 \pm 2$\\
+ \multirow{3}{*}{\textbf{Map 2}} & $W_1$ & $1409$ & $235$& $364$\\
+ & $W_2$ & $1402$ & $236$ & \textbf{354} \bm{$(<0.01)$}\\
+ & $W_3$ & $1416$ & \textbf{219} \bm{$(<0.01)$} & $360$\\
+ & $W_4$ & $1396$ $(0.22)$ & $245$ & $361$\\
 \hline
- \multirow{3}{*}{\textbf{Map 3}} & $(0.33,0.33,0.33)$ & $1373 \pm 6$ & $221 \pm 3$& $301 \pm 7$\\
- & $(0.1,0.3,0.6)$ & $1378 \pm 5$ & $211 \pm 3$ & \bm{$268 \pm 5$}\\
- & $(0.1,0.6,0.3)$ & $1385 \pm 6$ & \bm{$203 \pm 4$} & $291 \pm 7$\\
- & $(0.6,0.1,0.3)$ & \bm{$1363 \pm 4$} & $229 \pm 4$ & $285 \pm 7$\\
+ \multirow{3}{*}{\textbf{Map 3}} & $W_1$ & $1373$ & $221$& $301$\\
+ & $W_2$ & $1378$ & $211$ & \textbf{268} \bm{$(<0.01)$}\\
+ & $W_3$ & $1385$ & \textbf{203} \bm{$(<0.01)$} & $291$\\
+ & $W_4$ & $1363$ $(0.17)$ & $229$ & $285$\\
 \hline
- \multirow{3}{*}{\textbf{Map 4}} & $(0.33,0.33,0.33)$ & $1383 \pm 6$ & $291 \pm 5$& $565 \pm 5$\\
- & $(0.1,0.3,0.6)$ & $1385 \pm 7$ & $304 \pm 4$ & \bm{$542 \pm 4$}\\
- & $(0.1,0.6,0.3)$ & $1423 \pm 6$ & \bm{$273 \pm 4$} & $583 \pm 5$\\
- & $(0.6,0.1,0.3)$ & $1388 \pm 6$ & $309 \pm 4$ & $559 \pm 5$\\
+ \multirow{3}{*}{\textbf{Map 4}} & $W_1$ & $1383$ & $291$& $565$\\
+ & $W_2$ & $1385$ & $304$ & \textbf{542} \bm{$(<0.01)$}\\
+ & $W_3$ & $1423 $ & \textbf{273} \bm{$(<0.01)$} & $583$\\
+ & $W_4$ & $1388$ $(0.55)$ & $309$ & $559$\\
 \hline
- \multirow{3}{*}{\textbf{Map 5}} & $(0.33,0.33,0.33)$ & $1405 \pm 7$ & $467 \pm 4$& $559 \pm 4$\\
- & $(0.1,0.3,0.6)$ & $1431 \pm 9$ & $447 \pm 4$ & $541 \pm 4$\\
- & $(0.1,0.6,0.3)$ & $1467 \pm 9$ & \bm{$411 \pm 5$} & $567 \pm 5$\\
- & $(0.6,0.1,0.3)$ & $1399 \pm 9$ & $469 \pm 4$ & $547 \pm 3$\\
+ \multirow{3}{*}{\textbf{Map 5}} & $W_1$ & $1405$ & $467$& $559$\\
+ & $W_2$ & $1431$ & $447$ & \textbf{541} \bm{$(<0.01)$}\\
+ & $W_3$ & $1467$ & \textbf{411} \bm{$(<0.01)$} & $567$\\
+ & $W_4$ & $1399$ $(0.60)$ & $469$ & $547$\\
 \hline
- \multirow{3}{*}{\textbf{Map 6}} & $(0.33,0.33,0.33)$ & $1575 \pm 7$ & $549 \pm 5$& $303 \pm 4$\\
- & $(0.1,0.3,0.6)$ & $1626 \pm 9$ & $540 \pm 6$ & $286 \pm 5$\\
- & $(0.1,0.6,0.3)$ & $1703 \pm 11$ & \bm{$499 \pm 4$} & $316 \pm 7$\\
- & $(0.6,0.1,0.3)$ & $1571 \pm 7$ & $559 \pm 5$ & $294 \pm 4$\\
+ \multirow{3}{*}{\textbf{Map 6}} & $W_1$ & $1575$ & $549$& $303$\\
+ & $W_2$ & $1626$ & $540$ & \textbf{286} \bm{$(0.01)$}\\
+ & $W_3$ & $1703$ & \textbf{499} \bm{$(<0.01)$} & $316$\\
+ & $W_4$ & $1571$ $(0.68)$ & $559$ & $294$\\
 \hline
- \multirow{3}{*}{\textbf{Map 7}} & $(0.33,0.33,0.33)$ & $1434 \pm 5$ & $599 \pm 6$& $284 \pm 6$\\
- & $(0.1,0.3,0.6)$ & $1475 \pm 10$ & $602 \pm 5$ & \bm{$243 \pm 6$}\\
- & $(0.1,0.6,0.3)$ & $1489 \pm 12$ & \bm{$549 \pm 3$} & $264 \pm 6$\\
- & $(0.6,0.1,0.3)$ & \bm{$1407 \pm 8$} & $618 \pm 5$ & $270 \pm 6$\\
+ \multirow{3}{*}{\textbf{Map 7}} & $W_1$ & $1434$ & $599$& $284$\\
+ & $W_2$ & $1475$ & $602$ & \textbf{243} \bm{$(0.01)$}\\
+ & $W_3$ & $1489$ & \textbf{549} \bm{$(<0.01)$} & $264$\\
+ & $W_4$ & \textbf{1407} \bm{$(<0.01)$} & $618$ & $270$\\
 \hline
- \multirow{3}{*}{\textbf{Map 8}} & $(0.33,0.33,0.33)$ & $1761 \pm 9$ & $254 \pm 5$& $382 \pm 3$\\
- & $(0.1,0.3,0.6)$ & $1804 \pm 10$ & $269 \pm 4$ & \bm{$357 \pm 4$}\\
- & $(0.1,0.6,0.3)$ & $1826 \pm 10$ & \bm{$230 \pm 3$} & $392 \pm 7$\\
- & $(0.6,0.1,0.3)$ & \bm{$1732 \pm 9$} & $311 \pm 8$ & $379 \pm 6$\\
+ \multirow{3}{*}{\textbf{Map 8}} & $W_1$ & $1761 $ & $254$& $382$\\
+ & $W_2$ & $1804$ & $269$ & \textbf{357} \bm{$(<0.01)$}\\
+ & $W_3$ & $1826$ & 230 \bm{$(<0.01)$} & $392$\\
+ & $W_4$ & \textbf{1732} \bm{$(0.02)$} & $311$ & $379$\\
 \hline
- \multirow{3}{*}{\textbf{Map 9}} & $(0.33,0.33,0.33)$ & $2501 \pm 14$ & $926 \pm 6$& $574 \pm 9$\\
- & $(0.1,0.3,0.6)$ & $2503 \pm 10$ & $921 \pm 10$ & \bm{$524 \pm 8$}\\
- & $(0.1,0.6,0.3)$ & $2641 \pm 14$ & \bm{$833 \pm 5$} & $574 \pm 14$\\
- & $(0.6,0.1,0.3)$ & \bm{$2470 \pm 9$} & $956 \pm 5$ & $573 \pm 8$\\
+ \multirow{3}{*}{\textbf{Map 9}} & $W_1$ & $2501$ & $926$& $574$\\
+ & $W_2$ & $2503$ & $921$ & \textbf{524} \bm{$(<0.01)$}\\
+ & $W_3$ & $2641$ & \textbf{833} \bm{$(<0.01)$} & $574$\\
+ & $W_4$ & $2470$ $(0.06)$ & $956$ & $573$\\
 \hline
- \multirow{3}{*}{\textbf{Map 10}} & $(0.33,0.33,0.33)$ & $1430 \pm 8$ & $630 \pm 4$& $205 \pm 2$\\
- & $(0.1,0.3,0.6)$ & $1493 \pm 13$ & $615 \pm 4$ & $209 \pm 2$\\
- & $(0.1,0.6,0.3)$ & $1542 \pm 10$ & \bm{$554 \pm 4$} & $229 \pm 5$\\
- & $(0.6,0.1,0.3)$ & \bm{$1378 \pm 5$} & $663 \pm 6$ & $202 \pm 4$\\
+ \multirow{3}{*}{\textbf{Map 10}} & $W_1$ & $1430$ & $630$& $205$\\
+ & $W_2$ & $1493$ & $615$ & $209$ $(0.16)$\\
+ & $W_3$ & $1542$ & \textbf{554} \bm{$(<0.01)$} & $229$\\
+ & $W_4$ & \textbf{1378} \bm{$(<0.01)$} & $663$ & $202$\\
 \hline
 \end{tabular}
-\caption{MO-PTSP results with different weight vectors. Values in bold indicate the best results on each map, when they are separated at least by $2$ standard errors from the others.}
+\egroup
+\caption{MO-PTSP averages with different weight vectors. Includes p-values for the objective with the highest weight. Results in bold are statistically significant (p-value $<0.05$).}
 \label{tab:weights}
 \end{center}
 \end{table}
+
+%\begin{table}[!t]
+%\begin{center}
+%%\begin{tabular}{|>{\centering\arraybackslash}m{0.65cm}|c|c|c|c|}
+%\bgroup
+%%\def\arraystretch{0.9}%  1 is the default, change whatever you need
+%\renewcommand\tabcolsep{5pt}
+%\begin{tabular}{|p{0.9cm}|p{0.5cm}|m{1.9cm}|m{1.75cm}|m{1.75cm}|}
+%\hline
+%\textbf{Map}  & \textbf{$W$} & \textbf{Time} &  \textbf{Fuel} & \textbf{Damage} \\ 
+%\hline
+% \multirow{3}{*}{\textbf{Map 1}} & $W_1$ & $1654$ & $131$& $846$\\
+% & $W_2$ & $1657$ & $130$ & \textbf{773} \bm{$(<0.01)$}\\
+% & $W_3$ & $1681$ & \textbf{131} $(0.72)$ & $837$\\
+% & $W_4$ & \textbf{1649} $(0.63)$ & $132$ & $833$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 2}} & $W_1$ & $1409$ & $235$& $364$\\
+% & $W_2$ & $1402$ & $236$ & $354$ $(0.1)$\\
+% & $W_3$ & $1416$ & \textbf{219} \bm{$(0.01)$} & $360$\\
+% & $W_4$ & \textbf{1396} $(0.55)$ & $245$ & $361$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 3}} & $W_1$ & $1373$ & $221$& $301$\\
+% & $W_2$ & $1378$ & $211$ & \textbf{268} $(0.053)$\\
+% & $W_3$ & $1385$ & \textbf{203} $(0.11)$ & $291$\\
+% & $W_4$ & \textbf{1363} $(0.17)$ & $229$ & $285$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 4}} & $W_1$ & \textbf{1383} & $291$& $565$\\
+% & $W_2$ & $1385$ & $304$ & \textbf{542} \bm{$(0.01)$}\\
+% & $W_3$ & $1423 $ & \textbf{273} \bm{$(0.01)$} & $583$\\
+% & $W_4$ & $1388$ $(0.74)$ & $309$ & $559$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 5}} & $W_1$ & $1405$ & $467$& $559$\\
+% & $W_2$ & $1431$ & $447$ & \textbf{541} $(0.23)$\\
+% & $W_3$ & $1467$ & \textbf{411} \bm{$(<0.01)$} & $567$\\
+% & $W_4$ & \textbf{1399} $(0.60)$ & $469$ & $547$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 6}} & $W_1$ & $1575$ & $549$& $303$\\
+% & $W_2$ & $1626$ & $540$ & \textbf{286} $(0.21)$\\
+% & $W_3$ & $1703$ & \textbf{499} \bm{$(<0.01)$} & $316$\\
+% & $W_4$ & \textbf{1571} $(0.68)$ & $559$ & $294$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 7}} & $W_1$ & $1434$ & $599$& $284$\\
+% & $W_2$ & $1475$ & $602$ & \textbf{243} \bm{$(0.01)$}\\
+% & $W_3$ & $1489$ & \textbf{549} \bm{$(<0.01)$} & $264$\\
+% & $W_4$ & \textbf{1407} \bm{$(0.01)$} & $618$ & $270$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 8}} & $W_1$ & $1761 $ & $254$& $382$\\
+% & $W_2$ & $1804$ & $269$ & 357 \bm{$(<0.01)$}\\
+% & $W_3$ & $1826$ & 230 \bm{$(<0.01)$} & $392$\\
+% & $W_4$ & \textbf{1732} \bm{$(0.02)$} & $311$ & $379$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 9}} & $W_1$ & $2501$ & $926$& $574$\\
+% & $W_2$ & $2503$ & $921$ & \textbf{524} \bm{$(<0.01)$}\\
+% & $W_3$ & $2641$ & \textbf{833} \bm{$(<0.01)$} & $574$\\
+% & $W_4$ & \textbf{2470} $(0.06)$ & $956$ & $573$\\
+%\hline
+% \multirow{3}{*}{\textbf{Map 10}} & $W_1$ & $1430$ & $630$& $205$\\
+% & $W_2$ & $1493$ & $615$ & \textbf{209} $(0.16)$\\
+% & $W_3$ & $1542$ & \textbf{554} \bm{$(0.00)$} & $229$\\
+% & $W_4$ & \textbf{1378} \bm{$(<0.01)$} & $663$ & $202$\\
+%\hline
+%\end{tabular}
+%\egroup
+%\caption{MO-PTSP results with different weight vectors. Values in bold indicate the best results on each map, when they are separated at least by $2$ standard errors from the others.}
+%\label{tab:weights}
+%\end{center}
+%\end{table}
 
 Some exceptions can be explained by analysing the specific maps: in map 1, a fuel canister is always collected near the end, restoring the fuel level to its maximum. This leaves too few cycles to make a difference in the controller (note also that this is the map with the smallest fuel consumption). Also, in map 10, there is no difference in the damage objective, however map 10 is a map with no obstacles to damage the ship (thus only lava lakes deal damage). This also results in this map being the one with the lowest overall damage. It can also be seen that, in those maps where time has priority, the results for this objective are not as dominant as the other two. This can be explained by the fact that the time heuristic is actually part of the fuel and damage heuristics (Equation~\ref{eq:dist} in Eqs.~\ref{eq:fuel} and~\ref{eq:dam}).
 
