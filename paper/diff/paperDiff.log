@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.28)  9 JUN 2014 13:41
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.1.28)  11 JUN 2014 15:25
 entering extended mode
  %&-line parsing enabled.
 **paperDiff.tex
@@ -814,12 +814,6 @@ gns to
  []
 
 
-Underfull \hbox (badness 1430) in paragraph at lines 669--670
-\OT1/ptm/m/n/10 front $\OML/cmm/m/it/10 F[]$ []|   []   |   []   |   []   |   [
-]   |   []   |   []   |   []
- []
-
-
 Underfull \hbox (badness 2894) in paragraph at lines 686--687
 []\OT1/ptm/m/n/10 Multi-objective Re-in-force-ment Learn-ing (MORL) [[]]
  []
@@ -1355,11 +1349,7 @@ File: photos/lucas.png Graphic file (type png)
 <use photos/lucas.png> [14
 
  <./photos/perez.jpg> <./photos/sanaz.jpg> <./photos/spyro.jpg> <./photos/lucas
-.png>] (./paperDiff.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+.png>] (./paperDiff.aux) ) 
 Here is how much of TeX's memory you used:
  16937 strings out of 493848
  295273 string characters out of 1152823
@@ -1368,26 +1358,26 @@ Here is how much of TeX's memory you used:
  52018 words of font info for 111 fonts, out of 3000000 for 9000
  721 hyphenation exceptions out of 8191
  63i,14n,92p,1236b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-texlive/fonts/typ
-e1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
-cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi7.pfb></
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/te
-xmf-texlive/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texmf-te
-xlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/
-type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/type1/public/
-amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
-sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/tex
-mf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-texlive/f
-onts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/share/texmf-texlive/fonts/t
-ype1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-texlive/fonts/type1/u
-rw/courier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pf
-b></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf
--texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1
-/urw/times/utmri8a.pfb>
-Output written on paperDiff.pdf (14 pages, 1536584 bytes).
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc
+}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share
+/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texl
+ive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/t
+ype1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/
+amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
+cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cmextra/cmmib8.
+pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/sh
+are/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-tex
+live/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/am
+sfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
+msy7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb></u
+sr/share/texmf-texlive/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/tex
+mf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/t
+ype1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi
+8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/t
+exmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on paperDiff.pdf (14 pages, 1536693 bytes).
 PDF statistics:
  407 PDF objects out of 1000 (max. 8388607)
  105 named destinations out of 1000 (max. 500000)
