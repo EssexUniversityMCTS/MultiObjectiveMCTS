@@ -539,7 +539,7 @@ Each iteration of MCTS can be divided into several steps, as introduced by G. Ch
 
 \begin{figure} [!t]
 	\begin{center}
-	\includegraphics[scale=0.4,natwidth=708,natheight=484]{img/mcts.png}
+	\includegraphics[scale=0.4,natwidth=708,natheight=484]{figures/perez1.png}
 	\caption{MCTS algorithm steps.}
 	\label{fig:mcts}
 	\end{center}
@@ -589,7 +589,7 @@ In this case, it is said that these solutions are indifferent to each other. Sol
 
 \begin{figure} [!t]
 	\begin{center}
-	\includegraphics[scale=0.235]{img/moopDec2.png}
+	\includegraphics[scale=0.235]{figures/perez2.png}
 	\caption{Decision and objective spaces in a MOP with two variables ($x_1$ and $x_2$) and two objectives ($f_1$ and $f_2$). In the objective space, yellow dots are non-optimal objective vectors, while blue dots form a non-dominated set. From~\cite{Brockhoff2013}.}
 	\label{fig:moop}
 	\end{center}
@@ -672,7 +672,7 @@ Given a Pareto front $P$, $HV(P)$ is defined as the volume of the objective spac
 
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=0.75\columnwidth]{img/hv}
+\includegraphics[width=0.75\columnwidth]{figures/perez3}
 \end{center}
 \caption{$HV(P)$ of a given Pareto-front $P$}
 \label{fig:hv}
@@ -699,7 +699,7 @@ The next step is to define the value for each state and action pair, $V(s,a)$, a
 
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=0.65\columnwidth]{img/wangHV}
+\includegraphics[width=0.65\columnwidth]{figures/perez4}
 \end{center}
 \caption{$r^p_x$ is the projection of the $r_x$ value on the piecewise linear surface (discontinuous line). The shadowed surface represents $HV(P)$. From~\cite{Weijia2012}.}
 \label{fig:wangHV}
@@ -772,7 +772,7 @@ The Deep Sea Treasure (DST) is a popular multi-objective problem introduced by V
 
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=0.75\columnwidth]{img/dst}
+\includegraphics[width=0.75\columnwidth]{figures/perez5}
 \end{center}
 \caption{Environment of the Deep Sea Treasure (from~\cite{Vamplew2010}): grey squares represent the treasure (with their different values) available in the map. The black cells are the sea floor and the white ones are the positions that the vessel can occupy freely. The game ends when the submarine picks one of the treasures.}
 \label{fig:dstBase}
@@ -787,7 +787,7 @@ The optimal Pareto front of the DST is shown in Figure~\ref{fig:optDst}. There a
 
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=1.0\columnwidth]{img/optDST.png}
+\includegraphics[width=1.0\columnwidth]{figures/perez6}
 \end{center}
 \caption{Optimal Pareto Front of the Deep Sea Treasure, with both objectives to be maximized.}
 \label{fig:optDst}
@@ -801,7 +801,7 @@ The DST is a problem especially suited for the use of Transposition Tables (TT)~
 
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=0.9\columnwidth]{img/dstTransTables}
+\includegraphics[width=0.9\columnwidth]{figures/perez7}
 \end{center}
 \caption{Example of two different sequences of actions (R: Right, D: Down) that lie in the same position in the map, but at a different node in the tree.}
 \label{fig:dstTable}
@@ -837,7 +837,7 @@ Figure~\ref{fig:sampleMap} shows an example of an MO-PTSP map, as drawn by the f
 
 \begin{figure} [!t]
 	\begin{center}
-	\includegraphics[width=0.8\columnwidth]{img/moptspmap}
+	\includegraphics[width=0.8\columnwidth]{figures/perez8}
 	\caption{Sample MO-PTSP map.}
 	\label{fig:sampleMap}
 	\end{center}
@@ -908,7 +908,7 @@ The weight vector for DST has two dimensions. This vector is here referred to as
 
 \begin{figure*}[!t]
 	\centering
-	\includegraphics[width=2.1\columnwidth]{img/dstAll}
+	\includegraphics[width=2.1\columnwidth]{figures/perez9}
 	\caption{Results in DST: percentages of each optima found during $100$ games played with different weight vectors. Scalarization approaches converge to the edges of the optimal front, whereas Pareto approaches are able to find all optimal solutions. The proposed algorithm, MO-MCTS, finds these solutions significantly more often than NSGA-II.}
 	\label{fig:extCase}
 \end{figure*}
