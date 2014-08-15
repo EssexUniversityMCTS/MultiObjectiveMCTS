@@ -22,8 +22,8 @@ public class LunarRun {
     public static boolean m_verbose = false;
 
     public static Game game;
-    //public static LunarLanderEvoCont cont;
-    public static LunarLanderHOOCont cont;
+    public static LunarLanderEvoCont cont;
+    //public static LunarLanderHOOCont cont;
 
     public static void main(String[] args) {
         runGame();
@@ -33,8 +33,8 @@ public class LunarRun {
 
     public static void prepareGame() {
         game = new LunarGame();
-        //cont = new LunarLanderEvoCont();
-        cont = new LunarLanderHOOCont();
+        cont = new LunarLanderEvoCont();
+       // cont = new LunarLanderHOOCont();
     }
 
     public static void runGame() {

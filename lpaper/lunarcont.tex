@@ -84,7 +84,7 @@ Section~\ref{sec:Planning} explains why and how the above algorithms can be used
 
 This is the first background section of this paper and aims to introduce the two core optimisation algorithms on which our contributions are based. We will present both algorithms from an implementer's viewpoint, without explicitly justifying the design and mathematical choices behind them, nor going into too much detail. Interested readers should look at the cited bibliography for extensive discussions. 
 
-In general, the optimisation problem can be defined as: Given a function $f:\bm{X}\rightarrow Y $, where $X \in \mathcal{R}^n$, with $n$ being the length of vector $\bm{X}$. The domain $\bm{X}$ is usually called the search space. Our goal is to find a vector $\bm{x}_0$, for which $f(\bm{x}) > f(\bm{x_0}) $ for all $x$ (also known as ``minimisation'') or $f(\bm{x}) < f(\bm{x_0})$ for all $x$ (known as ``maximisation'').
+In general, the optimisation problem can be defined as: Given a function $f:\bm{X}\rightarrow \bm{Y} $, where $\bm{X} \in \mathcal{R}^n$, with $n$ being the length of vector $\bm{X}$. The domain $\bm{X}$ is usually called the search space. Our goal is to find a vector $\bm{x}_0$, for which $f(\bm{x}) > f(\bm{x_0}) $ for all $x$ (also known as ``minimisation'') or $f(\bm{x}) < f(\bm{x_0})$ for all $x$ (known as ``maximisation'').
 There are an enormous number of algorithms devoted to this problem, but only two will be presented and compared here. Both of these are considered state of the art in their respective fields and do not require the calculation of a gradient. If one has an analytic expression of the gradient or if the functions proposed are smooth enough, it might be better to look elsewhere for solutions (e.g. Conjugate Gradient Methods~\cite{shewchuk1994introduction}).
 
 \subsection{CMA-ES} \label{sec:algCma}
@@ -101,7 +101,7 @@ CMA-ES creates a population of individuals by sampling from an MND: $\mathcal{N}
 
 \subsection{T-HOO}
 %$\bm{x^{C_l}_{\mathit{min}}} = \bm{x^{C}_{\mathit{min}}} $,
-Recently, a family of algorithms based on discretizing the search domain has been proposed. Only one of these algorithms is going to be discussed here, Truncated Hierarchical Optimistic Optimisation (T-HOO)~\cite{hoo2011}. The T-HOO algorithm was built from the ground up to perform optimisation of noisy functions. It is an iterative, anytime algorithm, which is run for $n_0$ iterations.  The algorithm is based on a number of components. The first one is a data structure called a node and designated $\nu$. The node includes the maximum and minimum values of our search space, vectors $\bm{x_{\mathit{max}}}$ and $\bm{x_{\mathit{min}}}$ respectively. The node also has a property called $\mathit{count}$, which initially is set to zero and a property called $\mathit{sum}$, which, again, is initially set to zero. An unvisited node (i.e. $\mathit{count}=0$) is called a leaf node.  ``Splitting'' a node is the procedure of creating two children $C(\nu) = \{C_l(\nu),C_r(\nu)\}$. Both children are initialised $\bm{x_{\mathit{max}}}$ and $\bm{x_{\mathit{min}}}$ to their parents' node values when there are multiple dimensions to choose from, at $k$ according to some random distribution. Thus, for child $C_l(\nu)$ ,   $\bm{x^{C_l}_{\mathit{max,k}}} =\bm{x^{C}_{\mathit{min,k}}} +  \left(\bm{x^{C}_{\mathit{min,k}}} - \bm{x^{C}_{\mathit{max,k}}}\right)/2 $. For the other child,  $\bm{x^{C_r}_{\mathit{min,k}}} = \bm{x^{C}_{\mathit{min,k}}} +  \left(\bm{x^{C}_{\mathit{min,k}}} - \bm{x^{C}_{\mathit{max,k}}}\right)/2 $. In other words, the father node is split into two children nodes, choosing which dimension to split uniform random (or according to some other criterion). Each node also has an associated value called $B(\nu)$, which is defined recursively as:  $B(\nu) = min \{U(\nu),max \{B(C_l(\nu)),B(C_r(\nu))\}\}$. Part of this equation is the term $U(\nu)$, which is defined as in Equation \ref{eq:U}:
+Recently, a family of algorithms based on discretizing the search domain has been proposed. Only one of these algorithms is going to be discussed here, Truncated Hierarchical Optimistic Optimisation (T-HOO)~\cite{hoo2011}. The T-HOO algorithm was built from the ground up to perform optimisation of noisy functions. It is an iterative, anytime algorithm, which is run for $n_0$ iterations.  The algorithm is based on a number of components. The first one is a data structure called a node and designated $\nu$. The node includes the maximum and minimum values of our search space, vectors $\bm{x_{\mathit{max}}}$ and $\bm{x_{\mathit{min}}}$ respectively. The node also has a property called $\mathit{count}$, which initially is set to zero and a property called $\mathit{sum}$, which, again, is initially set to zero. An unvisited node (i.e. $\mathit{count}=0$) is called a leaf node.  ``Splitting'' a node is the procedure of creating two children $C(\nu) = \{C_l(\nu),C_r(\nu)\}$. Both children are initialised $\bm{x_{\mathit{max}}}$ and $\bm{x_{\mathit{min}}}$ to their parents' node values when there are multiple dimensions to choose from, at $k$ according to some random distribution. Thus, for child $C_l(\nu)$ ,   $\bm{x^{C_l}_{\mathit{max,k}}} =\bm{x^{C}_{\mathit{min,k}}} +  \left(\bm{x^{C}_{\mathit{min,k}}} - \bm{x^{C}_{\mathit{max,k}}}\right)/2 $. For the other child,  $\bm{x^{C_r}_{\mathit{min,k}}} =  \bm{x^{C_l}_{\mathit{max,k}}}$. In other words, the father node is split into two children nodes, choosing which dimension to split uniform random (or according to some other criterion). Each node also has an associated value called $B(\nu)$, which is defined recursively as:  $B(\nu) = min \{U(\nu),max \{B(C_l(\nu)),B(C_r(\nu))\}\}$. Part of this equation is the term $U(\nu)$, which is defined as in Equation \ref{eq:U}:
 
 
 \begin{equation}
@@ -111,7 +111,7 @@ U(\nu) = S(\nu)/N(\nu) + \sqrt{2ln n_0/N(\nu)} + \upsilon_1 \rho^h
 
 
 
-If a dissimilarity metric is defined between different values of $\bm{X}$ as ${\lVert \bm{x}_1 - \bm{x}_2) \rVert}^\alpha$, one can set $\upsilon_1 =\sqrt{|A|}/2)^\alpha$ and $\rho = 2^{-\alpha/|A|}$. In our experiments $a = 2$. If $N(\nu) = 0$, $B(\nu) = U(\nu) = \infty$, i.e. unvisited nodes have priority. If a node has not been visited then it is called a leaf node. If a node is a leaf node, one can ``draw'' a sample from it, by uniformly randomly sampling between $\bm{x_{\mathit{max}}}$ and $\bm{x_{\mathit{min}}}$.
+If a dissimilarity metric is defined between different values of $\bm{X}$ as ${\lVert \bm{x}_1 - \bm{x}_2 \rVert}^\alpha$, one can set $\upsilon_1 =\sqrt{|A|}/2)^\alpha$ and $\rho = 2^{-\alpha/|A|}$. In our experiments $\alpha = 2$. If $N(\nu) = 0$, $B(\nu) = U(\nu) = \infty$, i.e. unvisited nodes have priority. If a node has not been visited then it is called a leaf node. If a node is a leaf node, one can ``draw'' a sample from it, by uniformly randomly sampling between $\bm{x_{\mathit{max}}}$ and $\bm{x_{\mathit{min}}}$.
 
 The algorithm works by starting at the root node (the initial node). Since the leaf node and the root node coincide, HOOT samples from it and splits it. It can now proceed to the second iteration, where the algorithm follows a route using the maximum B-value of its children nodes, which it then samples and splits. The process repeats until the maximum number of iterations $n_0$ is over. If a certain depth is exceeded there is no point splitting nodes any more (given our iteration budget $n_0$). 
 
@@ -124,7 +124,7 @@ In this section a formalised version of planing will be presented and an explana
 The main decision theoretic abstraction for planning/control is the Markov Decision Process (MDP)~\cite{howard1960dynamic}. Formally,  an MDP is a tuple $\langle S,A,T,R,\gamma\rangle$, where:
 
 \begin{itemize}
-\item $S$ is a set of states, $s \in S$, where $s_j^t$ is state $j$ at time $t$ and $s'_j$ is the state j at time $t+1$.
+\item $S$ is a set of states, $s \in S$, with $s'$ being the next state in time. 
 \item $A$ is a set of actions, each action named $a_j$.
 \item  $T:S \times S \times  A  \rightarrow [0,1]$ is the probability of moving from state $s$ to state $s'$  after action $a \in A$ has taken place. $T(s'|s,a)$ denotes this probability.
 \item  $R:S \rightarrow \Re$, $R(s)$ is a reward function at each state.
@@ -132,14 +132,14 @@ The main decision theoretic abstraction for planning/control is the Markov Decis
 \end{itemize}
 
 The MDP defines a single agent environment, fully observable to the agent. In an MDP, the Markov property holds (hence the name), which means that all the information an agent needs in order to act is embedded in the current state.
-A possible route of action an agent might take is known as the \textit{policy} $\pi$. A policy is a probabilistic mapping between state and actions, $\pi:S \times A \rightarrow [0,1]$, thus $\pi(s,a) \in [0,1]$,  $\sum\limits_{a\in A}{\pi(s,a)} = 1$. The set of all policies is denoted as $\Pi$. The goal of an agent in an MDP environment is to maximise its long term value. Note that, since we are dealing with continuous actions and states here, sets $A$ and $S$ are metric (and infinitive). Also note that we are NOT dealing with continuous time MDPs in this paper, although there is a notion of time. An example of the effects of the discount factor on rewards can be found in Figure \ref{fig:gamma}.
+A possible route of action an agent might take is known as the \textit{policy} $\pi$. A policy is a probabilistic mapping between state and actions, $\pi:S \times A \rightarrow [0,1]$, thus $\pi(s,a) \in [0,1]$,  $\sum\limits_{a\in A}{\pi(s,a)} = 1$. The set of all policies is denoted as $\Pi$. The goal of an agent in an MDP environment is to maximise its long term value. Note that, since we are dealing with continuous actions and states here, sets $A$ and $S$ are metric (and not countable). Also note that we are NOT dealing with continuous time MDPs in this paper, although there is a notion of time. An example of the effects of the discount factor on rewards can be found in Figure \ref{fig:gamma}.
 
 
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.45\textwidth]{graphics/gamma-crop.pdf}
-  \caption{Examples of how rewards are affected by $\gamma$.}
+  \caption{Examples of how rewards are affected by $\gamma$. Split probability reflects the probability of T-HOO splitting a node into two, while action depth reflects look-ahead depth}
   \label{fig:gamma}
 \end{figure}
 
@@ -152,23 +152,10 @@ Another point of interest is \textit{when} planning happens. In open loop planni
 
 If the agent replans at every step, discarding or augmenting the plan received from previous steps, it is known as ``rolling horizon'' planning. The idea here is that, if the agent can plan as well as possible up to a  certain point, it can perform an action, move the planning horizon one step forward and replan. For example, Monte Carlo Tree Search for infinite MDPs can be seen as an approximate rolling horizon planning version of $TD(1)$\cite{silver2009reinforcement}.  The term ``Simulation based'' is used when the planning happens for an MDP that has a tree like structure and rewards are only visible at the end of the tree, a situation common in many games.
 
-When learning how to act using a generative model, one can make a third distinction as to the type of sets represented by $A$ and $S$. In this paper the focus is on an $A$ and $S$ that come from a metric space. This means  that both sets' elements define a notion of distance and, for all practical purposes, have an infinite amount of elements. More specifically, both sets are drawn from a bounded set of real numbers, $\Re^n$.
+When learning how to act using a generative model (i.e. an internal simulator of feature events conditioned on actions), one can make a third distinction as to the type of sets represented by $A$ and $S$. In this paper the focus is on an $A$ and $S$ that come from a metric space. This means  that both sets' elements define a notion of distance and, for all practical purposes, have an infinite amount of elements. More specifically, both sets are drawn from a bounded set of real numbers, $\Re^n$.
 
 Since an open loop policy is now a real-valued vector of actions, algorithms like T-HOO and CMA-ES can be used to find such a policy, hence the title of this paper. To the best of our knowledge this is the first time evolution has been used in such a setting. There are examples of closed loop rolling horizon papers, but these are beyond the scope of this article~\cite{xiang2012differential,samothrakis2010planning}.
 
-
-
-\subsection{Notes on planning using a Generative Model}
-
-The Markov Decision Process simply describes an environment alongside the rewards that said environment provides to an agent. A problem central to Artificial Intelligence is what actions an agent must take to maximise its long term reward. The most basic assumption one can make is that the agent knows nothing about the environment. In this case the agent gets thrown into the environment and interacts (``trains'') for some time. After the training is complete, the agent should be able to act intelligently (presumably with some success).
-
-Another approach one can take is to assume that the agent has a copy of the MDP in its ``mind'' and thus is able to plan accordingly. This is usually termed dynamic programming~\cite{sutton1998reinforcement}, however it cannot be used in the case of continuous states or actions without the use of a function approximator (FA) or some kind of discretization. Another approach, and one which has made a significant impact recently, arguably presented for the first time by Kearns~\cite{citeulike:1584916} and popularised mostly as Upper Confidence Bounds for Trees (UCT)~\cite{kocsis2006bandit}, is to use a generative model.
-
-A generative model is nothing more than a simulator of future events. This is less of a requirement than knowing the full model (which entails knowing the full function $T$), but still requires the agent to have some knowledge of the world. This category of algorithms, which are broadly termed ``Rolling Horizon'', has the following steps. From the current state, a number of simulations of possible futures is run by executing a set of action sequences (all of this in the ``mind'' of the agent). The simulations last for a certain number of steps (hence the ``rolling horizon'') or continue until an end state is encountered (i.e. when the MDP has ``absorbing'' states that cannot be acted from).
-
-Once a satisfactory plan/policy has been estimated (or the agent runs out of time, iterations etc.) it proceeds by executing the first action of the plan, thus moving to the next state. Once there, the agent performs the same sequence of ``mental'' actions, (i.e. plans and executes the first action), until some predefined stopping condition.  In this paper we will concern ourselves \textit{only} with this method of planning. What changes from method to method is how the plan is formed. The main version of the algorithm used can be seen in Algorithm \ref{algo:ooop}.
-
-In standard UCT, a procedure similar to temporal difference learning is followed (or, more closely, Monte Carlo methods), where one learns the value of each state. An agent then forms a policy by choosing a value greedily. In our case, because our state space has continuous states and actions, this is impossible without the use of a function approximator (or an infinite discretization of space), which is not attempted here. What is attempted though is to learn the policy function directly without reference to state, while planning continuously from the current state. So while the agent forms open-loop plans at each clock tick, in reality it is executing a closed-loop policy. While the strategy is not provably optimal, it can work well in practice~\cite{weinstein2012bandit}. This will be seen by our experimental results (see Section \ref{sec:Experiments}). 
 
 
 
@@ -181,8 +168,8 @@ In standard UCT, a procedure similar to temporal difference learning is followed
 
 	\Procedure{$\mathsc{OOP}$} {}
 		\While{$!StoppingCondition$}
-		    \State $a \gets \mathsc{FindOpenLoopPlan}(depth, T',S')[0]$ \Comment{Execute first action(s) of the policy}
-		    \State $s \sim T(s'|s,a)$ \Comment{Stop only at an absorbing state}
+		    \State $a \gets \mathsc{FindOpenLoopPlan}(depth, T',S')[0]$ \Comment{Execute first action(s) of the policy - [0] gets the first action}
+		    \State $s \sim T(s'|s,a)$ \Comment{Stop only at an absorbing state, sampling ($\sim$) from the environment}
 		\EndWhile
 		\State
 	\EndProcedure
@@ -287,32 +274,29 @@ r = -((2 \theta / \pi)^2 + \dot{\theta}^2 + (F / 50)^2 )
 
 
 \subsection{Lunar Lander}
-In this section we give a brief overview of the game of Lunar Lander, a popular arcade game. 
+In this section we give a brief overview of a problem based upon {\itshape Lunar Lander}, a popular arcade game. The goal in {\itshape Lunar Lander} is to land a spaceship on a flat plateau on an otherwise jagged landscape. In order to do this, the player must use a supply of fuel to apply thrust to a spaceship, which has inertia. The ship is able to rotate at no cost to fuel usage, but must contend with rotational inertia.
 
 \subsubsection{Environmental Properties}
 
-The properties of the base environment of {\itshape Lunar Lander} are that it is frictionless, and that it is a two-dimensional plane with horizontal wrapping. This can also be conceptualised as a cylinder. Anything that passes from the left edge of the playing field moves to the right instantaneously, and vice versa.
-
-The other feature of note is the jagged landscape, a simplistic representation of the noisy, crater-filled lunar landscape the game represents. This landscape is constructed as a series of line segments, with each vertex of the jagged landscape being distributed equally horizontally, and randomly vertically. % unclear?
-
+The properties of the base environment of {\itshape Lunar Lander} are that it is frictionless, and that it is a two-dimensional plane with horizontal wrapping. This can also be conceptualised as a cylinder. Anything that passes from the left edge of the playing field moves to the right instantaneously, and vice versa. The landscape is constructed as a series of line segments, with each vertex being distributed equally horizontally, and randomly vertically.
 
 \subsubsection{Spaceship Physics}
 
-The spaceship within this game world is modelled as a circular mass with some basic physical properties, such as a position within the game world $\bm {s}$, a velocity $\bm {v}$, an orientation $\bm{d}$, an angular velocity $\omega$ and a radius of a bounding sphere $r$ used for collision detection with the landscape.
+The spaceship within this game world is modelled as a circular mass with some physical properties, such as a position within the game world $\bm {s}$, a velocity $\bm {v}$, an orientation $\bm{d}$, an angular velocity $\omega$ and a radius of a bounding sphere $r$ used for collision detection with the landscape.
 
-This collision detection method is based on the lowest point of the spaceship's bounding circle coming into intersection with the highest point of the landscape for the line perpendicular between the ship and the bottom of the playing field, as can be seen in Figure \ref{fig:diagram_landscapepoint}.
+This collision detection method is based on the spaceship's bounding circle overlapping the corresponding point on the landscape on the same vertical axis, as can be seen in Figure \ref{fig:diagram_landscapepoint}.
 
-% this needs a diagram for clarity: reuse the old one? reusing it temporarily
+
 \begin{figure}[hbtp]
 \centering
-\includegraphics[scale=0.4]{graphics/landscapepoint}
+\includegraphics[scale=0.35]{graphics/landscapepoint}
 \caption{The point closest to the spaceship on the landscape lies in between two of the defined vertices of the landscape, and requires interpolation to calculate the y co-ordinate from the x co-ordinate of the ship.}
 \label{fig:diagram_landscapepoint}
 \end{figure}
 
-As the landscape is stored as a series of line segments, interpolation must be used in the event the ship is not perfectly aligned with one of the landscape axes. The point that lies on the line segment that the ship is being checked against is calculated through simple linear interpolation based on which two vertices the ship is horizontally closest to. For the ship's centre $\bm {s}$, the left nearest landscape vertex $\bm {p}^{l}$ and the right nearest landscape vertex $\bm {p}^{r}$, the point of collision $\bm {p}^{c}$ against the landscape is calculated as 
+For the ship's centre $\bm {s}$, the left nearest landscape vertex $\bm {p}^{l}$ and the right nearest landscape vertex $\bm {p}^{r}$, the point of collision $\bm {p}^{c}$ against the landscape is calculated as 
 
-% does this constitute self-plaigarism???
+
 
 
 \begin{figure*}[ht]
@@ -387,13 +371,13 @@ Collision is then true if the following statement is true:
 \bm {s}_{y} + r \geq \bm {p}^{c}_{y}
 \end{equation}
 
-The ship colliding with the landscape constitutes the end of the {\itshape Lunar Lander} game. The conditions surrounding this collision, including speedand orientation of the ship, constitute whether the nature of the collision is a success or a failure. In this experimental setup we accept a velocity of $5$ and an angle of $< 0.1$ radians as successful landing criteria.
+The ship colliding with the landscape constitutes the end of the {\itshape Lunar Lander} game. The conditions surrounding this collision, including speed and orientation of the ship, constitute whether the nature of the collision is a success or a failure. In this experimental setup we accept a velocity of $5$ and an angle of $< 0.1$ radians as successful landing criteria.
 
-An agent can modify the ship's direction by applying linear thrust $\bm{a_T}$ and angular impulse $\bm{a_I}$. The controllers have to identify a vector of real numbers $\bm{A}$, with each element of the set $a_i \in [0,1]$. Each even element of the vector represents the linear thrust, whereas each odd element represents angular velocity. Each linear thrust vector element is transformed by applying as follows: 
+An agent can modify the ship's direction by applying linear thrust $\bm{a_T}$ and angular impulse $\bm{a_I}$. The controllers have to identify a vector of real numbers $\bm{A}$, with each element of the set $a_i \in [0,1]$.  Each even element of the vector represents the linear thrust, whereas each odd element represents angular velocity, actions that the agent can take. Each linear thrust vector element is transformed by applying the following: 
 
 \begin{equation}
-\bm{a_I} = 5(\bm{a_I} - 0.5)
-\bm{a_T} = 300\bm{a_T} 
+\bm{a_I} \gets 5(\bm{a_I} - 0.5)
+\bm{a_T} \gets 300\bm{a_T} 
 \end{equation}
 
 Finally each linear thrust and angular impulse is repeated for $X = 7$ actions, the effects of which we are going to explore below. 
@@ -414,8 +398,8 @@ The vectors defined in Equation \ref{eq:vectors} define three directions for the
 
 
 \begin{align}
-f &= \twopartdef{-\sum{arccos(\bm{dl}\cdot\bm{d}/\norm{\bm{dl}}\norm{\bm{d}}})}{\bm{np_x} < \bm{s_x}}{-\sum{arccos(\bm{dr}\cdot\bm{d}/\norm{\bm{dr}}\norm{\bm{d}}})} {otherwise}\notag\\
-l &= -\sum{arccos(\bm{du}\cdot\bm{d}/\norm{\bm{du}}\norm{\bm{d}}}) - \abs{\bm {v_y} - V_{y}^{max}}\notag\\
+f &= \twopartdef{-\sum{arccos(\bm{dl}\cdot\bm{d}/(\norm{\bm{dl}}\norm{\bm{d}}}))}{\bm{np_x} < \bm{s_x}}{-\sum{arccos(\bm{dr}\cdot\bm{d}/(\norm{\bm{dr}}\norm{\bm{d}}}))} {otherwise}\notag\\
+l &= -\sum{arccos(\bm{du}\cdot\bm{d}/(\norm{\bm{du}}\norm{\bm{d}}})) - \abs{\bm {v_y} - V_{y}^{max}}\notag\\
 h &= \twopartdef{ \abs{-(\norm{\bm {v}} - C) - \abs{\bm {s}_{x} - \bm {np}_{x}}} - f}{\norm{\bm {s} - \bm {np}} < D}
 {l - \abs{\bm {v_x} -C_l }  }{Otherwise}\notag\\
 h&\gets h + p 
@@ -466,7 +450,7 @@ We present the results of our experiments below.
         \begin{subfigure}{0.49\textwidth}
                 \centering
                 \includegraphics[width=1.0\textwidth]{./graphics/map2.pdf}
-                \caption{Map A,  where the ship is lower then the pad.}
+                \caption{Map A,  where the ship is lower than the pad.}
                 \label{fig:map2}
         \end{subfigure}  
         \begin{subfigure}{0.49\textwidth}
@@ -498,10 +482,7 @@ We present the results of our experiments below.
 \subsection{Benchmark Problems}
 
 
-For the second set of experiments we have defined the following variables. The first two involve running the experiments with a fixed rollout depth of 50, i.e. each algorithm at each step plans for 50 steps ahead. We set the noise levels to $0.1 (\mathcal{U}(0,1)-0.5)*2 l$ uniform noise for the double integrator experiment and $10 (\mathcal{U}(0,1)-0.5)*2 l$  for the Inverted Pendulum.  The variable $l$ is the noise level which defines how noisy the environment is. Initially, we performed two experiments, with a variable number of iterations and a fixed noise level of one. 
-
-
-
+For the second set of experiments we have defined the following variables. The first two involve running the experiments with a fixed rollout depth of 50, i.e. each algorithm at each step plans for 50 steps ahead. We set the noise levels to $0.1 (\mathcal{U}(-0.5,0.5)) l$ uniform noise for the double integrator experiment and $10 (\mathcal{U}(-0.5,0.5)) l$  for the Inverted Pendulum (different noise levels for different problems come from the fact that the problems have unequal features).  The variable $l$ is the noise level which defines how noisy the environment is. Initially, we performed two experiments, with a variable number of iterations and a fixed noise level of one. In all experiments the default CMA implementation is used~\footnote{\url{https://www.lri.fr/~hansen/cmaes_java.tar.gz}}. 
 
 
 The results of these experiments can be seen in graphs  \ref{fig:IP} and \ref{fig:DI}. These are close to the original experiments of Weinstein and Littman~\cite{weinstein2012bandit}, only this time we varied the number
@@ -541,7 +522,8 @@ There are a number of things to notice here. The first is that only in Map D, wh
 
 
 \section{Conclusion} \label{sec:conclusion}
-We showed that it is doable to use evolution in a rolling horizon setting, making it possible to create agents using off-the-shelf evolutionary algorithms and a generative model. We used an experimental setup that included both simple benchmark problems and a popular arcade game, Lunar Lander. Unfortunately, it seems that different algorithms require different heuristics to work properly in the case that absorbing states are not met during rollouts. In future research we aim to improve MCTS-like algorithms for continuous settings by including a learning module, possibly in the form of actor-critic algorithms. This should automate learning the heuristics (after some ad-hoc played games) and help guide the rollouts towards more sensible solutions, even in the case where heuristics do not favour T-HOLOP. 
+We showed that it is doable to use evolution in a rolling horizon setting, making it possible to create agents using off-the-shelf evolutionary algorithms and a generative model. We used an experimental setup that included both simple benchmark problems and a popular arcade game, Lunar Lander. Unfortunately, it seems that different algorithms require different heuristics to work properly in the case that absorbing states are not met during rollouts. Definite conclusions are hard to draw about the quality and/or the suitability of each method. There are a multitude of hyperparameters to optimise and each method responds better to different heuristics. On top of that, implementations of each method might have different memory/speed requirements on different platforms - which makes direct comparison even harder. If anything, such intricacies require more specific set of experiments and a conscious effort to understand which method behaves better under what conditions. Overall however we think it might be possible to incorporate simplifying assumptions into T-HOLOP priors, thus making it easier to search harder distributions.  In all cases however, one might want to include sensible defaults in all algorithms, and use them without too much hassle; CMA-ES is probably as close to that as one can imagine for continuous settings, so it might be worth considering it as a ``first option'' in most settings (including the one we use here). 
+In future research we aim to improve MCTS-like algorithms for continuous settings by including a learning module, possibly in the form of actor-critic algorithms. This should automate learning heuristics (after some training games) and help guide the rollouts towards more sensible solutions, even in the case where heuristics do not favour T-HOLOP. 
 
  
 % Use \section* for the acknowledgments
@@ -552,4 +534,4 @@ This work was supported by EPSRC grant EP/H048588/1 entitled: ``UCT for Games an
 
 \bibliographystyle{IEEEtran}
 \bibliography{lunarcontbib}
-\end{document}
+\end{document}=
